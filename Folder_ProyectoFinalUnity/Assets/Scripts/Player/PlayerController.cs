@@ -11,43 +11,72 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speedRunning;
     [SerializeField] private float jumpForce;
     [SerializeField] private float groundDistance;
-    [SerializeField] private Transform checkGround;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private float jumpCooldownTime = 0.1f;
     [SerializeField] private float jumpTimeCollider = 0.5f;
+    private float jumpCooldownTime = 0.1f;
+    private float attackCooldown = 1.3f;
     private float originalSpeed;
     private Vector2 movement;
 
-    private bool canJump = true;
-    private bool hasLanded = false;
+    [Header("References Managers")]
+    [SerializeField] private LifeManager lifeManager;
+
+    private bool isTakingDamage = false;
+    public bool canJump = true;
     private bool isJumping;
     private bool isGrounded;
     private bool canMove = true;
     private bool isFastRunning;
+    private bool isAttacking;
 
     [Header("Player Components")]
     private Rigidbody myRBD;
     private CapsuleCollider myCollider;
+    private CapsuleCollider colliderFeets;
     private PlayerInput playerInput;
     private Animator myAnimator;
 
+
+    private void OnEnable()
+    {
+        LifeManager.OnPlayerDamage += TakeDamage;
+    }
+    private void OnDisable()
+    {
+        LifeManager.OnPlayerDamage -= TakeDamage;
+    }
     private void Awake()
     {    
         myCollider = GetComponent<CapsuleCollider>();
+        colliderFeets = GetComponentInChildren<CapsuleCollider>();
         myRBD = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
         myAnimator = GetComponent<Animator>();     
     }
     private void Start()
     {
+        isGrounded = true;
+        isJumping = false;
+        isAttacking = false;
         originalSpeed = speed;
+
+        myAnimator.SetBool("isJumpNormal", false);
+        myAnimator.SetBool("isInGround", true);
+        myAnimator.SetBool("isRunning", false);
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            TakeDamage();
+        }
     }
     private void FixedUpdate()
     {
+        CheckGround();
         AnimationsPlayer();
         RotatePlayer();
         ApplyPhysics();
-        CheckGround();
     }
     private void ApplyPhysics()
     {
@@ -57,9 +86,8 @@ public class PlayerController : MonoBehaviour
         {
             myRBD.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isJumping = false;
-            hasLanded = false;
             canJump = false;
-            StartCoroutine(JumpCooldownAndCollider());
+            StartCoroutine(JumpCooldown());
             StartCoroutine(JumpAdjustCollider());
         }
     }
@@ -75,27 +103,22 @@ public class PlayerController : MonoBehaviour
         if (context.performed && isGrounded && canJump)
         {
             isJumping = true;
-            myAnimator.SetBool("isJumpNormal",true);
+            myAnimator.SetBool("isJumpNormal", true);
+            myAnimator.SetBool("isInGround", true);
         }
-    }
-    private IEnumerator JumpAdjustCollider()
-    {
-        myCollider.height = 4f;
-        myCollider.radius = 0.8f;
-        myCollider.center = new Vector3(0.33f, 3.3f, 0.4f);
-        yield return new WaitForSeconds(jumpTimeCollider);
-        myCollider.height = 5.3f;
-        myCollider.radius = 0.88f;
-        myCollider.center = new Vector3(0f, 2.7f, 0.1f);
-    }
-    private IEnumerator JumpCooldownAndCollider()
-    {
-        canJump = false;
-        yield return new WaitForSeconds(jumpCooldownTime); 
-        canJump = true;
-        if (isGrounded)
+        else
         {
-            myAnimator.SetBool("isJumpNormal", false); 
+            IsFalling();
+        }
+
+    }
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed && !isAttacking && movement.magnitude == 0)
+        {
+            isAttacking = true;
+            StartCoroutine(AttackCooldown());
+            myAnimator.SetBool("isAttack",true);
         }
     }
     public void OnRunning(InputAction.CallbackContext context)
@@ -121,6 +144,44 @@ public class PlayerController : MonoBehaviour
             myAnimator.SetBool("isRunning", false);
         }
     }
+    private void IsFalling()
+    {
+        myAnimator.SetBool("isJumpNormal", false);
+        myAnimator.SetBool("isInGround", true);
+    }
+    private IEnumerator AttackCooldown()
+    {
+        myAnimator.SetBool("isJumpNormal", false);
+        myAnimator.SetBool("isInGround", true);
+        myAnimator.SetBool("isRunning", false);
+        canMove = false;
+        yield return new WaitForSeconds(attackCooldown);
+        canMove = true;
+        speed = originalSpeed;
+        myAnimator.SetBool("isAttack", false); 
+        isAttacking = false;
+    }
+    private IEnumerator JumpAdjustCollider()
+    {
+        myCollider.height = 4f;
+        myCollider.radius = 0.8f;
+        myCollider.center = new Vector3(0.33f, 3.3f, 0.4f);
+        yield return new WaitForSeconds(jumpTimeCollider);
+        myCollider.height = 5.3f;
+        myCollider.radius = 0.88f;
+        myCollider.center = new Vector3(0f, 2.7f, 0.1f);
+    }
+    private IEnumerator JumpCooldown()
+    {
+        canJump = false;
+        yield return new WaitForSeconds(jumpCooldownTime); 
+        canJump = true;
+        if (isGrounded)
+        {
+            myAnimator.SetBool("isJumpNormal", false); 
+        }
+    }
+   
     private void AnimationsPlayer()
     {
         myAnimator.SetFloat("X", movement.x);
@@ -147,18 +208,34 @@ public class PlayerController : MonoBehaviour
     }
     private void CheckGround()
     {
-        isGrounded = Physics.Raycast(checkGround.transform.position, Vector3.down, groundDistance, groundLayer);
+        bool wasGrounded = isGrounded;
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundDistance, groundLayer);
 
-        if(isGrounded && !isJumping)
+        if (isGrounded && !wasGrounded)
         {
-            hasLanded = true;
-            myAnimator.SetBool("isJumpNormal",false);
+            myAnimator.SetBool("isJumpNormal", false);
+            myAnimator.SetBool("isInGround", true);
+            Debug.Log("Player landed");
+        }
+        else if (!isGrounded)
+        {
+            myAnimator.SetBool("isInGround", true);
+            Debug.Log("Player is falling");
+        }
+    }
+    private void TakeDamage()
+    {
+        if (!isTakingDamage)
+        {
+            isTakingDamage = true;
+            lifeManager.DamageToPlayer();
+            isTakingDamage = false;
         }
     }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
 
-        Gizmos.DrawLine(checkGround.transform.position, checkGround.transform.position + Vector3.down * groundDistance);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundDistance);
     }
 }
