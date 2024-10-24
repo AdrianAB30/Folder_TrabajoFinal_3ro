@@ -669,13 +669,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.08798125, y: -0.6696983, z: 0.0794256, w: 0.7331133}
-  m_LocalPosition: {x: 95, y: 108, z: 135}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.7, y: 76.6, z: 94.2}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 13.614, y: -84.833, z: -0.082}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1042,6 +1042,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: sign
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5ad1f5d86691e8d48822acfbac385256,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5ad1f5d86691e8d48822acfbac385256,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1208,6 +1218,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c4a2d409a849fbd4ba2317a2e8a6a28c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1567,7 +1582,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 903591a8435d7d24cbc5b2c5b32b2172,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 69.78
+      value: 69.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 903591a8435d7d24cbc5b2c5b32b2172,
         type: 3}
@@ -1665,7 +1680,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 903591a8435d7d24cbc5b2c5b32b2172,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1209054960}
+      addedObject: {fileID: 1209054962}
   m_SourcePrefab: {fileID: 100100000, guid: 903591a8435d7d24cbc5b2c5b32b2172, type: 3}
 --- !u!1 &925907075 stripped
 GameObject:
@@ -1901,15 +1916,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1044819471}
-  - component: {fileID: 1044819473}
-  - component: {fileID: 1044819472}
   m_Layer: 0
   m_Name: Check
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1044819471
 Transform:
   m_ObjectHideFlags: 0
@@ -1919,48 +1932,12 @@ Transform:
   m_GameObject: {fileID: 1044819470}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.3, z: 0}
+  m_LocalPosition: {x: 0, y: 0.403, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1209054959}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1044819472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1044819470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f47f513fa03a6db41bd3e9bd2a5acafa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  logicPlayer: {fileID: 1209054955}
---- !u!136 &1044819473
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1044819470}
-  m_Material: {fileID: 13400000, guid: 84157eadfaadfa14dbc49d95de7bcbcf, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3
-  m_Height: 0.67
-  m_Direction: 1
-  m_Center: {x: -0.01, y: 0.22, z: 0}
 --- !u!1 &1133271019 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 11f0e0d9fb61e7e4093c6f2e90461fc9,
@@ -2126,11 +2103,12 @@ MonoBehaviour:
   speed: 20
   speedRunning: 10
   jumpForce: 20
-  groundDistance: 0.5
+  groundDistance: 1
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  jumpTimeCollider: -3.52
+  jumpTimeCollider: 1.5
+  checkGround: {fileID: 1044819470}
   lifeManager: {fileID: 1611634781}
   canJump: 1
 --- !u!54 &1209054956
@@ -2141,7 +2119,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1209054953}
   serializedVersion: 4
-  m_Mass: 2.5
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -2166,8 +2144,8 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 919322534}
   m_PrefabAsset: {fileID: 0}
---- !u!136 &1209054960
-CapsuleCollider:
+--- !u!65 &1209054962
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2184,11 +2162,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.88
-  m_Height: 5.263774
-  m_Direction: 1
-  m_Center: {x: 0, y: 2.7, z: 0.100000024}
+  serializedVersion: 3
+  m_Size: {x: 1.72, y: 5.1, z: 1.55}
+  m_Center: {x: 0.025, y: 2.78, z: 0.2}
 --- !u!1 &1280250655
 GameObject:
   m_ObjectHideFlags: 0
@@ -2526,6 +2502,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: arrows
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 11f0e0d9fb61e7e4093c6f2e90461fc9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 11f0e0d9fb61e7e4093c6f2e90461fc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2630,8 +2616,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 9.821886, y: 9.918367, z: 9.783295}
-  m_Center: {x: -0.04880951, y: 4.9591837, z: -0.067688525}
+  m_Size: {x: 9.821886, y: 10.023819, z: 9.783295}
+  m_Center: {x: -0.04880951, y: 5.0119095, z: -0.067688525}
 --- !u!4 &2025667807 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1852576806548013000, guid: 903591a8435d7d24cbc5b2c5b32b2172,
