@@ -11,44 +11,19 @@ public class InputHandler : MonoBehaviour
     public static event Action<bool> OnRunningInput;
     public static event Action<bool> OnCoverInput;
     public static event Action<bool> OnRollingInput;
-
-    [SerializeField] private PlayerInput playerInput;
-
-    private void OnEnable()
-    {
-        playerInput.actions["Movimiento"].performed += HandleMovement;
-        playerInput.actions["Movimiento"].canceled += HandleMovement;
-        playerInput.actions["Jump"].performed += HandleJump;
-        playerInput.actions["Attack"].performed += HandleAttack;
-        playerInput.actions["Running"].performed += HandleRunning;
-        playerInput.actions["Running"].canceled += HandleRunning;
-        playerInput.actions["Cover"].performed += HandleCover;
-        playerInput.actions["Cover"].canceled += HandleCover;
-        playerInput.actions["Rolling"].performed += HandleRolling;
-    }
-
-    private void OnDisable()
-    {
-        playerInput.actions["Movimiento"].performed -= HandleMovement;
-        playerInput.actions["Movimiento"].canceled -= HandleMovement;
-        playerInput.actions["Jump"].performed -= HandleJump;
-        playerInput.actions["Attack"].performed -= HandleAttack;
-        playerInput.actions["Running"].performed -= HandleRunning;
-        playerInput.actions["Running"].canceled -= HandleRunning;
-        playerInput.actions["Cover"].performed -= HandleCover;
-        playerInput.actions["Cover"].canceled -= HandleCover;
-        playerInput.actions["Rolling"].performed -= HandleRolling;
-    }
+   
 
     public void HandleMovement(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
+            Debug.Log("Moviendose");
             Vector2 movementInput = context.ReadValue<Vector2>();
             OnMovementInput?.Invoke(movementInput);
         }
         else if (context.canceled)
         {
+            Debug.Log("Ya no se mueve");
             OnMovementInput?.Invoke(Vector2.zero);
         }
     }
@@ -56,6 +31,7 @@ public class InputHandler : MonoBehaviour
     {
         if (context.performed)
         {
+            Debug.Log("Saltando");
             OnJumpInput?.Invoke();
         }
     }
@@ -63,6 +39,7 @@ public class InputHandler : MonoBehaviour
     {
         if (context.performed)
         {
+            Debug.Log("Atacando");
             OnAttackInput?.Invoke();
         }
     }
@@ -70,10 +47,12 @@ public class InputHandler : MonoBehaviour
     {
         if (context.performed)
         {
+            Debug.Log("Corriendo");
             OnRunningInput?.Invoke(true);
         }
         else if (context.canceled)
         {
+            Debug.Log("Ya no corre");
             OnRunningInput?.Invoke(false);
         }
     }
@@ -81,10 +60,12 @@ public class InputHandler : MonoBehaviour
     {
         if (context.performed)
         {
+            Debug.Log("Cubriendose");
             OnCoverInput?.Invoke(true);
         }
         else if (context.canceled)
         {
+            Debug.Log("Ya no se cubre");
             OnCoverInput?.Invoke(false);
         }
     }
@@ -92,10 +73,12 @@ public class InputHandler : MonoBehaviour
     {
         if (context.performed)
         {
+            Debug.Log("Rolleando");
             OnRollingInput?.Invoke(true);
         }
         else if (context.canceled)
         {
+            Debug.Log("Ya no rollea");
             OnRollingInput?.Invoke(false);
         }
     }

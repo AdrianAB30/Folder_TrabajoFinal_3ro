@@ -236,7 +236,7 @@
                 {
                     "name": "",
                     "id": "e7f0dcae-3180-4289-b721-b60f964584aa",
-                    "path": "<Gamepad>/leftShoulder",
+                    "path": "<Gamepad>/leftStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -302,7 +302,7 @@
                 {
                     "name": "",
                     "id": "a76be0bf-6f8c-48b0-9e0d-3dfed3dcaa6e",
-                    "path": "<Gamepad>/rightShoulder",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -345,8 +345,30 @@
                 },
                 {
                     "name": "",
+                    "id": "d3dfe5ac-01a0-4e6f-baa3-52068fc48a56",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NextWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "cc5f4736-7b3d-4967-8a4b-e2ee05894909",
                     "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PreviousWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6d8892ee-ee16-4098-9625-3694a11f5844",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

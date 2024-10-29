@@ -8,9 +8,8 @@ public class PlayerController : MonoBehaviour
     [Header("Player Data")]
     [SerializeField] private PlayerData playerData;
     [SerializeField] private GameObject checkGround;
-    private bool isAttacking = false;
     private Vector3 jumpingCenter = new Vector3(0.025f, 2.1f, 0.2f);
-    private Vector3 jumpingSize = new Vector3(1.72f, 3f, 1.6f);
+    private Vector3 jumpingSize = new Vector3(1.72f, 4f, 1.6f);
 
     private Vector3 fallingCenter = new Vector3(0.025f, 2.7f, 0.2f);
     private Vector3 fallingSize = new Vector3(1.72f, 5f, 1.55f);
@@ -18,6 +17,8 @@ public class PlayerController : MonoBehaviour
     [Header("References Managers")]
     [SerializeField] private LifeManager lifeManager;
     [SerializeField] private InventoryPlayer inventoryPlayer;
+    [SerializeField] private Particle_Class particleClass;
+    [SerializeField] private UIManager uiManager;
 
     [Header("Player Components")]
     private Rigidbody myRBD;
@@ -27,10 +28,13 @@ public class PlayerController : MonoBehaviour
     //Eventos
     public event Action OnJumpColl;
     public event Action OnFallingColl;
+    public static event Action OnStartRollingParticle;
+    public static event Action OnEndRollingParticle;
+    public static event Action OnBowCollected;
 
     private void OnEnable()
     {
-        LifeManager.OnPlayerDamage += TakeDamage;
+        lifeManager.OnPlayerDamage += TakeDamage;
         OnJumpColl += JumpCollider;
         OnFallingColl += FallingCollider;
         InputHandler.OnMovementInput += OnMovement;
@@ -42,7 +46,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDisable()
     {
-        LifeManager.OnPlayerDamage -= TakeDamage;
+        lifeManager.OnPlayerDamage -= TakeDamage;
         OnJumpColl -= JumpCollider;
         OnFallingColl -= FallingCollider;
         InputHandler.OnMovementInput -= OnMovement;
@@ -68,7 +72,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            TakeDamage();
+            TakeDamage(1);
         }
     }
     private void FixedUpdate()
@@ -86,7 +90,6 @@ public class PlayerController : MonoBehaviour
         Vector3 velocity = myRBD.velocity;
         velocity.x = playerData.movement.x * playerData.speed;
         velocity.z = playerData.movement.y * playerData.speed;
-
         if (!playerData.isGrounded && myRBD.velocity.y < 0)
         {
             velocity.y += Physics.gravity.y * playerData.forceFalling * Time.fixedDeltaTime;
@@ -136,9 +139,9 @@ public class PlayerController : MonoBehaviour
     }
     private void OnAttack()
     {
-        if (!isAttacking && !playerData.isJumping && playerData.movement.magnitude == 0 && !playerData.isCovering && playerData.isGrounded)
+        if (!playerData.isAttacking && !playerData.isJumping && playerData.movement.magnitude == 0 && !playerData.isCovering && playerData.isGrounded)
         {
-            isAttacking = true;
+            playerData.isAttacking = true;
             playerData.canJump = false;
             playerData.isAttacking = true;
             StartCoroutine(AttackCooldown());
@@ -200,7 +203,7 @@ public class PlayerController : MonoBehaviour
                 playerData.canJump = false;
                 playerData.isAttacking = false;
                 myAnimator.SetBool("isRolling", true);
-
+                OnStartRollingParticle?.Invoke();
                 StartCoroutine(Rolling());
             }
         }
@@ -223,6 +226,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region CORRUTINAS
+
     private IEnumerator AttackCooldown()
     {
         myAnimator.SetBool("isJumpNormal", false);
@@ -232,7 +236,7 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(playerData.attackCooldown);
 
-        isAttacking = false;
+        playerData.isAttacking = false;
         playerData.canMove = true;
         playerData.speed = playerData.originalSpeed;
         myAnimator.SetBool("isAttack", false);
@@ -244,18 +248,17 @@ public class PlayerController : MonoBehaviour
         myCollider.center = new Vector3(0.025f, 1.15f, 0.7f);
         myCollider.size = new Vector3(1.72f, 1.8f, 4f);
         Vector3 rollDirection = new Vector3(playerData.movement.x, 0, playerData.movement.y).normalized;
-
         if (rollDirection.magnitude > 0 && !playerData.isRolling)
         {
             myRBD.AddForce(rollDirection * playerData.rollImpulse, ForceMode.Impulse);
         }
 
         yield return new WaitForSeconds(1f);
-
         myCollider.center = new Vector3(0.025f, 2.78f, 0.2f);
         myCollider.size = new Vector3(1.72f, 5.1f, 1.55f);
         playerData.isRolling = false;
         myAnimator.SetBool("isRolling", false);
+        OnEndRollingParticle?.Invoke();
 
         playerData.canMove = true;
         playerData.canJump = true;
@@ -318,13 +321,20 @@ public class PlayerController : MonoBehaviour
         }
         playerData.wasGrounded = playerData.isGrounded;
     }
-    private void TakeDamage()
+    public void TakeDamage(int damageAmount)
     {
         if (!playerData.isTakingDamage)
         {
             playerData.isTakingDamage = true;
-            lifeManager.DamageToPlayer();
+            lifeManager.DamageToPlayer(damageAmount);
             playerData.isTakingDamage = false;
+        }
+    }
+    public void TriggerEquipEnd()
+    {
+        if (inventoryPlayer != null)
+        {
+            inventoryPlayer.OnEquipAnimationEnd();
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -333,6 +343,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Has recogido el arco del suelo.");
             inventoryPlayer.AddWeapon(inventoryPlayer.GetBow());
+            OnBowCollected?.Invoke();
             inventoryPlayer.ActivateBow();
             inventoryPlayer.ActivateQuiver();
             other.gameObject.SetActive(false);
@@ -342,5 +353,10 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Has recogido la funda del suelo.");
             other.gameObject.SetActive(false);
         }
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(checkGround.transform.position, Vector3.down * playerData.groundDistance);
     }
 }

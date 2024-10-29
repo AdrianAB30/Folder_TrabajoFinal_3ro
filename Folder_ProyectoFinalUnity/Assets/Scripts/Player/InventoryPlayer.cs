@@ -1,7 +1,7 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 public class InventoryPlayer : MonoBehaviour
 {
@@ -19,7 +19,8 @@ public class InventoryPlayer : MonoBehaviour
     [SerializeField] private GameObject groundBow;
     [SerializeField] private GameObject groundQuiver;
 
-    [SerializeField] private GameObject player;
+    //Eventos
+    public static event Action<string> OnWeaponChanged;
 
     public Animator playerAnimator;
     private GameObject currentWeapon;
@@ -48,7 +49,7 @@ public class InventoryPlayer : MonoBehaviour
             AddWeapon(bow);
             groundBow.SetActive(false);
             groundQuiver.SetActive(false);
-            EquipWeapon(bow); 
+            EquipWeapon(bow);
         }
     }
     public void AddWeapon(GameObject weapon)
@@ -86,6 +87,8 @@ public class InventoryPlayer : MonoBehaviour
         currentWeapon = newWeapon;
         currentWeapon.SetActive(true);
 
+        OnWeaponChanged?.Invoke(currentWeapon.name);
+
         if (currentWeapon == sword)
         {
             shield.SetActive(true); 
@@ -110,13 +113,10 @@ public class InventoryPlayer : MonoBehaviour
         playerAnimator.SetBool("hasBow", currentWeapon == bow);
 
         Debug.Log("Se ha equipado: " + currentWeapon.name);
-        StartCoroutine(StopEquippingAnimation());
     }
-    private IEnumerator StopEquippingAnimation()
+    public void OnEquipAnimationEnd() 
     {
-        yield return new WaitForSeconds(0.5f);
         playerAnimator.SetBool("isEquipping", false);
-        yield return new WaitForSeconds(2.5f);
         isEquipping = false;
     }
     public void ActivateBow()

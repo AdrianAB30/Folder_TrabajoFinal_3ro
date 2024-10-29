@@ -16,15 +16,15 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  speed: 20
-  originalSpeed: 20
-  speedRunning: 5
-  forceFalling: 25
-  jumpForce: 20
-  groundDistance: 0.8
+  speed: 7
+  originalSpeed: 7
+  speedRunning: 2
+  forceFalling: 5
+  jumpForce: 10
+  groundDistance: 0.1
   attackCooldown: 1.2
-  rollImpulse: 100
-  rotationSpeed: 12
+  rollImpulse: 10
+  rotationSpeed: 10
   wasGrounded: 1
   isTakingDamage: 0
   isGrounded: 1
