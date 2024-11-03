@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
-public class DoubleLinkedList<T>
+public class DoubleCircularLinkedList<T>
 {
     private class Node
     {
@@ -17,93 +18,138 @@ public class DoubleLinkedList<T>
         }
     }
 
-    private Node head;
-    private Node current;
-    private int length;
+    private Node Head { get; set; }
+    public int Count { get; private set; }
 
-    public int Length => length;
-
-    public void AddEnd(T value)
+    public void InsertAtStart(T value)
     {
         Node newNode = new Node(value);
-        if (head == null)
+        if (Head == null)
         {
-            head = newNode;
-            current = head;
+            Head = newNode;
+            newNode.Next = Head;
+            newNode.Previous = Head;
         }
         else
         {
-            Node lastNode = head;
-            while (lastNode.Next != null)
-            {
-                lastNode = lastNode.Next;
-            }
-            lastNode.Next = newNode;
+            Node lastNode = SearchLastNode();
+            newNode.Next = Head;
             newNode.Previous = lastNode;
+            lastNode.Next = newNode;
+            Head.Previous = newNode;
         }
-        length++;
+        Head = newNode;
+        ++Count;
     }
 
-    public T GetNext()
+    public void InsertAtEnd(T value)
     {
-        if (current.Next != null)
+        if (Head == null)
         {
-            current = current.Next;
+            InsertAtStart(value);
         }
         else
         {
-            current = head;
+            Node newNode = new Node(value);
+            Node lastNode = SearchLastNode();
+            newNode.Next = Head;
+            newNode.Previous = lastNode;
+            lastNode.Next = newNode;
+            Head.Previous = newNode;
+            ++Count;
         }
-        return current.Value;
     }
 
-    public T GetPrevious()
+    public T GetAtStart()
     {
-        if (current.Previous != null)
+        if (Head == null)
         {
-            current = current.Previous;
+            throw new NullReferenceException("La lista está vacía.");
+        }
+        return Head.Value;
+    }
+
+    public T GetAtEnd()
+    {
+        if (Head == null)
+            throw new NullReferenceException("La lista está vacía.");
+
+        Node lastNode = SearchLastNode();
+        return lastNode.Value;
+    }
+
+    public T GetAtPosition(int position)
+    {
+        if (position < 0 || position >= Count)
+        {
+            throw new NullReferenceException("Índice fuera de rango.");
+        }
+
+        Node currentNode = Head;
+        for (int i = 0; i < position; i++)
+        {
+            currentNode = currentNode.Next;
+        }
+        return currentNode.Value;
+    }
+
+    public void DeleteAtStart()
+    {
+        if (Head == null)
+        {
+            throw new NullReferenceException("La lista está vacía.");
+        }
+
+        if (Head.Next == Head)
+        {
+            Head = null;
+            Count = 0;
         }
         else
         {
-            current = GetLastNode();
+            Node lastNode = Head.Previous;
+            Node newHead = Head.Next;
+            newHead.Previous = lastNode;
+            lastNode.Next = newHead;
+            Head = newHead;
+            --Count;
         }
-        return current.Value;
     }
 
-    private Node GetLastNode()
+    public void DeleteAtEnd()
     {
-        Node lastNode = head;
-        while (lastNode.Next != null)
+        if (Head == null)
         {
-            lastNode = lastNode.Next;
+            throw new NullReferenceException("La lista está vacía.");
         }
-        return lastNode;
-    }
 
-    public T GetCurrent()
-    {
-        if (current != null)
+        if (Count == 1)
         {
-            return current.Value; 
+            Head = null;
+            Count = 0;
         }
         else
         {
-            throw new System.Exception("No hay un nodo actual."); 
+            Node lastNode = SearchLastNode();
+            Node newLastNode = lastNode.Previous;
+            newLastNode.Next = Head;
+            Head.Previous = newLastNode;
+            --Count;
         }
     }
 
-    public T GetAt(int index)
+    private Node SearchLastNode()
     {
-        if (index < 0 || index >= length)
+        if (Head == null)
         {
-            throw new System.ArgumentOutOfRangeException("Index is out of range."); 
+            return null;
         }
 
-        Node currentNode = head;
-        for (int i = 0; i < index; i++)
+        Node currentNode = Head;
+        while (currentNode.Next != Head)
         {
-            currentNode = currentNode.Next; 
+            currentNode = currentNode.Next;
         }
-        return currentNode.Value; 
+        return currentNode;
     }
 }

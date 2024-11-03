@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image swordBorder;
     [SerializeField] private Image bowBorder;
     [SerializeField] private GameObject bowUI;
+    [SerializeField] private GameObject swordUI;
 
     [Header("Stamina and Life Player")]
     [SerializeField] private Image staminaBar1; 
@@ -23,7 +24,8 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         bowUI.gameObject.SetActive(false);
-        swordBorder.gameObject.SetActive(true);
+        swordUI.gameObject.SetActive(false);
+        swordBorder.gameObject.SetActive(false);
         bowBorder.gameObject.SetActive(false);
     }
     private void OnEnable()
@@ -31,6 +33,7 @@ public class UIManager : MonoBehaviour
         lifeManager.OnPlayerDamage += UpdateLifeBar;
         InventoryPlayer.OnWeaponChanged += UpdateWeaponBorder;
         PlayerController.OnBowCollected += ActivateBowUI;
+        PlayerController.OnSwordCollected += ActivateSwordUI;
     }
 
     private void OnDisable()
@@ -38,10 +41,16 @@ public class UIManager : MonoBehaviour
         lifeManager.OnPlayerDamage -= UpdateLifeBar;
         InventoryPlayer.OnWeaponChanged -= UpdateWeaponBorder;
         PlayerController.OnBowCollected -= ActivateBowUI;
+        PlayerController.OnSwordCollected -= ActivateSwordUI;
     }
     private void ActivateBowUI()
     {
         bowUI.gameObject.SetActive(true); 
+    }
+    private void ActivateSwordUI()
+    {
+        swordUI.gameObject.SetActive(true);
+        swordBorder.gameObject.SetActive(true);
     }
 
     private void UpdateWeaponBorder(string weaponName)

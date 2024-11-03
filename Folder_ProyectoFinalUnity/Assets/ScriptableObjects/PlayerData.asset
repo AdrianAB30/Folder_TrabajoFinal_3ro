@@ -12,26 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5926b53cc01f73e4583214d58d8ee087, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  movement: {x: 0, y: 0}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  speed: 7
-  originalSpeed: 7
+  walkspeed: 6
+  life: 3
   speedRunning: 2
   forceFalling: 5
   jumpForce: 10
-  groundDistance: 0.1
   attackCooldown: 1.2
   rollImpulse: 10
-  rotationSpeed: 10
-  wasGrounded: 1
-  isTakingDamage: 0
-  isGrounded: 1
-  isJumping: 0
-  canJump: 1
-  isRunning: 0
-  canMove: 1
-  isAttacking: 0
-  isCovering: 0
-  isRolling: 0

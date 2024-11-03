@@ -8,6 +8,11 @@ public class PlayerController : MonoBehaviour
     [Header("Player Data")]
     [SerializeField] private PlayerData playerData;
     [SerializeField] private GameObject checkGround;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float groundDistance;
+    private float originalSpeed = 6f;
+    private float rotationSpeed = 10f;
+    private Vector2 movement;
     private Vector3 jumpingCenter = new Vector3(0.025f, 2.1f, 0.2f);
     private Vector3 jumpingSize = new Vector3(1.72f, 4f, 1.6f);
 
@@ -25,12 +30,25 @@ public class PlayerController : MonoBehaviour
     private BoxCollider myCollider;
     private Animator myAnimator;
 
+    [Header("Player Booleans")]
+    [SerializeField] private bool canJump = true;
+    [SerializeField] private bool canMove = true;
+    [SerializeField] private bool isAttacking = false;
+    [SerializeField] private bool isCovering = false;
+    [SerializeField] private bool isRolling = false;
+    [SerializeField] private bool isJumping = false;
+    private bool wasGrounded = false;
+    private bool isPlayerRunning = false;
+    private bool isTakingDamage = false;
+    private bool isGrounded = true;
+
     //Eventos
     public event Action OnJumpColl;
     public event Action OnFallingColl;
     public static event Action OnStartRollingParticle;
     public static event Action OnEndRollingParticle;
     public static event Action OnBowCollected;
+    public static event Action OnSwordCollected;
 
     private void OnEnable()
     {
@@ -88,20 +106,20 @@ public class PlayerController : MonoBehaviour
     private void ApplyPhysics()
     {
         Vector3 velocity = myRBD.velocity;
-        velocity.x = playerData.movement.x * playerData.speed;
-        velocity.z = playerData.movement.y * playerData.speed;
-        if (!playerData.isGrounded && myRBD.velocity.y < 0)
+        velocity.x = movement.x * playerData.walkspeed;
+        velocity.z = movement.y * playerData.walkspeed;
+        if (!isGrounded && myRBD.velocity.y < 0)
         {
             velocity.y += Physics.gravity.y * playerData.forceFalling * Time.fixedDeltaTime;
         }
 
         myRBD.velocity = velocity;
 
-        if (playerData.isJumping && playerData.isGrounded && playerData.canJump)
+        if (isJumping && isGrounded && canJump)
         {
             myRBD.AddForce(Vector3.up * playerData.jumpForce, ForceMode.Impulse);
-            playerData.isJumping = false;
-            playerData.canJump = false;
+            isJumping = false;
+            canJump = false;
         }
     }
 
@@ -111,13 +129,13 @@ public class PlayerController : MonoBehaviour
 
     private void OnMovement(Vector2 movementInput)
     {
-        if (playerData.canMove && !playerData.isRolling)
+        if (canMove && !isRolling)
         {
-            playerData.movement = movementInput;
+            movement = movementInput;
 
-            if (playerData.movement.magnitude == 0)
+            if (movement.magnitude == 0)
             {
-                playerData.speed = playerData.originalSpeed;
+                playerData.walkspeed = originalSpeed;
                 myAnimator.SetBool("isRunning", false);
                 myAnimator.SetBool("isAttack", false);
             }
@@ -125,9 +143,9 @@ public class PlayerController : MonoBehaviour
     }
     private void OnJump()
     {
-        if (playerData.isGrounded && playerData.canJump && !playerData.isAttacking)
+        if (isGrounded && canJump && !isAttacking && !isCovering)
         {
-            playerData.isJumping = true;
+            isJumping = true;
             myAnimator.SetBool("isJumpNormal", true);
             myAnimator.SetBool("isInGround", false);
             OnJumpColl?.Invoke();
@@ -139,69 +157,74 @@ public class PlayerController : MonoBehaviour
     }
     private void OnAttack()
     {
-        if (!playerData.isAttacking && !playerData.isJumping && playerData.movement.magnitude == 0 && !playerData.isCovering && playerData.isGrounded)
+        if (!isAttacking && !isJumping && movement.magnitude == 0 && !isCovering && isGrounded)
         {
-            playerData.isAttacking = true;
-            playerData.canJump = false;
-            playerData.isAttacking = true;
+            isAttacking = true;
+            canJump = false;
+            isAttacking = true;
             StartCoroutine(AttackCooldown());
             myAnimator.SetBool("isAttack", true);
         }
     }
-    private void OnCovering(bool isCovering)
+    private void OnCovering(bool isCoveringPlayer)
     {
-        if (!playerData.isJumping && !playerData.isAttacking && !playerData.isRolling)
+        if (!isJumping && !isAttacking && !isRolling)
         {
-            playerData.isCovering = isCovering;
+            isCovering = isCoveringPlayer;
             myAnimator.SetBool("isCovering", isCovering);
 
             if (isCovering)
             {
-                playerData.canMove = false;
-                playerData.canJump = false;
-                playerData.isRolling = false;
-                playerData.speed = 0f;
-                playerData.movement = Vector2.zero;
+                canMove = false;
+                canJump = false;
+                isRolling = false;
+                playerData.walkspeed = 0f;
+                movement = Vector2.zero;
             }
             else
             {
-                playerData.canMove = true;
-                playerData.canJump = true;
-                playerData.speed = playerData.originalSpeed;
+                canMove = true;
+                canJump = true;
+                playerData.walkspeed = originalSpeed;
             }
         }
     }
     private void OnRunning(bool isRunning)
     {
-        if (playerData.isGrounded && playerData.movement.magnitude > 0)
+        isPlayerRunning = isRunning;
+        if (isGrounded && movement.magnitude > 0)
         {
             if (isRunning)
             {
-                playerData.speed = playerData.originalSpeed + playerData.speedRunning;
+                playerData.walkspeed = originalSpeed + playerData.speedRunning;
                 myAnimator.SetBool("isRunning", true);
+                canJump = false;
             }
             else
             {
-                playerData.speed = playerData.originalSpeed;
+                playerData.walkspeed = originalSpeed;
                 myAnimator.SetBool("isRunning", false);
+                canJump = true; 
             }
         }
         else
         {
-            playerData.speed = playerData.originalSpeed;
+            playerData.walkspeed = originalSpeed;
             myAnimator.SetBool("isRunning", false);
+            canJump = true;
         }
     }
-    private void OnRolling(bool isRolling)
+    private void OnRolling(bool isRollingPlayer)
     {
-        if (isRolling)
+        isRolling = isRollingPlayer;
+        if (isRollingPlayer)
         {
-            if (playerData.isGrounded && !playerData.isCovering && !playerData.isJumping && !playerData.isAttacking)
+            if (isGrounded && isPlayerRunning && movement.magnitude > 0 && !isCovering && !isJumping && !isAttacking)
             {
-                playerData.isRolling = true;
-                playerData.canMove = false;
-                playerData.canJump = false;
-                playerData.isAttacking = false;
+                isRolling = true;
+                canMove = false;
+                canJump = false;
+                isAttacking = false;
                 myAnimator.SetBool("isRolling", true);
                 OnStartRollingParticle?.Invoke();
                 StartCoroutine(Rolling());
@@ -232,23 +255,23 @@ public class PlayerController : MonoBehaviour
         myAnimator.SetBool("isJumpNormal", false);
         myAnimator.SetBool("isInGround", true);
         myAnimator.SetBool("isRunning", false);
-        playerData.canMove = false;
+        canMove = false;
 
         yield return new WaitForSeconds(playerData.attackCooldown);
 
-        playerData.isAttacking = false;
-        playerData.canMove = true;
-        playerData.speed = playerData.originalSpeed;
+        isAttacking = false;
+        canMove = true;
+        playerData.walkspeed = originalSpeed;
         myAnimator.SetBool("isAttack", false);
-        playerData.isAttacking = false;
-        playerData.canJump = true;
+        isAttacking = false;
+        canJump = true;
     }
     private IEnumerator Rolling()
     {
         myCollider.center = new Vector3(0.025f, 1.15f, 0.7f);
         myCollider.size = new Vector3(1.72f, 1.8f, 4f);
-        Vector3 rollDirection = new Vector3(playerData.movement.x, 0, playerData.movement.y).normalized;
-        if (rollDirection.magnitude > 0 && !playerData.isRolling)
+        Vector3 rollDirection = new Vector3(movement.x, 0, movement.y).normalized;
+        if (rollDirection.magnitude > 0 && !isRolling)
         {
             myRBD.AddForce(rollDirection * playerData.rollImpulse, ForceMode.Impulse);
         }
@@ -256,24 +279,24 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         myCollider.center = new Vector3(0.025f, 2.78f, 0.2f);
         myCollider.size = new Vector3(1.72f, 5.1f, 1.55f);
-        playerData.isRolling = false;
+        isRolling = false;
         myAnimator.SetBool("isRolling", false);
         OnEndRollingParticle?.Invoke();
 
-        playerData.canMove = true;
-        playerData.canJump = true;
+        canMove = true;
+        canJump = true;
 
-        playerData.movement = Vector2.zero;
+        movement = Vector2.zero;
     }
     #endregion
 
     #region ANIMATIONS
     private void AnimationsPlayer()
     {
-        myAnimator.SetFloat("X", playerData.movement.x);
-        myAnimator.SetFloat("Y", playerData.movement.y);
+        myAnimator.SetFloat("X", movement.x);
+        myAnimator.SetFloat("Y", movement.y);
 
-        if (playerData.isCovering)
+        if (isCovering)
         {
             myAnimator.SetBool("isRunning", false);
             myAnimator.SetBool("isAttack", false);
@@ -282,52 +305,52 @@ public class PlayerController : MonoBehaviour
     }
     private void RotatePlayer()
     {
-        Vector3 targetDirection = new Vector3(playerData.movement.x, 0, playerData.movement.y).normalized;
+        Vector3 targetDirection = new Vector3(movement.x, 0, movement.y).normalized;
 
         if (targetDirection.magnitude > 0)
         {
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, playerData.rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
     #endregion 
 
     private void CheckGround()
     {
-        playerData.isGrounded = Physics.Raycast(checkGround.transform.position, Vector3.down, playerData.groundDistance, playerData.groundLayer);
+        isGrounded = Physics.Raycast(checkGround.transform.position, Vector3.down, groundDistance, groundLayer);
 
-        if (playerData.isGrounded && !playerData.wasGrounded)
+        if (isGrounded && !wasGrounded)
         {
             myAnimator.SetBool("isJumpNormal", false);
             myAnimator.SetBool("isInGround", true);
-            playerData.canJump = true;
-            playerData.isJumping = false;
+            canJump = true;
+            isJumping = false;
             OnFallingColl?.Invoke();
 
-            if (playerData.isCovering)
+            if (isCovering)
             {
-                playerData.canMove = false;
+                canMove = false;
             }
         }
-        else if (!playerData.isGrounded)
+        else if (!isGrounded)
         {
             myAnimator.SetBool("isInGround", false);
-            playerData.canJump = false;
+            canJump = false;
 
-            if (playerData.isCovering)
+            if (isCovering)
             {
                 OnCovering(false);
             }
         }
-        playerData.wasGrounded = playerData.isGrounded;
+        wasGrounded = isGrounded;
     }
     public void TakeDamage(int damageAmount)
     {
-        if (!playerData.isTakingDamage)
+        if (!isTakingDamage)
         {
-            playerData.isTakingDamage = true;
+            isTakingDamage = true;
             lifeManager.DamageToPlayer(damageAmount);
-            playerData.isTakingDamage = false;
+            isTakingDamage = false;
         }
     }
     public void TriggerEquipEnd()
@@ -353,10 +376,22 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Has recogido la funda del suelo.");
             other.gameObject.SetActive(false);
         }
+        else if (other.CompareTag("GroundSword"))
+        {
+            Debug.Log("Has recogido la espada y escudo");
+            inventoryPlayer.AddWeapon(inventoryPlayer.GetSwordAndShield());
+            OnSwordCollected?.Invoke();
+            inventoryPlayer.ActivateSword();
+            other.gameObject.SetActive(false);
+        }
+        else if (other.CompareTag("Shield"))
+        {
+            other.gameObject.SetActive(false);
+        }
     }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(checkGround.transform.position, Vector3.down * playerData.groundDistance);
+        Gizmos.DrawRay(checkGround.transform.position, Vector3.down * groundDistance);
     }
 }

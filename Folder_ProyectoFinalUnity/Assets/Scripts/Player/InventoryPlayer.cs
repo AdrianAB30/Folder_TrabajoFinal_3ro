@@ -5,13 +5,16 @@ using System;
 
 public class InventoryPlayer : MonoBehaviour
 {
-    private DoubleLinkedList<GameObject> weaponsInventory = new DoubleLinkedList<GameObject>();
+    private DoubleCircularLinkedList<GameObject> weaponsInventory = new DoubleCircularLinkedList<GameObject>();
 
     [Header("Sword and Shield")]
     [SerializeField] private GameObject sword;
     [SerializeField] private GameObject shield;
     [SerializeField] private GameObject swordBack;
     [SerializeField] private GameObject shieldBack;
+    [SerializeField] private GameObject swordGround;
+    [SerializeField] private GameObject shieldGround;
+
     [Header("Bow, Quiver and Arrow")]
     [SerializeField] private GameObject bow;
     [SerializeField] private GameObject bowHand;
@@ -19,7 +22,7 @@ public class InventoryPlayer : MonoBehaviour
     [SerializeField] private GameObject groundBow;
     [SerializeField] private GameObject groundQuiver;
 
-    //Eventos
+    // Eventos
     public static event Action<string> OnWeaponChanged;
 
     public Animator playerAnimator;
@@ -29,16 +32,15 @@ public class InventoryPlayer : MonoBehaviour
 
     private void Start()
     {
-        weaponsInventory.AddEnd(sword);
         currentWeapon = sword;
-        sword.SetActive(true);
-        shield.SetActive(true);
+        sword.SetActive(false);
+        shield.SetActive(false);
         bowHand.SetActive(false);
         bow.SetActive(false);
         quiver.SetActive(false);
         swordBack.SetActive(false);
         shieldBack.SetActive(false);
-        Debug.Log("Capacidad inicial del inventario: " + weaponsInventory.Length);
+        Debug.Log("Capacidad inicial del inventario: " + weaponsInventory.Count);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -51,32 +53,43 @@ public class InventoryPlayer : MonoBehaviour
             groundQuiver.SetActive(false);
             EquipWeapon(bow);
         }
+        else if (other.CompareTag("GroundSword"))
+        {
+            Debug.Log("Has recogido la espada");
+            AddWeapon(sword);
+            swordGround.SetActive(false);
+            shieldGround.SetActive(false);
+        }
     }
+
     public void AddWeapon(GameObject weapon)
     {
-        weaponsInventory.AddEnd(weapon);
+        weaponsInventory.InsertAtEnd(weapon);
         Debug.Log("Arma añadida al inventario: " + weapon.name);
-        Debug.Log("Capacidad actual del inventario: " + weaponsInventory.Length);
+        Debug.Log("Capacidad actual del inventario: " + weaponsInventory.Count);
     }
+
     public void OnSwitchWeaponPrevious(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            currentWeaponIndex = (currentWeaponIndex - 1 + weaponsInventory.Length) % weaponsInventory.Length;
-            EquipWeapon(weaponsInventory.GetAt(currentWeaponIndex));
+            currentWeaponIndex = (currentWeaponIndex - 1 + weaponsInventory.Count) % weaponsInventory.Count;
+            EquipWeapon(weaponsInventory.GetAtPosition(currentWeaponIndex));
         }
     }
+
     public void OnSwitchWeaponNext(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            currentWeaponIndex = (currentWeaponIndex + 1) % weaponsInventory.Length;
-            EquipWeapon(weaponsInventory.GetAt(currentWeaponIndex));
+            currentWeaponIndex = (currentWeaponIndex + 1) % weaponsInventory.Count;
+            EquipWeapon(weaponsInventory.GetAtPosition(currentWeaponIndex));
         }
     }
+
     private void EquipWeapon(GameObject newWeapon)
     {
-        if (isEquipping) return; 
+        if (isEquipping) return;
         isEquipping = true;
 
         playerAnimator.SetBool("isEquipping", true);
@@ -91,9 +104,9 @@ public class InventoryPlayer : MonoBehaviour
 
         if (currentWeapon == sword)
         {
-            shield.SetActive(true); 
-            sword.SetActive(true);   
-            bow.SetActive(true);  
+            shield.SetActive(true);
+            sword.SetActive(true);
+            bow.SetActive(true);
             quiver.SetActive(true);
             swordBack.SetActive(false);
             shieldBack.SetActive(false);
@@ -101,8 +114,8 @@ public class InventoryPlayer : MonoBehaviour
         }
         else if (currentWeapon == bow)
         {
-            shield.SetActive(false);  
-            sword.SetActive(false);    
+            shield.SetActive(false);
+            sword.SetActive(false);
             bow.SetActive(false);
             bowHand.SetActive(true);
             quiver.SetActive(true);
@@ -114,22 +127,38 @@ public class InventoryPlayer : MonoBehaviour
 
         Debug.Log("Se ha equipado: " + currentWeapon.name);
     }
-    public void OnEquipAnimationEnd() 
+
+    public void OnEquipAnimationEnd()
     {
         playerAnimator.SetBool("isEquipping", false);
         isEquipping = false;
     }
+
     public void ActivateBow()
     {
         if (bow != null)
         {
-            bow.SetActive(true); 
-            currentWeapon = bow; 
+            bow.SetActive(true);
+            currentWeapon = bow;
         }
     }
+    public void ActivateSword()
+    {
+        if (sword && shield != null)
+        {
+            sword.SetActive(true);
+            shield.SetActive(true);
+            currentWeapon = sword;
+        }
+    }
+
     public GameObject GetBow()
     {
-        return bow; 
+        return bow;
+    }
+    public GameObject GetSwordAndShield()
+    {
+        return sword;
     }
     public void ActivateQuiver()
     {
