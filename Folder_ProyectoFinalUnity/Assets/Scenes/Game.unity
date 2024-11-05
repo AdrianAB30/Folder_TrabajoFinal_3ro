@@ -8927,7 +8927,7 @@ MonoBehaviour:
   particleClass: {fileID: 1087493539}
   uiManager: {fileID: 1014093993}
   sfxSounds: {fileID: 11400000, guid: 00678904c8ffcf549a615a192d5214a7, type: 2}
-  herrera: {fileID: 0}
+  inputHandler: {fileID: 1381119525}
   canJump: 1
   canMove: 1
   isAttacking: 0
@@ -9148,22 +9148,6 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: a883bcef-4529-4463-9fcd-4322a3f4ab0a
     m_ActionName: Gameplay/PreviousWeapon[/Keyboard/1]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1381119525}
-        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
-        m_MethodName: HandleInteract
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 526ecea6-cf3d-4205-8fe0-d2b85de30a7b
-    m_ActionName: Gameplay/Interact[/Keyboard/f]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -9292,17 +9276,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1252500966}
-  m_LocalRotation: {x: -0, y: -0.9999792, z: -0, w: 0.006456197}
-  m_LocalPosition: {x: 0, y: 0, z: 0.11}
+  m_LocalRotation: {x: -0, y: -0.9980471, z: -0, w: 0.062466048}
+  m_LocalPosition: {x: 0, y: 0, z: 0.10999765}
   m_LocalScale: {x: 0.019594327, y: 0.019594327, z: 0.019594327}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 389950399}
   m_Father: {fileID: 1123913921}
-  m_LocalEulerAnglesHint: {x: 0, y: -179.26, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -172.837, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.080002, y: 7.73}
+  m_AnchoredPosition: {x: -0.08000552, y: 7.730004}
   m_SizeDelta: {x: 526, y: 296}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1252500968
@@ -9667,6 +9651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cc94cde4d4233a469dd683bd6c98003, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canHandleInput: 1
 --- !u!4 &1381119526
 Transform:
   m_ObjectHideFlags: 0
@@ -12024,7 +12009,7 @@ PrefabInstance:
     - target: {fileID: 6222959481195702107, guid: 671441632072eea429a8025b96f30886,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 17.84
+      value: 18.14
       objectReference: {fileID: 0}
     - target: {fileID: 6222959481195702107, guid: 671441632072eea429a8025b96f30886,
         type: 3}
@@ -12625,12 +12610,12 @@ PrefabInstance:
     - target: {fileID: 553348688638216881, guid: 13d6114a74a57a747b4892271333d36a,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 15.014795
+      value: 15.848117
       objectReference: {fileID: 0}
     - target: {fileID: 553348688638216881, guid: 13d6114a74a57a747b4892271333d36a,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 11.771825
+      value: 23.189318
       objectReference: {fileID: 0}
     - target: {fileID: 553348688638216881, guid: 13d6114a74a57a747b4892271333d36a,
         type: 3}
@@ -12645,7 +12630,7 @@ PrefabInstance:
     - target: {fileID: 553348688638216881, guid: 13d6114a74a57a747b4892271333d36a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -254.2
+      value: -194.9
       objectReference: {fileID: 0}
     - target: {fileID: 553348688638216881, guid: 13d6114a74a57a747b4892271333d36a,
         type: 3}

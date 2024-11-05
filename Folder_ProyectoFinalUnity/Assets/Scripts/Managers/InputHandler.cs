@@ -7,13 +7,17 @@ public class InputHandler : MonoBehaviour
 {
     public static event Action<Vector2> OnMovementInput;
     public static event Action OnJumpInput;
-    public static event Action OnAttackInput;
+    public static event Action<bool> OnAttackInput;
     public static event Action<bool> OnRunningInput;
     public static event Action<bool> OnCoverInput;
     public static event Action<bool> OnRollingInput;
-   
+
+    public bool canHandleInput = true;
+
     public void HandleMovement(InputAction.CallbackContext context)
     {
+        if (!canHandleInput) return;
+
         if (context.performed)
         {
             Debug.Log("Moviendose");
@@ -28,6 +32,8 @@ public class InputHandler : MonoBehaviour
     }
     public void HandleJump(InputAction.CallbackContext context)
     {
+        if (!canHandleInput) return;
+
         if (context.performed)
         {
             Debug.Log("Saltando");
@@ -36,10 +42,14 @@ public class InputHandler : MonoBehaviour
     }
     public void HandleAttack(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             Debug.Log("Atacando");
-            OnAttackInput?.Invoke();
+            OnAttackInput?.Invoke(true);
+        }
+        else if (context.canceled)
+        {
+            OnAttackInput?.Invoke(false);
         }
     }
     public void HandleRunning(InputAction.CallbackContext context)

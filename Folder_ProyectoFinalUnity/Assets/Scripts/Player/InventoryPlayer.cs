@@ -32,7 +32,12 @@ public class InventoryPlayer : MonoBehaviour
 
     private void Start()
     {
-        currentWeapon = sword;
+        ResetWeapons();
+        Debug.Log("Capacidad inicial del inventario: " + weaponsInventory.Count);
+    }
+
+    private void ResetWeapons()
+    {
         sword.SetActive(false);
         shield.SetActive(false);
         bowHand.SetActive(false);
@@ -40,26 +45,6 @@ public class InventoryPlayer : MonoBehaviour
         quiver.SetActive(false);
         swordBack.SetActive(false);
         shieldBack.SetActive(false);
-        Debug.Log("Capacidad inicial del inventario: " + weaponsInventory.Count);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("GroundBow"))
-        {
-            Debug.Log("Has recogido el arco del suelo.");
-            AddWeapon(bow);
-            groundBow.SetActive(false);
-            groundQuiver.SetActive(false);
-            EquipWeapon(bow);
-        }
-        else if (other.CompareTag("GroundSword"))
-        {
-            Debug.Log("Has recogido la espada");
-            AddWeapon(sword);
-            swordGround.SetActive(false);
-            shieldGround.SetActive(false);
-        }
     }
 
     public void AddWeapon(GameObject weapon)
@@ -71,7 +56,7 @@ public class InventoryPlayer : MonoBehaviour
 
     public void OnSwitchWeaponPrevious(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && weaponsInventory.Count > 0)
         {
             currentWeaponIndex = (currentWeaponIndex - 1 + weaponsInventory.Count) % weaponsInventory.Count;
             EquipWeapon(weaponsInventory.GetAtPosition(currentWeaponIndex));
@@ -80,7 +65,7 @@ public class InventoryPlayer : MonoBehaviour
 
     public void OnSwitchWeaponNext(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && weaponsInventory.Count > 0)
         {
             currentWeaponIndex = (currentWeaponIndex + 1) % weaponsInventory.Count;
             EquipWeapon(weaponsInventory.GetAtPosition(currentWeaponIndex));
@@ -89,7 +74,10 @@ public class InventoryPlayer : MonoBehaviour
 
     private void EquipWeapon(GameObject newWeapon)
     {
-        if (isEquipping) return;
+        if (isEquipping)
+        {
+            return;
+        }
         isEquipping = true;
 
         playerAnimator.SetBool("isEquipping", true);

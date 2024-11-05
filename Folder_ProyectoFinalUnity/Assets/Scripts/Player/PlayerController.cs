@@ -1,7 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -25,9 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Particle_Class particleClass;
     [SerializeField] private UIManager uiManager;
     [SerializeField] private SfxSounds sfxSounds;
-
-    [Header("References NPCS")]
-    [SerializeField] private HerreraController herrera;
+    [SerializeField] private InputHandler inputHandler;
 
     [Header("Player Components")]
     private Rigidbody myRBD;
@@ -88,9 +86,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-        myAnimator.SetBool("isJumpNormal", false);
-        myAnimator.SetBool("isInGround", true);
-        myAnimator.SetBool("isRunning", false);
+        StartCoroutine(StandCooldown());
     }
     private void Update()
     {
@@ -160,15 +156,25 @@ public class PlayerController : MonoBehaviour
             IsFalling();
         }
     }
-    private void OnAttack()
+    private void OnAttack(bool isPlayerAttack)
     {
-        if (!isAttacking && !isJumping && movement.magnitude == 0 && !isCovering && isGrounded)
+        if (isPlayerAttack)
         {
-            isAttacking = true;
-            canJump = false;
-            isAttacking = true;
-            StartCoroutine(AttackCooldown());
-            myAnimator.SetBool("isAttack", true);
+            if (!isAttacking && !isJumping && movement.magnitude == 0 && !isCovering && isGrounded)
+            {
+
+                isAttacking = true;
+                canJump = false;
+                canMove = false;
+                myAnimator.SetBool("isAttack", true);
+            }
+        }
+        else
+        {
+            isAttacking = false;
+            myAnimator.SetBool("isAttack", false);
+            canJump = true;
+            canMove = true;
         }
     }
     private void OnCovering(bool isCoveringPlayer)
@@ -210,7 +216,7 @@ public class PlayerController : MonoBehaviour
             {
                 playerData.walkspeed = originalSpeed;
                 myAnimator.SetBool("isRunning", false);
-                canJump = true; 
+                canJump = true;
             }
         }
         else
@@ -256,23 +262,6 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region CORRUTINAS
-
-    private IEnumerator AttackCooldown()
-    {
-        myAnimator.SetBool("isJumpNormal", false);
-        myAnimator.SetBool("isInGround", true);
-        myAnimator.SetBool("isRunning", false);
-        canMove = false;
-
-        yield return new WaitForSeconds(playerData.attackCooldown);
-
-        isAttacking = false;
-        canMove = true;
-        playerData.walkspeed = originalSpeed;
-        myAnimator.SetBool("isAttack", false);
-        isAttacking = false;
-        canJump = true;
-    }
     private IEnumerator Rolling()
     {
         myCollider.center = new Vector3(0.025f, 1.15f, 0.7f);
@@ -294,6 +283,19 @@ public class PlayerController : MonoBehaviour
         canJump = true;
 
         movement = Vector2.zero;
+    }
+    private IEnumerator StandCooldown()
+    {
+        inputHandler.canHandleInput = false;
+        yield return new WaitForSeconds(3f);
+        myAnimator.SetBool("isStand", true);
+        inputHandler.canHandleInput = false;
+        canMove = false;
+        canJump = false;
+        yield return new WaitForSeconds(playerData.standCooldown);
+        inputHandler.canHandleInput = true;
+        canMove = true;
+        canJump = true;
     }
     #endregion
 
@@ -378,7 +380,7 @@ public class PlayerController : MonoBehaviour
             inventoryPlayer.ActivateQuiver();
             other.gameObject.SetActive(false);
         }
-        else if (other.CompareTag("GroundQuiver")) 
+        else if (other.CompareTag("GroundQuiver"))
         {
             Debug.Log("Has recogido la funda del suelo.");
             other.gameObject.SetActive(false);
