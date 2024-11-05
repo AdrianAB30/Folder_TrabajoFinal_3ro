@@ -6,14 +6,19 @@ public abstract class PatrolBehaviour : MonoBehaviour
 {
     protected SimpleLinkedList<GameObject> nodesRoutes;
     [SerializeField] protected int currentPatrolIndex;
-    [SerializeField] protected float speedPatrol;
+    [SerializeField] protected NPCData npcData;
+    private Rigidbody myRBD;
 
+    protected virtual void Awake()
+    {
+        myRBD = GetComponent<Rigidbody>();
+    }
     protected virtual void Start()
     {
         currentPatrolIndex = 0;
     }
 
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
         if (nodesRoutes != null && nodesRoutes.Length > 0)
         {
@@ -30,7 +35,20 @@ public abstract class PatrolBehaviour : MonoBehaviour
 
     protected void MoveTowards(Vector3 targetPosition)
     {
-        Vector3 direction = (targetPosition - transform.position).normalized;
-        transform.position += direction * speedPatrol * Time.deltaTime;
+        if (myRBD != null)
+        {
+            float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+
+            if (distanceToTarget > npcData.distanceToNodeNPC)
+            {
+                Vector3 direction = (targetPosition - transform.position).normalized;
+                myRBD.AddForce(direction * npcData.movementForce * Time.deltaTime, ForceMode.Force);
+            }
+            else
+            {
+                myRBD.velocity = Vector3.zero;
+            }
+        }
     }
+
 }

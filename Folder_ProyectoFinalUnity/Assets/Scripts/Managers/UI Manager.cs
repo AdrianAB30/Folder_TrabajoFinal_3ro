@@ -1,7 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -20,20 +20,39 @@ public class UIManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private LifeManager lifeManager;
+    [SerializeField] private NPCData npcData;
+
+    [Header("Npc UI")]
+    [SerializeField] private GameObject dialogueHerreraPanel;
+    [SerializeField] private TMP_Text textHerrera;
+    [SerializeField] private float typingTime;
+    [SerializeField] private GameObject dialogueHenryPanel;
+    [SerializeField] private TMP_Text textHenry;
+    private bool isTyping;
+    private int dialogueLinesHerrera;
+
 
     private void Start()
+    {
+        ResetWeaponUI();
+    }
+
+    private void ResetWeaponUI()
     {
         bowUI.gameObject.SetActive(false);
         swordUI.gameObject.SetActive(false);
         swordBorder.gameObject.SetActive(false);
         bowBorder.gameObject.SetActive(false);
     }
+
     private void OnEnable()
     {
         lifeManager.OnPlayerDamage += UpdateLifeBar;
         InventoryPlayer.OnWeaponChanged += UpdateWeaponBorder;
         PlayerController.OnBowCollected += ActivateBowUI;
         PlayerController.OnSwordCollected += ActivateSwordUI;
+        HerreraController.OnPlayerEnter += ShowDialogueNpc;
+        HenryController.OnPlayerEnter += ShowDialogueNpc;
     }
 
     private void OnDisable()
@@ -42,6 +61,8 @@ public class UIManager : MonoBehaviour
         InventoryPlayer.OnWeaponChanged -= UpdateWeaponBorder;
         PlayerController.OnBowCollected -= ActivateBowUI;
         PlayerController.OnSwordCollected -= ActivateSwordUI;
+        HerreraController.OnPlayerEnter -= ShowDialogueNpc;
+        HenryController.OnPlayerEnter -= ShowDialogueNpc;
     }
     private void ActivateBowUI()
     {
@@ -108,5 +129,15 @@ public class UIManager : MonoBehaviour
         }
         image.fillAmount = 0;
     }
-
+    private void ShowDialogueNpc(bool isPlayerRange, string npcName)
+    {
+        if (npcName == "Herrera")
+        {
+            dialogueHerreraPanel.SetActive(isPlayerRange);
+        }
+        else if (npcName == "Henry")
+        {
+            dialogueHenryPanel.SetActive(isPlayerRange);
+        }
+    }
 }

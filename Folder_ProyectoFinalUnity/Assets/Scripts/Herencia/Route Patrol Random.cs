@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class RoutePatrolRandom : PatrolBehaviour
 {
-    public float waitTime;
     private bool isWaiting = false; 
-    private Animator npcAnimator;
+    public Animator npcRandomAnimator;
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
-        npcAnimator = GetComponent<Animator>();
+        base.Awake();
+        npcRandomAnimator = GetComponent<Animator>();
     }
     protected override void Start()
     {
+        StartCoroutine(WaitAtNode());
         base.Start();
     }
     protected override void Patrol()
@@ -27,13 +28,13 @@ public class RoutePatrolRandom : PatrolBehaviour
         MoveTowards(currentNode.transform.position);
         LookAtNode(currentNode);
 
-        if (Vector3.Distance(transform.position, currentNode.transform.position) > 0.1f)
+        if (Vector3.Distance(transform.position, currentNode.transform.position) > npcData.distanceToNodeNPC)
         {
-            npcAnimator.SetBool("isWalking", true);
+            npcRandomAnimator.SetBool("isWalkingRandom", true);
         }
         else
         {
-            npcAnimator.SetBool("isWalking", false);
+            npcRandomAnimator.SetBool("isWalkingRandom", false);
             StartCoroutine(WaitAtNode()); 
         }
     }
@@ -43,14 +44,14 @@ public class RoutePatrolRandom : PatrolBehaviour
         if (direction != Vector3.zero)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * npcData.rotateNpc);
         }
     }
     private IEnumerator WaitAtNode()
     {
-        isWaiting = true; 
-        npcAnimator.SetBool("isWalking", false); 
-        yield return new WaitForSeconds(waitTime); 
+        isWaiting = true;
+        npcRandomAnimator.SetBool("isWalkingRandom", false); 
+        yield return new WaitForSeconds(npcData.watingTime); 
 
         currentPatrolIndex = Random.Range(0, nodesRoutes.Length);
         isWaiting = false;

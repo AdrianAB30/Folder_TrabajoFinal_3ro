@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Nodes : MonoBehaviour
+public class Nodes 
 {
     public GameObject Node { get; private set; }
     private SimpleLinkedList<Nodes> neighbors;

@@ -12,7 +12,6 @@ public class InputHandler : MonoBehaviour
     public static event Action<bool> OnCoverInput;
     public static event Action<bool> OnRollingInput;
    
-
     public void HandleMovement(InputAction.CallbackContext context)
     {
         if (context.performed)

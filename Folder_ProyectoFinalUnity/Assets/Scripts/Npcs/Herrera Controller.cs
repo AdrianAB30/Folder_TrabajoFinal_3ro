@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using TMPro;
+using System;
 
 public class HerreraController : RoutePatrolDefined
 {
@@ -10,15 +12,38 @@ public class HerreraController : RoutePatrolDefined
     [SerializeField] private GameObject node3;
     [SerializeField] private GameObject node4;
 
+    [Header("NPC Dialogue")]
+    [SerializeField] private GameObject dialogueMark;
+
+    public Transform playerTransform;
+    private bool playerInRange;
+    private float originalForce;
+    private float originalRotate;
+
+    //Eventos
+    public static event Action<bool,string> OnPlayerEnter;
+
     protected override void Awake()
     {
         base.Awake();
     }
-
     protected override void Start()
     {
         base.Start();
         SetNodesPatrol();
+        originalForce = npcData.movementForce;
+        originalRotate = npcData.rotateNpc;
+    }
+    private void Update()
+    {
+        if (playerInRange)
+        {
+            RotateNpcToPlayer();
+        }
+        else
+        {
+            npcData.rotateNpc = originalRotate;
+        }
     }
     private void SetNodesPatrol()
     {
@@ -55,6 +80,40 @@ public class HerreraController : RoutePatrolDefined
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(node3.transform.position, node4.transform.position);
+        }
+    }
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            dialogueMark.SetActive(false);
+            npcAnimator.SetBool("isInteract", true);
+            OnPlayerEnter?.Invoke(true,"Herrera");
+            npcData.movementForce = 0f;
+            playerInRange = true;
+        }
+    }
+    private void OnTriggerExit(Collider collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            npcAnimator.SetBool("isInteract",false);
+            OnPlayerEnter?.Invoke(false,"Herrera");
+            npcData.movementForce = originalForce;
+            playerInRange = false;
+        }
+    }
+    private void RotateNpcToPlayer()
+    {
+        if (playerTransform != null) 
+        {
+            npcData.rotateNpc = 0f;
+            Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
+            if (directionToPlayer != Vector3.zero) 
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+            }
         }
     }
 }

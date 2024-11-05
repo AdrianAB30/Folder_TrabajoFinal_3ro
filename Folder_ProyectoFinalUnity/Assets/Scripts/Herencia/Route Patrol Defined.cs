@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class RoutePatrolDefined : PatrolBehaviour
 {
-    public float waitTime;
     private bool movingForward = true;
     private bool isWaiting = false;
-    private Animator npcAnimator;
+    public Animator npcAnimator;
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         npcAnimator = GetComponent<Animator>(); 
     }
     protected override void Start()
@@ -29,7 +29,7 @@ public class RoutePatrolDefined : PatrolBehaviour
 
         LookAtNode(currentNode);
 
-        if (Vector3.Distance(transform.position, currentNode.transform.position) > 0.1f)
+        if (Vector3.Distance(transform.position, currentNode.transform.position) > npcData.distanceToNodeNPC)
         {
             npcAnimator.SetBool("isWalking", true); 
         }
@@ -43,13 +43,13 @@ public class RoutePatrolDefined : PatrolBehaviour
     {
         Vector3 direction = (node.transform.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)); 
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 3f); 
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * npcData.rotateNpc); 
     }
     private IEnumerator WaitAtNode()
     {
         isWaiting = true;
         npcAnimator.SetBool("isWalking", false);
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(npcData.watingTime);
         isWaiting = false;
         UpdatePatrolIndex(); 
     }

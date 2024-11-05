@@ -24,11 +24,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InventoryPlayer inventoryPlayer;
     [SerializeField] private Particle_Class particleClass;
     [SerializeField] private UIManager uiManager;
+    [SerializeField] private SfxSounds sfxSounds;
+
+    [Header("References NPCS")]
+    [SerializeField] private HerreraController herrera;
 
     [Header("Player Components")]
     private Rigidbody myRBD;
     private BoxCollider myCollider;
     private Animator myAnimator;
+    private AudioSource myAudioSource;
 
     [Header("Player Booleans")]
     [SerializeField] private bool canJump = true;
@@ -79,6 +84,7 @@ public class PlayerController : MonoBehaviour
         myCollider = GetComponent<BoxCollider>();
         myRBD = GetComponent<Rigidbody>();
         myAnimator = GetComponent<Animator>();
+        myAudioSource = GetComponent<AudioSource>();
     }
     private void Start()
     {
@@ -132,7 +138,6 @@ public class PlayerController : MonoBehaviour
         if (canMove && !isRolling)
         {
             movement = movementInput;
-
             if (movement.magnitude == 0)
             {
                 playerData.walkspeed = originalSpeed;
@@ -197,6 +202,7 @@ public class PlayerController : MonoBehaviour
             if (isRunning)
             {
                 playerData.walkspeed = originalSpeed + playerData.speedRunning;
+
                 myAnimator.SetBool("isRunning", true);
                 canJump = false;
             }
@@ -227,6 +233,7 @@ public class PlayerController : MonoBehaviour
                 isAttacking = false;
                 myAnimator.SetBool("isRolling", true);
                 OnStartRollingParticle?.Invoke();
+                myAudioSource.PlayOneShot(sfxSounds.soundSfx[2]);
                 StartCoroutine(Rolling());
             }
         }
