@@ -26,7 +26,7 @@ public abstract class PatrolBehaviour : MonoBehaviour
         }
     }
 
-    public void SetPatrolRoute(SimpleLinkedList<GameObject> patrolNodes)
+    protected virtual void SetPatrolRoute(SimpleLinkedList<GameObject> patrolNodes)
     {
         nodesRoutes = patrolNodes;
         currentPatrolIndex = 0;
