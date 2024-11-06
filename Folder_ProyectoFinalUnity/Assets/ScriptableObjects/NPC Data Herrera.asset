@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: NPC Data Herrera
   m_EditorClassIdentifier: 
   watingTime: 1.2
-  rotateNpc: 1.5
-  distanceToNodeNPC: 0.2
-  movementForce: 850
+  forceRotateNpc: 5

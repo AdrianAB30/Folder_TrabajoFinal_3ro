@@ -31,8 +31,8 @@ public class HenryController : RoutePatrolRandom
     {
         base.Start();
         SetNodesPatrol();
-        originalForce = npcData.movementForce;
-        originalRotate = npcData.rotateNpc;
+        originalForce = movementForce;
+        originalRotate = npcData.forceRotateNpc;
     }
     private void Update()
     {
@@ -42,7 +42,7 @@ public class HenryController : RoutePatrolRandom
         }
         else
         {
-            npcData.rotateNpc = originalRotate;
+            npcData.forceRotateNpc = originalRotate;
         }
     }
     private void SetNodesPatrol()
@@ -90,7 +90,7 @@ public class HenryController : RoutePatrolRandom
             dialogueMark.SetActive(false);
             npcRandomAnimator.SetBool("isInteract", true);
             OnPlayerEnter?.Invoke(true,"Henry");
-            npcData.movementForce = 0f;
+            movementForce = 0f;
             playerInRange = true;
         }
     }
@@ -100,7 +100,7 @@ public class HenryController : RoutePatrolRandom
         {
             npcRandomAnimator.SetBool("isInteract", false);
             OnPlayerEnter?.Invoke(false,"Henry");
-            npcData.movementForce = originalForce;
+            movementForce = originalForce;
             playerInRange = false;
         }
     }
@@ -108,7 +108,7 @@ public class HenryController : RoutePatrolRandom
     {
         if (playerTransform != null)
         {
-            npcData.rotateNpc = 0f;
+            npcData.forceRotateNpc = 0f;
             Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
             if (directionToPlayer != Vector3.zero)
             {

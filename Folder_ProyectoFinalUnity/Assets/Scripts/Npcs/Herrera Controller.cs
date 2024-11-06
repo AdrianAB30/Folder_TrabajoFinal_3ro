@@ -7,10 +7,7 @@ public class HerreraController : RoutePatrolDefined
 {
     [Header("Patrol Data NPC")]
     [SerializeField] private GraphManager graphManager;
-    [SerializeField] private GameObject node1;
-    [SerializeField] private GameObject node2;
-    [SerializeField] private GameObject node3;
-    [SerializeField] private GameObject node4;
+    [SerializeField] private GameObject[] nodes;
 
     [Header("NPC Dialogue")]
     [SerializeField] private GameObject dialogueMark;
@@ -31,8 +28,8 @@ public class HerreraController : RoutePatrolDefined
     {
         base.Start();
         SetNodesPatrol();
-        originalForce = npcData.movementForce;
-        originalRotate = npcData.rotateNpc;
+        originalForce = movementForce;
+        originalRotate = npcData.forceRotateNpc;
     }
     private void Update()
     {
@@ -42,44 +39,44 @@ public class HerreraController : RoutePatrolDefined
         }
         else
         {
-            npcData.rotateNpc = originalRotate;
+            npcData.forceRotateNpc = originalRotate;
         }
     }
     private void SetNodesPatrol()
     {
         SimpleLinkedList<GameObject> patrolPoints = new SimpleLinkedList<GameObject>();
-        patrolPoints.InsertNodeAtEnd(node1);
-        patrolPoints.InsertNodeAtEnd(node2);
-        patrolPoints.InsertNodeAtEnd(node3);
-        patrolPoints.InsertNodeAtEnd(node4);
+        patrolPoints.InsertNodeAtEnd(nodes[0]);
+        patrolPoints.InsertNodeAtEnd(nodes[1]);
+        patrolPoints.InsertNodeAtEnd(nodes[2]);
+        patrolPoints.InsertNodeAtEnd(nodes[3]);
 
-        graphManager.AddNode(node1);
-        graphManager.AddNode(node2);
-        graphManager.AddNode(node3);
-        graphManager.AddNode(node4);
+        graphManager.AddNode(nodes[0]);
+        graphManager.AddNode(nodes[1]);
+        graphManager.AddNode(nodes[2]);
+        graphManager.AddNode(nodes[3]);
 
-        graphManager.AddBidirectionalConnections(node1, node2);
-        graphManager.AddBidirectionalConnections(node2, node3);
-        graphManager.AddBidirectionalConnections(node3, node4);
+        graphManager.AddBidirectionalConnections(nodes[0], nodes[1]);
+        graphManager.AddBidirectionalConnections(nodes[1], nodes[2]);
+        graphManager.AddBidirectionalConnections(nodes[2], nodes[3]);
 
         SetPatrolRoute(patrolPoints);
     }
     private void OnDrawGizmos()
     {
-        if (node1 != null && node2 != null)
+        if (nodes[0] != null && nodes[1] != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(node1.transform.position, node2.transform.position);
+            Gizmos.DrawLine(nodes[0].transform.position, nodes[1].transform.position);
         }
-        if (node2 != null && node3 != null)
+        if (nodes[1] != null && nodes[2] != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(node2.transform.position, node3.transform.position);
+            Gizmos.DrawLine(nodes[1].transform.position, nodes[2].transform.position);
         }
-        if (node3 != null && node4 != null)
+        if (nodes[2] != null && nodes[3] != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(node3.transform.position, node4.transform.position);
+            Gizmos.DrawLine(nodes[2].transform.position, nodes[3].transform.position);
         }
     }
     private void OnTriggerEnter(Collider collision)
@@ -89,7 +86,7 @@ public class HerreraController : RoutePatrolDefined
             dialogueMark.SetActive(false);
             npcAnimator.SetBool("isInteract", true);
             OnPlayerEnter?.Invoke(true,"Herrera");
-            npcData.movementForce = 0f;
+            movementForce = 0f;
             playerInRange = true;
         }
     }
@@ -99,7 +96,7 @@ public class HerreraController : RoutePatrolDefined
         {
             npcAnimator.SetBool("isInteract",false);
             OnPlayerEnter?.Invoke(false,"Herrera");
-            npcData.movementForce = originalForce;
+            movementForce = originalForce;
             playerInRange = false;
         }
     }
@@ -107,7 +104,7 @@ public class HerreraController : RoutePatrolDefined
     {
         if (playerTransform != null) 
         {
-            npcData.rotateNpc = 0f;
+            npcData.forceRotateNpc = 0f;
             Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
             if (directionToPlayer != Vector3.zero) 
             {

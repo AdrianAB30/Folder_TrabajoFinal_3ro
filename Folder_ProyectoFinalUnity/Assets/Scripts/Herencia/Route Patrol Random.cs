@@ -28,7 +28,7 @@ public class RoutePatrolRandom : PatrolBehaviour
         MoveTowards(currentNode.transform.position);
         LookAtNode(currentNode);
 
-        if (Vector3.Distance(transform.position, currentNode.transform.position) > npcData.distanceToNodeNPC)
+        if (Vector3.Distance(transform.position, currentNode.transform.position) > distanceToNode)
         {
             npcRandomAnimator.SetBool("isWalkingRandom", true);
         }
@@ -44,7 +44,7 @@ public class RoutePatrolRandom : PatrolBehaviour
         if (direction != Vector3.zero)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * npcData.rotateNpc);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * npcData.forceRotateNpc);
         }
     }
     private IEnumerator WaitAtNode()

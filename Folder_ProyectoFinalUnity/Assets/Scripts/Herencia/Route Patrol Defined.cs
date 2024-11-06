@@ -29,7 +29,7 @@ public class RoutePatrolDefined : PatrolBehaviour
 
         LookAtNode(currentNode);
 
-        if (Vector3.Distance(transform.position, currentNode.transform.position) > npcData.distanceToNodeNPC)
+        if (Vector3.Distance(transform.position, currentNode.transform.position) > distanceToNode)
         {
             npcAnimator.SetBool("isWalking", true); 
         }
@@ -43,7 +43,7 @@ public class RoutePatrolDefined : PatrolBehaviour
     {
         Vector3 direction = (node.transform.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)); 
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * npcData.rotateNpc); 
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * npcData.forceRotateNpc); 
     }
     private IEnumerator WaitAtNode()
     {

@@ -6,6 +6,8 @@ public abstract class PatrolBehaviour : MonoBehaviour
 {
     protected SimpleLinkedList<GameObject> nodesRoutes;
     [SerializeField] protected int currentPatrolIndex;
+    [SerializeField] protected float distanceToNode;
+    [SerializeField] protected float movementForce;
     [SerializeField] protected NPCData npcData;
     private Rigidbody myRBD;
 
@@ -39,10 +41,10 @@ public abstract class PatrolBehaviour : MonoBehaviour
         {
             float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
 
-            if (distanceToTarget > npcData.distanceToNodeNPC)
+            if (distanceToTarget > distanceToNode)
             {
                 Vector3 direction = (targetPosition - transform.position).normalized;
-                myRBD.AddForce(direction * npcData.movementForce * Time.deltaTime, ForceMode.Force);
+                myRBD.AddForce(direction * movementForce * Time.deltaTime, ForceMode.Force);
             }
             else
             {

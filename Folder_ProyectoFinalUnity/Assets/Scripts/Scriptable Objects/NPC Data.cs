@@ -6,7 +6,5 @@ using UnityEngine;
 public class NPCData : ScriptableObject
 {
     public float watingTime;
-    public float rotateNpc;
-    public float distanceToNodeNPC;
-    public float movementForce = 850f;
+    public float forceRotateNpc;
 }
