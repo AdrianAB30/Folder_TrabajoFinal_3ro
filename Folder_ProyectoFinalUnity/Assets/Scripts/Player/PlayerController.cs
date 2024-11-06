@@ -228,20 +228,19 @@ public class PlayerController : MonoBehaviour
     }
     private void OnRolling(bool isRollingPlayer)
     {
-        isRolling = isRollingPlayer;
-        if (isRollingPlayer)
+        if (isRolling || !isRollingPlayer) return;
+
+        if (isGrounded && isPlayerRunning && movement.magnitude > 0 && !isCovering && !isJumping && !isAttacking)
         {
-            if (isGrounded && isPlayerRunning && movement.magnitude > 0 && !isCovering && !isJumping && !isAttacking)
-            {
-                isRolling = true;
-                canMove = false;
-                canJump = false;
-                isAttacking = false;
-                myAnimator.SetBool("isRolling", true);
-                OnStartRollingParticle?.Invoke();
-                myAudioSource.PlayOneShot(sfxSounds.soundSfx[2]);
-                StartCoroutine(Rolling());
-            }
+            isRolling = true;
+            canMove = false;
+            canJump = false;
+            isAttacking = false;
+            myAnimator.SetBool("isRolling", true);
+            OnStartRollingParticle?.Invoke();
+            myAudioSource.PlayOneShot(sfxSounds.soundSfx[2]);
+
+            StartCoroutine(Rolling());
         }
     }
     private void JumpCollider()

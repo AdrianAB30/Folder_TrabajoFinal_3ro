@@ -19,4 +19,4 @@ MonoBehaviour:
   jumpForce: 10
   attackCooldown: 1.2
   rollImpulse: 10
-  standCooldown: 5
+  standCooldown: 3.6

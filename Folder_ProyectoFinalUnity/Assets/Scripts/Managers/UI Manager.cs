@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
@@ -23,17 +24,22 @@ public class UIManager : MonoBehaviour
     [SerializeField] private NPCData npcData;
 
     [Header("Npc UI")]
-    [SerializeField] private GameObject dialogueHerreraPanel;
-    [SerializeField] private TMP_Text textHerrera;
-    [SerializeField] private float typingTime;
-    [SerializeField] private GameObject dialogueHenryPanel;
-    [SerializeField] private TMP_Text textHenry;
-    private bool isTyping;
-    private int dialogueLinesHerrera;
+    [SerializeField] private RectTransform dialogueHerreraPanel;
+    [SerializeField] private RectTransform dialogueHenryPanel;
 
+
+    [Header("Dotween")]
+    [SerializeField] Ease easeAnimation;
+    [SerializeField] private float duration;
+    [SerializeField] private Vector3 targetHerreraPosition;
+    [SerializeField] private Vector3 targetHenryPosition;
+    private Vector3 originalPositionHerrera;
+    private Vector3 originalPositionHenry; 
 
     private void Start()
     {
+        originalPositionHerrera = dialogueHerreraPanel.anchoredPosition;
+        originalPositionHenry = dialogueHenryPanel.anchoredPosition;
         ResetWeaponUI();
     }
 
@@ -129,15 +135,29 @@ public class UIManager : MonoBehaviour
         }
         image.fillAmount = 0;
     }
-    private void ShowDialogueNpc(bool isPlayerRange, string npcName)
+    private void ShowDialogueNpc(bool isPlayerInRange, string npcName)
     {
         if (npcName == "Herrera")
         {
-            dialogueHerreraPanel.SetActive(isPlayerRange);
+            if (isPlayerInRange)
+            {
+                dialogueHerreraPanel.DOAnchorPos(targetHerreraPosition, duration).SetEase(easeAnimation);
+            }
+            else
+            {
+                dialogueHerreraPanel.DOAnchorPos(originalPositionHerrera, duration).SetEase(easeAnimation);
+            }
         }
         else if (npcName == "Henry")
         {
-            dialogueHenryPanel.SetActive(isPlayerRange);
+            if (isPlayerInRange)
+            {
+                dialogueHenryPanel.DOAnchorPos(targetHenryPosition, duration).SetEase(easeAnimation);
+            }
+            else
+            {
+                dialogueHenryPanel.DOAnchorPos(originalPositionHenry, duration).SetEase(easeAnimation);
+            }
         }
     }
 }
