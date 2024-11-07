@@ -33,9 +33,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Attack",
+                    "name": "Attack Sword",
                     "type": "Button",
                     "id": "d575d417-de3f-42c2-a586-23619b1cdbd7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Attack Bow",
+                    "type": "Button",
+                    "id": "88844087-dd26-49f6-8a8a-4f5a217b3e7a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -251,7 +260,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack",
+                    "action": "Attack Sword",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -262,7 +271,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack",
+                    "action": "Attack Sword",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -373,6 +382,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "PreviousWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "de1f15e7-229a-46ed-8159-8779772e94ea",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack Bow",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

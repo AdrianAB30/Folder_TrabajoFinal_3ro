@@ -3,14 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HenryController : RoutePatrolRandom
+public class HenryController : RoutePatrolDefined
 {
     [Header("Patrol Data NPC")]
     [SerializeField] private GraphManager graphManager;
-    [SerializeField] private GameObject node1;
-    [SerializeField] private GameObject node2;
-    [SerializeField] private GameObject node3;
-    [SerializeField] private GameObject node4;
+    [SerializeField] private GameObject[] nodes;
 
     [Header("NPC Dialogue")]
     [SerializeField] private GameObject dialogueMark;
@@ -48,39 +45,38 @@ public class HenryController : RoutePatrolRandom
     private void SetNodesPatrol()
     {
         SimpleLinkedList<GameObject> patrolPointsRandom = new SimpleLinkedList<GameObject>();
-        patrolPointsRandom.InsertNodeAtEnd(node1);
-        patrolPointsRandom.InsertNodeAtEnd(node2);
-        patrolPointsRandom.InsertNodeAtEnd(node3);
-        patrolPointsRandom.InsertNodeAtEnd(node4);
+        patrolPointsRandom.InsertNodeAtEnd(nodes[0]);
+        patrolPointsRandom.InsertNodeAtEnd(nodes[1]);
+        patrolPointsRandom.InsertNodeAtEnd(nodes[2]);
+        patrolPointsRandom.InsertNodeAtEnd(nodes[3]);
 
-        graphManager.AddNode(node1);
-        graphManager.AddNode(node2);
-        graphManager.AddNode(node3);
-        graphManager.AddNode(node4);
+        graphManager.AddNode(nodes[0]);
+        graphManager.AddNode(nodes[1]);
+        graphManager.AddNode(nodes[2]);
+        graphManager.AddNode(nodes[3]);
 
-        graphManager.AddBidirectionalConnections(node1, node2);
-        graphManager.AddBidirectionalConnections(node2, node3);
-        graphManager.AddBidirectionalConnections(node3, node4);
-        graphManager.AddBidirectionalConnections(node4, node1);
+        graphManager.AddBidirectionalConnections(nodes[0], nodes[1]);
+        graphManager.AddBidirectionalConnections(nodes[1], nodes[2]);
+        graphManager.AddBidirectionalConnections(nodes[2], nodes[3]);
 
         SetPatrolRoute(patrolPointsRandom);
     }
     private void OnDrawGizmos()
     {
-        if (node1 != null && node2 != null)
+        if (nodes[0] != null && nodes[1] != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(node1.transform.position, node2.transform.position);
+            Gizmos.DrawLine(nodes[0].transform.position, nodes[1].transform.position);
         }
-        if (node2 != null && node3 != null)
+        if (nodes[1] != null && nodes[2] != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(node2.transform.position, node3.transform.position);
+            Gizmos.DrawLine(nodes[1].transform.position, nodes[2].transform.position);
         }
-        if (node3 != null && node4 != null)
+        if (nodes[2] != null && nodes[3] != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(node3.transform.position, node4.transform.position);
+            Gizmos.DrawLine(nodes[2].transform.position, nodes[3].transform.position);
         }
     }
     private void OnTriggerEnter(Collider collision)
@@ -88,7 +84,7 @@ public class HenryController : RoutePatrolRandom
         if (collision.gameObject.CompareTag("Player"))
         {
             dialogueMark.SetActive(false);
-            npcRandomAnimator.SetBool("isInteract", true);
+            npcAnimator.SetBool("isInteract", true);
             OnPlayerEnter?.Invoke(true,"Henry");
             movementForce = 0f;
             playerInRange = true;
@@ -98,7 +94,7 @@ public class HenryController : RoutePatrolRandom
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            npcRandomAnimator.SetBool("isInteract", false);
+            npcAnimator.SetBool("isInteract", false);
             OnPlayerEnter?.Invoke(false,"Henry");
             movementForce = originalForce;
             playerInRange = false;

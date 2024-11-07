@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     private Vector2 movement;
     private Vector3 jumpingCenter = new Vector3(0.025f, 2.1f, 0.2f);
     private Vector3 jumpingSize = new Vector3(1.72f, 4f, 1.6f);
-
     private Vector3 fallingCenter = new Vector3(0.025f, 2.7f, 0.2f);
     private Vector3 fallingSize = new Vector3(1.72f, 5f, 1.55f);
 
@@ -36,7 +35,8 @@ public class PlayerController : MonoBehaviour
     [Header("Player Booleans")]
     [SerializeField] private bool canJump = true;
     [SerializeField] private bool canMove = true;
-    [SerializeField] private bool isAttacking = false;
+    [SerializeField] private bool isAttackSword = false;
+    [SerializeField] private bool isAttackBow = false;
     [SerializeField] private bool isCovering = false;
     [SerializeField] private bool isRolling = false;
     [SerializeField] private bool isJumping = false;
@@ -58,24 +58,26 @@ public class PlayerController : MonoBehaviour
         lifeManager.OnPlayerDamage += TakeDamage;
         OnJumpColl += JumpCollider;
         OnFallingColl += FallingCollider;
-        InputHandler.OnMovementInput += OnMovement;
-        InputHandler.OnJumpInput += OnJump;
-        InputHandler.OnAttackInput += OnAttack;
-        InputHandler.OnRunningInput += OnRunning;
-        InputHandler.OnCoverInput += OnCovering;
-        InputHandler.OnRollingInput += OnRolling;
+        inputHandler.OnMovementInput += OnMovement;
+        inputHandler.OnJumpInput += OnJump;
+        inputHandler.OnAttackSwordInput += OnAttackSword;
+        inputHandler.OnAttackBow += OnAttackBow;
+        inputHandler.OnRunningInput += OnRunning;
+        inputHandler.OnCoverInput += OnCovering;
+        inputHandler.OnRollingInput += OnRolling;
     }
     private void OnDisable()
     {
         lifeManager.OnPlayerDamage -= TakeDamage;
         OnJumpColl -= JumpCollider;
         OnFallingColl -= FallingCollider;
-        InputHandler.OnMovementInput -= OnMovement;
-        InputHandler.OnJumpInput -= OnJump;
-        InputHandler.OnAttackInput -= OnAttack;
-        InputHandler.OnRunningInput -= OnRunning;
-        InputHandler.OnCoverInput -= OnCovering;
-        InputHandler.OnRollingInput -= OnRolling;
+        inputHandler.OnMovementInput -= OnMovement;
+        inputHandler.OnJumpInput -= OnJump;
+        inputHandler.OnAttackSwordInput -= OnAttackSword;
+        inputHandler.OnAttackBow -= OnAttackBow;
+        inputHandler.OnRunningInput -= OnRunning;
+        inputHandler.OnCoverInput -= OnCovering;
+        inputHandler.OnRollingInput -= OnRolling;
     }
     private void Awake()
     {
@@ -144,7 +146,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnJump()
     {
-        if (isGrounded && canJump && !isAttacking && !isCovering)
+        if (isGrounded && canJump && !isAttackSword && !isCovering)
         {
             isJumping = true;
             myAnimator.SetBool("isJumpNormal", true);
@@ -156,30 +158,38 @@ public class PlayerController : MonoBehaviour
             IsFalling();
         }
     }
-    private void OnAttack(bool isPlayerAttack)
+    private void OnAttackSword()
     {
-        if (isPlayerAttack)
+        if (!isAttackSword && !isJumping && movement.magnitude == 0 && !isCovering && isGrounded)
         {
-            if (!isAttacking && !isJumping && movement.magnitude == 0 && !isCovering && isGrounded)
+            isAttackSword = true;
+            canJump = false;
+            canMove = false;
+            myAnimator.SetBool("isAttack", true);
+            StartCoroutine(AttackCooldown());
+        }
+    }
+    private void OnAttackBow(bool isPlayerAttacking)
+    {
+        if (isPlayerAttacking)
+        {
+            if (!isAttackBow && !isJumping && movement.magnitude == 0 && !isCovering && isGrounded)
             {
-
-                isAttacking = true;
-                canJump = false;
-                canMove = false;
-                myAnimator.SetBool("isAttack", true);
+                isAttackBow = true;
+                myAnimator.SetBool("isAttackBow",true);
             }
         }
         else
         {
-            isAttacking = false;
-            myAnimator.SetBool("isAttack", false);
+            isAttackBow = false;
+            myAnimator.SetBool("isAttackBow", false);
             canJump = true;
             canMove = true;
         }
     }
     private void OnCovering(bool isCoveringPlayer)
     {
-        if (!isJumping && !isAttacking && !isRolling)
+        if (!isJumping && !isAttackSword && !isRolling)
         {
             isCovering = isCoveringPlayer;
             myAnimator.SetBool("isCovering", isCovering);
@@ -208,7 +218,6 @@ public class PlayerController : MonoBehaviour
             if (isRunning)
             {
                 playerData.walkspeed = originalSpeed + playerData.speedRunning;
-
                 myAnimator.SetBool("isRunning", true);
                 canJump = false;
             }
@@ -226,20 +235,19 @@ public class PlayerController : MonoBehaviour
             canJump = true;
         }
     }
-    private void OnRolling(bool isRollingPlayer)
+    private void OnRolling()
     {
-        if (isRolling || !isRollingPlayer) return;
+        if (isRolling) return;
 
-        if (isGrounded && isPlayerRunning && movement.magnitude > 0 && !isCovering && !isJumping && !isAttacking)
+        if (isGrounded && isPlayerRunning && movement.magnitude > 0 && !isCovering && !isJumping && !isAttackSword)
         {
             isRolling = true;
             canMove = false;
             canJump = false;
-            isAttacking = false;
+            isAttackSword = false;
             myAnimator.SetBool("isRolling", true);
             OnStartRollingParticle?.Invoke();
             myAudioSource.PlayOneShot(sfxSounds.soundSfx[2]);
-
             StartCoroutine(Rolling());
         }
     }
@@ -277,11 +285,24 @@ public class PlayerController : MonoBehaviour
         isRolling = false;
         myAnimator.SetBool("isRolling", false);
         OnEndRollingParticle?.Invoke();
-
         canMove = true;
         canJump = true;
-
         movement = Vector2.zero;
+    }
+    private IEnumerator AttackCooldown()
+    {
+        myAnimator.SetBool("isJumpNormal", false);
+        myAnimator.SetBool("isInGround", true);
+        myAnimator.SetBool("isRunning", false);
+        canMove = false;
+
+        yield return new WaitForSeconds(playerData.attackCooldown);
+
+        isAttackSword = false;
+        canMove = true;
+        playerData.walkspeed = originalSpeed;
+        myAnimator.SetBool("isAttack", false);
+        canJump = true;
     }
     private IEnumerator StandCooldown()
     {
@@ -396,10 +417,5 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
         }
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(checkGround.transform.position, Vector3.down * groundDistance);
     }
 }

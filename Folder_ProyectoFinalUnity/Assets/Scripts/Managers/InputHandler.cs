@@ -5,12 +5,13 @@ using UnityEngine.InputSystem;
 
 public class InputHandler : MonoBehaviour
 {
-    public static event Action<Vector2> OnMovementInput;
-    public static event Action OnJumpInput;
-    public static event Action<bool> OnAttackInput;
-    public static event Action<bool> OnRunningInput;
-    public static event Action<bool> OnCoverInput;
-    public static event Action<bool> OnRollingInput;
+    public event Action<Vector2> OnMovementInput;
+    public event Action OnJumpInput;
+    public event Action OnAttackSwordInput;
+    public event Action OnRollingInput;
+    public event Action<bool> OnAttackBow;
+    public event Action<bool> OnRunningInput;
+    public event Action<bool> OnCoverInput;
 
     public bool canHandleInput = true;
 
@@ -40,21 +41,32 @@ public class InputHandler : MonoBehaviour
             OnJumpInput?.Invoke();
         }
     }
-    public void HandleAttack(InputAction.CallbackContext context)
+    public void HandleAttackSword(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Debug.Log("Atacando con espada");
+            OnAttackSwordInput?.Invoke();
+        }
+
+    }
+    public void HandleAttackBow(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            Debug.Log("Atacando");
-            OnAttackInput?.Invoke(true);
+            Debug.Log("Tensando el Arco");
+            OnAttackBow?.Invoke(true);
         }
         else if (context.canceled)
         {
-            OnAttackInput?.Invoke(false);
+            Debug.Log("Disparando Flecha");
+            OnAttackBow?.Invoke(false); 
         }
     }
+
     public void HandleRunning(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             Debug.Log("Corriendo");
             OnRunningInput?.Invoke(true);
@@ -67,7 +79,7 @@ public class InputHandler : MonoBehaviour
     }
     public void HandleCover(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             Debug.Log("Cubriendose");
             OnCoverInput?.Invoke(true);
@@ -83,12 +95,7 @@ public class InputHandler : MonoBehaviour
         if (context.performed)
         {
             Debug.Log("Rolleando");
-            OnRollingInput?.Invoke(true);
-        }
-        else if (context.canceled)
-        {
-            Debug.Log("Ya no rollea");
-            OnRollingInput?.Invoke(false);
+            OnRollingInput?.Invoke();
         }
     }
 }

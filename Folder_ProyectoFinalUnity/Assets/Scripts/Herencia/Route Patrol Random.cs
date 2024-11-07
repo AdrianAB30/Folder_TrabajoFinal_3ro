@@ -1,16 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RoutePatrolRandom : PatrolBehaviour
 {
     private bool isWaiting = false; 
-    public Animator npcRandomAnimator;
+    public Animator enemyAnimator;
 
     protected override void Awake()
     {
         base.Awake();
-        npcRandomAnimator = GetComponent<Animator>();
+        enemyAnimator = GetComponent<Animator>();
     }
     protected override void Start()
     {
@@ -26,15 +25,15 @@ public class RoutePatrolRandom : PatrolBehaviour
 
         GameObject currentNode = nodesRoutes.GetNodeAtPosition(currentPatrolIndex);
         MoveTowards(currentNode.transform.position);
-        LookAtNode(currentNode);
+        LookAtNode(currentNode);    
 
         if (Vector3.Distance(transform.position, currentNode.transform.position) > distanceToNode)
         {
-            npcRandomAnimator.SetBool("isWalkingRandom", true);
+            enemyAnimator.SetBool("isWalkingRandom", true);
         }
         else
         {
-            npcRandomAnimator.SetBool("isWalkingRandom", false);
+            enemyAnimator.SetBool("isWalkingRandom", false);
             StartCoroutine(WaitAtNode()); 
         }
     }
@@ -44,14 +43,14 @@ public class RoutePatrolRandom : PatrolBehaviour
         if (direction != Vector3.zero)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * npcData.forceRotateNpc);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * enemyData.forceRotateEnemy);
         }
     }
     private IEnumerator WaitAtNode()
     {
         isWaiting = true;
-        npcRandomAnimator.SetBool("isWalkingRandom", false); 
-        yield return new WaitForSeconds(npcData.watingTime); 
+        enemyAnimator.SetBool("isWalkingRandom", false); 
+        yield return new WaitForSeconds(enemyData.watingTime); 
 
         currentPatrolIndex = Random.Range(0, nodesRoutes.Length);
         isWaiting = false;
