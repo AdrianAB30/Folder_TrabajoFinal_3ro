@@ -15,31 +15,33 @@ public class UIManager : MonoBehaviour
     [Header("Stamina and Life Player")]
     [SerializeField] private Image staminaBar1; 
     [SerializeField] private Image staminaBar2;
-    [SerializeField] private Image lifeFill1;
-    [SerializeField] private Image lifeFill2;
-    [SerializeField] private Image lifeFill3;
+    [SerializeField] private Image[] lifeFills;
 
     [Header("References")]
     [SerializeField] private LifeManager lifeManager;
-    [SerializeField] private NPCData npcData;
+    [SerializeField] private NPCData dialoguesHenry;
+    [SerializeField] private NPCData dialoguesHerrera;
 
     [Header("Npc UI")]
-    [SerializeField] private RectTransform dialogueHerreraPanel;
-    [SerializeField] private RectTransform dialogueHenryPanel;
-
+    [SerializeField] private RectTransform[] dialoguePanels;
+    [SerializeField] private TMP_Text[] dialogueTexts; 
+    [SerializeField] private TMP_Text[] npcNameTexts;
+    [SerializeField] private Image[] npcImages;
 
     [Header("Dotween")]
     [SerializeField] Ease easeAnimation;
     [SerializeField] private float duration;
-    [SerializeField] private Vector3 targetHerreraPosition;
-    [SerializeField] private Vector3 targetHenryPosition;
-    private Vector3 originalPositionHerrera;
-    private Vector3 originalPositionHenry; 
+    [SerializeField] private Vector3[] targetPositions;
+    private Vector3[] originalPositions;
 
     private void Start()
     {
-        originalPositionHerrera = dialogueHerreraPanel.anchoredPosition;
-        originalPositionHenry = dialogueHenryPanel.anchoredPosition;
+
+        originalPositions = new Vector3[dialoguePanels.Length];
+        for (int i = 0; i < dialoguePanels.Length; i++)
+        {
+            originalPositions[i] = dialoguePanels[i].anchoredPosition;
+        }
         ResetWeaponUI();
     }
 
@@ -100,25 +102,15 @@ public class UIManager : MonoBehaviour
     }
     private void UpdateLifeBar(int hitsReceived)
     {
-        Image currentFill = null;
-
-        switch (hitsReceived)
+        if (hitsReceived > 0 && hitsReceived <= lifeFills.Length)
         {
-            case 1:
-                currentFill = lifeFill1;
-                break;
-            case 2:
-                currentFill = lifeFill2;
-                break;
-            case 3:
-                currentFill = lifeFill3;
-                Debug.Log("Sin vida");
-                break;
-        }
-
-        if (currentFill != null)
-        {
+            Image currentFill = lifeFills[hitsReceived - 1];
             StartCoroutine(FadeOutLifeBar(currentFill));
+
+            if (hitsReceived == lifeFills.Length)
+            {
+                Debug.Log("Sin vida");
+            }
         }
     }
     private IEnumerator FadeOutLifeBar(Image image)
@@ -137,27 +129,37 @@ public class UIManager : MonoBehaviour
     }
     private void ShowDialogueNpc(bool isPlayerInRange, string npcName)
     {
+        int npcIndex = -1;
+        NPCData dialoguesToShow = null;
+
         if (npcName == "Herrera")
         {
-            if (isPlayerInRange)
-            {
-                dialogueHerreraPanel.DOAnchorPos(targetHerreraPosition, duration).SetEase(easeAnimation);
-            }
-            else
-            {
-                dialogueHerreraPanel.DOAnchorPos(originalPositionHerrera, duration).SetEase(easeAnimation);
-            }
+            npcIndex = 0;
+            dialoguesToShow = dialoguesHerrera;
         }
         else if (npcName == "Henry")
         {
+            npcIndex = 1;
+            dialoguesToShow = dialoguesHenry;
+        }
+
+        if (npcIndex != -1 && dialoguesToShow != null)
+        {
             if (isPlayerInRange)
             {
-                dialogueHenryPanel.DOAnchorPos(targetHenryPosition, duration).SetEase(easeAnimation);
+                DisplayDialogueNPC(npcIndex, dialoguesToShow);
+                dialoguePanels[npcIndex].DOAnchorPos(targetPositions[npcIndex], duration).SetEase(easeAnimation);
             }
             else
             {
-                dialogueHenryPanel.DOAnchorPos(originalPositionHenry, duration).SetEase(easeAnimation);
+                dialoguePanels[npcIndex].DOAnchorPos(originalPositions[npcIndex], duration).SetEase(easeAnimation);
             }
         }
+    }
+    private void DisplayDialogueNPC(int npcIndex, NPCData dialoguesData)
+    {
+        npcNameTexts[npcIndex].text = dialoguesData.nameCharacter;
+        dialogueTexts[npcIndex].text = dialoguesData.dialogue;
+        npcImages[npcIndex].sprite = dialoguesData.imageCharacter;
     }
 }
