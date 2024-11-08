@@ -307,7 +307,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator StandCooldown()
     {
         inputHandler.canHandleInput = false;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         myAnimator.SetBool("isStand", true);
         inputHandler.canHandleInput = false;
         canMove = false;
