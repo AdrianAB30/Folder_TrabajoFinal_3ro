@@ -3,8 +3,10 @@ using UnityEngine;
 
 public class RoutePatrolRandom : PatrolBehaviour
 {
-    private bool isWaiting = false; 
+    private bool isWaiting = false;
     public Animator enemyAnimator;
+    public bool isTakingDamage;
+    public bool isDead;
 
     protected override void Awake()
     {
@@ -18,7 +20,7 @@ public class RoutePatrolRandom : PatrolBehaviour
     }
     protected override void Patrol()
     {
-        if (nodesRoutes.Length == 0 || isWaiting) 
+        if (nodesRoutes.Length == 0 || isWaiting || isTakingDamage || isDead)
         {
             return;
         }

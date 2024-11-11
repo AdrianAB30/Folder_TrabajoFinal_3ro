@@ -395,6 +395,17 @@
                     "action": "Attack Bow",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e4b03845-d55f-4fb3-b29b-28d16a50122c",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack Bow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

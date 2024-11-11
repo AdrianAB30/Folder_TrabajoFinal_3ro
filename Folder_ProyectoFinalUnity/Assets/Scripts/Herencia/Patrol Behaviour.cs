@@ -10,7 +10,7 @@ public abstract class PatrolBehaviour : MonoBehaviour
     [SerializeField] protected float movementForce;
     [SerializeField] protected NPCData npcData;
     [SerializeField] protected EnemyData enemyData;
-    private Rigidbody myRBD;
+    public Rigidbody myRBD;
 
     protected virtual void Awake()
     {

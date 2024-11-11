@@ -9,6 +9,7 @@ TagManager:
   - GroundQuiver
   - GroundSword
   - Shield
+  - Sword
   layers:
   - Default
   - TransparentFX

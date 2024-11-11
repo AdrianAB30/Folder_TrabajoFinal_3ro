@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NPC Herrera
   m_EditorClassIdentifier: 
   watingTime: 1.2
-  forceRotateNpc: 0
+  forceRotateNpc: 5
   nameCharacter: Herrera
   dialogue: SI vas a salir de la aldea no te olvides de equpiarte con tu escudo y
     espada, nadie sabe que puede pasar afuera.

@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
     public static event Action OnEndRollingParticle;
     public static event Action OnBowCollected;
     public static event Action OnSwordCollected;
+    public static event Action<bool> OnAttackBowSpawner;
 
     private void OnEnable()
     {
@@ -88,6 +89,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
+        playerData.Stamina = 100f;
         StartCoroutine(StandCooldown());
     }
     private void Update()
@@ -96,6 +98,7 @@ public class PlayerController : MonoBehaviour
         {
             TakeDamage(1);
         }
+        StaminaLogic();
     }
     private void FixedUpdate()
     {
@@ -138,6 +141,7 @@ public class PlayerController : MonoBehaviour
             movement = movementInput;
             if (movement.magnitude == 0)
             {
+                IncreaseStamina(Time.deltaTime * 5f);
                 playerData.walkspeed = originalSpeed;
                 myAnimator.SetBool("isRunning", false);
                 myAnimator.SetBool("isAttack", false);
@@ -146,8 +150,9 @@ public class PlayerController : MonoBehaviour
     }
     private void OnJump()
     {
-        if (isGrounded && canJump && !isAttackSword && !isCovering)
+        if (isGrounded && canJump && !isAttackSword && !isCovering && playerData.Stamina > 10 && !isPlayerRunning)
         {
+            DecreaseStamina(5);
             isJumping = true;
             myAnimator.SetBool("isJumpNormal", true);
             myAnimator.SetBool("isInGround", false);
@@ -160,8 +165,9 @@ public class PlayerController : MonoBehaviour
     }
     private void OnAttackSword()
     {
-        if (!isAttackSword && !isJumping && movement.magnitude == 0 && !isCovering && isGrounded)
+        if (!isAttackSword && !isJumping && movement.magnitude == 0 && !isCovering && isGrounded && playerData.Stamina > 10)
         {
+            DecreaseStamina(5);
             isAttackSword = true;
             canJump = false;
             canMove = false;
@@ -177,6 +183,7 @@ public class PlayerController : MonoBehaviour
             {
                 isAttackBow = true;
                 myAnimator.SetBool("isAttackBow",true);
+                OnAttackBowSpawner?.Invoke(false);
             }
         }
         else
@@ -185,6 +192,7 @@ public class PlayerController : MonoBehaviour
             myAnimator.SetBool("isAttackBow", false);
             canJump = true;
             canMove = true;
+            OnAttackBowSpawner?.Invoke(true);
         }
     }
     private void OnCovering(bool isCoveringPlayer)
@@ -196,6 +204,7 @@ public class PlayerController : MonoBehaviour
 
             if (isCovering)
             {
+                IncreaseStamina(Time.deltaTime * 5f);
                 canMove = false;
                 canJump = false;
                 isRolling = false;
@@ -212,24 +221,16 @@ public class PlayerController : MonoBehaviour
     }
     private void OnRunning(bool isRunning)
     {
-        isPlayerRunning = isRunning;
-        if (isGrounded && movement.magnitude > 0)
+        if (playerData.Stamina > 10f && isRunning && isGrounded && movement.magnitude > 0)
         {
-            if (isRunning)
-            {
-                playerData.walkspeed = originalSpeed + playerData.speedRunning;
-                myAnimator.SetBool("isRunning", true);
-                canJump = false;
-            }
-            else
-            {
-                playerData.walkspeed = originalSpeed;
-                myAnimator.SetBool("isRunning", false);
-                canJump = true;
-            }
+            isPlayerRunning = true;
+            playerData.walkspeed = originalSpeed + playerData.speedRunning;
+            myAnimator.SetBool("isRunning", true);
+            canJump = false;
         }
         else
         {
+            isPlayerRunning = false;
             playerData.walkspeed = originalSpeed;
             myAnimator.SetBool("isRunning", false);
             canJump = true;
@@ -239,8 +240,9 @@ public class PlayerController : MonoBehaviour
     {
         if (isRolling) return;
 
-        if (isGrounded && isPlayerRunning && movement.magnitude > 0 && !isCovering && !isJumping && !isAttackSword)
+        if (isGrounded && isPlayerRunning && movement.magnitude > 0 && !isCovering && !isJumping && !isAttackSword && playerData.Stamina > 10)
         {
+            DecreaseStamina(5);
             isRolling = true;
             canMove = false;
             canJump = false;
@@ -294,6 +296,7 @@ public class PlayerController : MonoBehaviour
         myAnimator.SetBool("isJumpNormal", false);
         myAnimator.SetBool("isInGround", true);
         myAnimator.SetBool("isRunning", false);
+        isAttackSword = true;
         canMove = false;
 
         yield return new WaitForSeconds(playerData.attackCooldown);
@@ -417,5 +420,37 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
         }
+    }
+    private void IncreaseStamina(float amount)
+    {
+        playerData.Stamina = Mathf.Min(playerData.Stamina + amount, 100);
+        uiManager.UpdateStaminaBar();
+    }
+    private void DecreaseStamina(float amount)
+    {
+        playerData.Stamina = Mathf.Max(playerData.Stamina - amount, 0);
+        uiManager.UpdateStaminaBar();
+    }
+    private void StaminaLogic()
+    {
+        if (isPlayerRunning && playerData.Stamina > 0)
+        {
+            DecreaseStamina(Time.deltaTime * 8f);
+        }
+        else if (movement.magnitude == 0 || (movement.magnitude > 0 && !isPlayerRunning))
+        {
+            IncreaseStamina(Time.deltaTime * 3f);
+        }
+        else if (playerData.Stamina <= 0)
+        {
+            isPlayerRunning = false;
+            playerData.walkspeed = originalSpeed;
+            myAnimator.SetBool("isRunning", false);
+            canJump = true;
+        }
+    }
+    public void ChangeState(string newState)
+    {
+        Debug.Log("Cambiando al estado: " + newState);
     }
 }

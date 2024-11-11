@@ -22,6 +22,7 @@ public class InventoryPlayer : MonoBehaviour
     [SerializeField] private GameObject groundBow;
     [SerializeField] private GameObject groundQuiver;
 
+    [SerializeField] private PlayerController playerController;
     // Eventos
     public static event Action<string> OnWeaponChanged;
 
@@ -52,6 +53,11 @@ public class InventoryPlayer : MonoBehaviour
         weaponsInventory.InsertAtEnd(weapon);
         Debug.Log("Arma añadida al inventario: " + weapon.name);
         Debug.Log("Capacidad actual del inventario: " + weaponsInventory.Count);
+         if (weapon == sword)
+         {
+             playerController.ChangeState("SwordState"); 
+             EquipWeapon(sword);
+         }
     }
 
     public void OnSwitchWeaponPrevious(InputAction.CallbackContext context)

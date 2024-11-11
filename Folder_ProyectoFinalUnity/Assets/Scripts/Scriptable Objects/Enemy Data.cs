@@ -6,5 +6,13 @@ public class EnemyData : ScriptableObject
 {
     public float watingTime;
     public float forceRotateEnemy;
-    public float maxLife;
+    public int maxLife;
+    public int damage;
+    public int pushingForceHit;
+    public Vector3 directionPushing;
+
+    public int GetMaxLife()
+    {
+        return maxLife;
+    }
 }

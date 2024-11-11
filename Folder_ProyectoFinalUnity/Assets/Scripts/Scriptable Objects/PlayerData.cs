@@ -14,4 +14,5 @@ public class PlayerData : ScriptableObject
     public float attackCooldown;
     public float rollImpulse;
     public float standCooldown;
+    public float Stamina;
 }

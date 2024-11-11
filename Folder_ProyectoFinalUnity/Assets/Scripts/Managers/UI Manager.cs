@@ -13,14 +13,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject swordUI;
 
     [Header("Stamina and Life Player")]
-    [SerializeField] private Image staminaBar1; 
-    [SerializeField] private Image staminaBar2;
+    [SerializeField] private Image[] staminaFills; 
     [SerializeField] private Image[] lifeFills;
 
     [Header("References")]
     [SerializeField] private LifeManager lifeManager;
     [SerializeField] private NPCData dialoguesHenry;
     [SerializeField] private NPCData dialoguesHerrera;
+    [SerializeField] private PlayerData dataPlayer;
 
     [Header("Npc UI")]
     [SerializeField] private RectTransform[] dialoguePanels;
@@ -33,7 +33,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float duration;
     [SerializeField] private Vector3[] targetPositions;
     private Vector3[] originalPositions;
-
     private void Start()
     {
 
@@ -100,7 +99,7 @@ public class UIManager : MonoBehaviour
                 break;
         }
     }
-    private void UpdateLifeBar(int hitsReceived)
+    public void UpdateLifeBar(int hitsReceived)
     {
         if (hitsReceived > 0 && hitsReceived <= lifeFills.Length)
         {
@@ -110,6 +109,33 @@ public class UIManager : MonoBehaviour
             if (hitsReceived == lifeFills.Length)
             {
                 Debug.Log("Sin vida");
+            }
+        }
+    }
+    public void UpdateStaminaBar()
+    {
+        if (staminaFills != null && dataPlayer != null)
+        {
+            float maxStaminaPerBar = 50f;
+            float currentStamina = dataPlayer.Stamina;
+
+            if (currentStamina > maxStaminaPerBar)
+            {
+                staminaFills[1].fillAmount = 1f;
+            }
+            else
+            {
+                staminaFills[1].fillAmount = currentStamina / maxStaminaPerBar;
+            }
+
+            if (currentStamina > maxStaminaPerBar)
+            {
+                float excessStamina = currentStamina - maxStaminaPerBar;
+                staminaFills[0].fillAmount = excessStamina / maxStaminaPerBar;
+            }
+            else
+            {
+                staminaFills[0].fillAmount = 0f;
             }
         }
     }
