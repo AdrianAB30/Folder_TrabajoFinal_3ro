@@ -10,6 +10,8 @@ TagManager:
   - GroundSword
   - Shield
   - Sword
+  - Arrow
+  - Perder
   layers:
   - Default
   - TransparentFX

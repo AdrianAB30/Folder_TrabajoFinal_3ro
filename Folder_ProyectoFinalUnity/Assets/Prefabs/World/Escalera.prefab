@@ -41,37 +41,37 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 8c1c56cf201fe0e45b889a70774a5fac,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.88345784
+      value: 0.8973761
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8c1c56cf201fe0e45b889a70774a5fac,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.22365107
+      value: -0.15435027
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8c1c56cf201fe0e45b889a70774a5fac,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.39812207
+      value: 0.40539226
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8c1c56cf201fe0e45b889a70774a5fac,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.104791574
+      value: 0.08092793
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8c1c56cf201fe0e45b889a70774a5fac,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -28.595
+      value: -20.038
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8c1c56cf201fe0e45b889a70774a5fac,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 48.399
+      value: 48.406
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8c1c56cf201fe0e45b889a70774a5fac,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0.462
+      value: 1.226
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8c1c56cf201fe0e45b889a70774a5fac,
         type: 3}
@@ -117,5 +117,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.4999998, y: 4.9999995, z: 0.5000001}
-  m_Center: {x: 4.440892e-16, y: 2.4999998, z: 0.00000000745058}
+  m_Size: {x: 2.4999998, y: 4.9999986, z: 1.0180845}
+  m_Center: {x: 0.000015795473, y: 2.5000007, z: 0.2590618}

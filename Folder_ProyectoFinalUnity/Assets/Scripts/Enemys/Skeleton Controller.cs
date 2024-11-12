@@ -109,5 +109,10 @@ public class SkeletonController : RoutePatrolRandom
         {
             TakeDamage(20);
         }
+        if (other.gameObject.CompareTag("Arrow"))
+        {
+            TakeDamage(10);
+            Destroy(other.gameObject);
+        }
     }
 }

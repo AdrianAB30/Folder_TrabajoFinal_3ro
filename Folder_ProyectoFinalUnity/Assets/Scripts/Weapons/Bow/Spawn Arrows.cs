@@ -35,7 +35,7 @@ public class SpawnArrows : MonoBehaviour
 
         arrowRb.useGravity = true;
 
-        Vector3 launchDirection = bowTransform.forward + bowTransform.up * 0.2f; // Ajusta el 0.2f según el ángulo deseado
+        Vector3 launchDirection = bowTransform.forward + bowTransform.up * 0.2f; 
 
         arrowRb.AddForce(launchDirection.normalized * launchForce, ForceMode.Impulse);
 

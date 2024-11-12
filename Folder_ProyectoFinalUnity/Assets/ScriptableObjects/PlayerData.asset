@@ -19,5 +19,5 @@ MonoBehaviour:
   jumpForce: 10
   attackCooldown: 1
   rollImpulse: 10
-  standCooldown: 3.5
-  Stamina: 49.153534
+  standCooldown: 3
+  Stamina: 100

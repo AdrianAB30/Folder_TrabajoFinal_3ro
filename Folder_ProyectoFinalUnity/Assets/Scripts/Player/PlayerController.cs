@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private UIManager uiManager;
     [SerializeField] private SfxSounds sfxSounds;
     [SerializeField] private InputHandler inputHandler;
+    [SerializeField] private GameManager gameManager;
 
     [Header("Player Components")]
     private Rigidbody myRBD;
@@ -89,8 +91,9 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-        playerData.Stamina = 100f;
+        myAnimator.SetBool("isStand", true);
         StartCoroutine(StandCooldown());
+        playerData.Stamina = 100f;
     }
     private void Update()
     {
@@ -309,16 +312,13 @@ public class PlayerController : MonoBehaviour
     }
     private IEnumerator StandCooldown()
     {
-        inputHandler.canHandleInput = false;
-        yield return new WaitForSeconds(5f);
-        myAnimator.SetBool("isStand", true);
-        inputHandler.canHandleInput = false;
-        canMove = false;
         canJump = false;
-        yield return new WaitForSeconds(playerData.standCooldown);
+        canMove = false;
+        inputHandler.canHandleInput = false;
+        yield return new WaitForSeconds(3f);
         inputHandler.canHandleInput = true;
-        canMove = true;
         canJump = true;
+        canMove = true;
     }
     #endregion
 
@@ -419,6 +419,10 @@ public class PlayerController : MonoBehaviour
         else if (other.CompareTag("Shield"))
         {
             other.gameObject.SetActive(false);
+        }
+        else if (other.CompareTag("Perder"))
+        {
+            gameManager.LooseGame();
         }
     }
     private void IncreaseStamina(float amount)

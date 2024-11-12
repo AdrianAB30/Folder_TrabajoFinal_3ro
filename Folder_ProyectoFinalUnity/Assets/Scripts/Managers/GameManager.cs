@@ -1,63 +1,69 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;  
-using UnityEngine.UI;  
 using System;
+using UnityEngine.SceneManagement;
+using Cinemachine;
+using DG.Tweening;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
-    [SerializeField] private Image imageFade;
-    [SerializeField] private float fadeDuration;
-    [SerializeField] private float logoDisplayTime;
+    [SerializeField] private RectTransform panelOptions;
+    [SerializeField] private GameObject panel;
+    [SerializeField] private GameObject loosePanel;
+
+    [Header("Dotween")]
+
+    [SerializeField] private Ease myEase;
+    [SerializeField] private float duration;
 
     public event Action OnStartGame;
 
-
-    private void Awake()
+    public void ChangeScene(string sceneName)
     {
-
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this.gameObject); 
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(this);
-        }
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(sceneName);
+        OnStartGame?.Invoke(); 
     }
-    private void Start()
+    public void ShowOptions()
     {
-        StartCoroutine(ShowLogoAndMenu());
+        panel.gameObject.SetActive(true);
+        panelOptions.DOAnchorPos(new Vector3(0, 0, 0), duration).SetEase(myEase);
     }
-
-    private IEnumerator ShowLogoAndMenu()
+    public void ShowOptionsInGame()
     {
-        if (imageFade != null)
-        {
-            imageFade.color = new Color(0, 0, 0, 1);
-
-            yield return StartCoroutine(Fade(1, 0));
-
-            yield return new WaitForSeconds(logoDisplayTime);
-
-            yield return StartCoroutine(Fade(0, 1));
-
-            OnStartGame?.Invoke();
-        }
+        panel.gameObject.SetActive(true);
+        panelOptions.DOAnchorPos(new Vector3(0, 0, 0), duration).SetEase(myEase);
+        StartCoroutine(TimeInGamePause());
     }
-
-    private IEnumerator Fade(float startAlpha, float endAlpha)
+    public void HideOptions()
     {
-        float elapsedTime = 0f;
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float newAlpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / fadeDuration);
-            imageFade.color = new Color(0, 0, 0, newAlpha);
-            yield return null;
-        }
-        imageFade.color = new Color(0, 0, 0, endAlpha);
+        panel.gameObject.SetActive(false);
+        panelOptions.DOAnchorPos(new Vector3(0,950,0), duration).SetEase(myEase);
+    }
+    public void HideOptionsInGame()
+    {
+        panel.gameObject.SetActive(false);
+        panelOptions.DOAnchorPos(new Vector3(0, 950, 0), duration).SetEase(myEase);
+        Time.timeScale = 1;
+    }
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+    public void RestartGame()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene("Game");
+    }
+    IEnumerator TimeInGamePause()
+    {
+        yield return new WaitForSeconds(1f);
+        Time.timeScale = 0;
+    }
+    public void LooseGame()
+    {
+        loosePanel.SetActive(true);
+        Time.timeScale = 0;
     }
 }

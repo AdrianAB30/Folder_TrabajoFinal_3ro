@@ -11,7 +11,14 @@ public class Arrow : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
     }
-
+    private void Start()
+    {
+        ShootArrow();
+    }
+    public void ShootArrow()
+    {
+        rb.AddForce(transform.forward * arrowData.shootForce, ForceMode.VelocityChange);
+    }
     private void Update()
     {
         if (rb.velocity.magnitude > 0.1f)

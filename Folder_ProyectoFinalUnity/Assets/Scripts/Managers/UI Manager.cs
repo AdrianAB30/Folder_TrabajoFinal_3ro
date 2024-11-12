@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using DG.Tweening.Core.Easing;
 
 public class UIManager : MonoBehaviour
 {
@@ -15,9 +16,12 @@ public class UIManager : MonoBehaviour
     [Header("Stamina and Life Player")]
     [SerializeField] private Image[] staminaFills; 
     [SerializeField] private Image[] lifeFills;
+    [SerializeField] private RectTransform lifeBar;
+    [SerializeField] private RectTransform staminaBar;
 
     [Header("References")]
     [SerializeField] private LifeManager lifeManager;
+    [SerializeField] private GameManager gameManager;
     [SerializeField] private NPCData dialoguesHenry;
     [SerializeField] private NPCData dialoguesHerrera;
     [SerializeField] private PlayerData dataPlayer;
@@ -35,6 +39,7 @@ public class UIManager : MonoBehaviour
     private Vector3[] originalPositions;
     private void Start()
     {
+        StartCoroutine(MoveAtributesPlayer());
 
         originalPositions = new Vector3[dialoguePanels.Length];
         for (int i = 0; i < dialoguePanels.Length; i++)
@@ -181,6 +186,12 @@ public class UIManager : MonoBehaviour
                 dialoguePanels[npcIndex].DOAnchorPos(originalPositions[npcIndex], duration).SetEase(easeAnimation);
             }
         }
+    }
+    private IEnumerator MoveAtributesPlayer()
+    {
+        yield return new WaitForSeconds(1f);
+        lifeBar.DOAnchorPos(targetPositions[2], duration).SetEase(Ease.InOutQuad);
+        staminaBar.DOAnchorPos(targetPositions[3], duration).SetEase(Ease.InBounce);
     }
     private void DisplayDialogueNPC(int npcIndex, NPCData dialoguesData)
     {
