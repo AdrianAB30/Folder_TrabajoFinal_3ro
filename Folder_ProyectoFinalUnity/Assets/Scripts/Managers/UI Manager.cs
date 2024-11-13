@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using DG.Tweening.Core.Easing;
+using Cinemachine;
 
 public class UIManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private NPCData dialoguesHenry;
     [SerializeField] private NPCData dialoguesHerrera;
     [SerializeField] private PlayerData dataPlayer;
+    [SerializeField] private PlayerController player;
 
     [Header("Npc UI")]
     [SerializeField] private RectTransform[] dialoguePanels;
@@ -37,6 +39,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float duration;
     [SerializeField] private Vector3[] targetPositions;
     private Vector3[] originalPositions;
+
     private void Start()
     {
         StartCoroutine(MoveAtributesPlayer());
@@ -59,6 +62,7 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
+        player.OnPlayerStand += ShowTutorial;
         lifeManager.OnPlayerDamage += UpdateLifeBar;
         InventoryPlayer.OnWeaponChanged += UpdateWeaponBorder;
         PlayerController.OnBowCollected += ActivateBowUI;
@@ -69,6 +73,7 @@ public class UIManager : MonoBehaviour
 
     private void OnDisable()
     {
+        player.OnPlayerStand -= ShowTutorial;
         lifeManager.OnPlayerDamage -= UpdateLifeBar;
         InventoryPlayer.OnWeaponChanged -= UpdateWeaponBorder;
         PlayerController.OnBowCollected -= ActivateBowUI;
@@ -78,12 +83,20 @@ public class UIManager : MonoBehaviour
     }
     private void ActivateBowUI()
     {
-        bowUI.gameObject.SetActive(true); 
+        bowUI.gameObject.SetActive(true);
+        DOTween.Sequence()
+        .Append(dialoguePanels[4].DOAnchorPos(targetPositions[6], 0.5f).SetEase(Ease.InSine))
+        .AppendInterval(5f)
+        .Append(dialoguePanels[4].DOAnchorPos(originalPositions[4],0.8f).SetEase(Ease.InOutBack));
     }
     private void ActivateSwordUI()
     {
         swordUI.gameObject.SetActive(true);
         swordBorder.gameObject.SetActive(true);
+        DOTween.Sequence()
+        .Append(dialoguePanels[5].DOAnchorPos(targetPositions[7],0.5f).SetEase(Ease.InSine))
+        .AppendInterval(5f)
+        .Append(dialoguePanels[5].DOAnchorPos(originalPositions[5],0.8f).SetEase(Ease.InOutBack));
     }
 
     private void UpdateWeaponBorder(string weaponName)
@@ -189,14 +202,26 @@ public class UIManager : MonoBehaviour
     }
     private IEnumerator MoveAtributesPlayer()
     {
-        yield return new WaitForSeconds(1f);
-        lifeBar.DOAnchorPos(targetPositions[2], duration).SetEase(Ease.InOutQuad);
-        staminaBar.DOAnchorPos(targetPositions[3], duration).SetEase(Ease.InBounce);
+        yield return new WaitForSeconds(3f);
+        lifeBar.DOAnchorPos(targetPositions[2], 0.5f).SetEase(Ease.InOutQuad);
+        staminaBar.DOAnchorPos(targetPositions[3], 0.8f).SetEase(Ease.OutQuad);
     }
     private void DisplayDialogueNPC(int npcIndex, NPCData dialoguesData)
     {
         npcNameTexts[npcIndex].text = dialoguesData.nameCharacter;
         dialogueTexts[npcIndex].text = dialoguesData.dialogue;
         npcImages[npcIndex].sprite = dialoguesData.imageCharacter;
+    }
+    private void ShowTutorial()
+    {
+     DOTween.Sequence()
+    .AppendInterval(0.8f)
+    .Append(dialoguePanels[2].DOAnchorPos(targetPositions[4],0.5f).SetEase(Ease.InSine))
+    .AppendInterval(2f)
+    .Append(dialoguePanels[2].DOAnchorPos(originalPositions[2], 0.8f).SetEase(Ease.InOutBack))
+    .AppendInterval(2f)
+    .Append(dialoguePanels[3].DOAnchorPos(targetPositions[5],0.5f).SetEase(Ease.InSine))
+    .AppendInterval(2f)
+    .Append(dialoguePanels[3].DOAnchorPos(originalPositions[3], 0.8f).SetEase(Ease.InOutBack));
     }
 }

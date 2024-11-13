@@ -13,20 +13,20 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private Slider sfxSlider;
     private float volume;
 
-    public static AudioManager Instance { get; set; }
+    //public static AudioManager Instance { get; set; }
 
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(Instance);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-    }
+    //private void Awake()
+    //{
+    //    if (Instance != null && Instance != this)
+    //    {
+    //        Destroy(Instance);
+    //    }
+    //    else
+    //    {
+    //        Instance = this;
+    //        DontDestroyOnLoad(gameObject);
+    //    }
+    //}
 
     private void Start()
     {

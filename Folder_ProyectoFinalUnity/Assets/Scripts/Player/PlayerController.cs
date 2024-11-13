@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
     public static event Action OnBowCollected;
     public static event Action OnSwordCollected;
     public static event Action<bool> OnAttackBowSpawner;
+    public event Action OnPlayerStand;
 
     private void OnEnable()
     {
@@ -91,7 +92,6 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-        myAnimator.SetBool("isStand", true);
         StartCoroutine(StandCooldown());
         playerData.Stamina = 100f;
     }
@@ -279,9 +279,9 @@ public class PlayerController : MonoBehaviour
         myCollider.center = new Vector3(0.025f, 1.15f, 0.7f);
         myCollider.size = new Vector3(1.72f, 1.8f, 4f);
         Vector3 rollDirection = new Vector3(movement.x, 0, movement.y).normalized;
-        if (rollDirection.magnitude > 0 && !isRolling)
+        if (rollDirection.magnitude > 0 && isRolling)
         {
-            myRBD.AddForce(rollDirection * playerData.rollImpulse, ForceMode.Impulse);
+            myRBD.AddForce(rollDirection * playerData.rollImpulse * Time.deltaTime, ForceMode.Impulse);
         }
 
         yield return new WaitForSeconds(1f);
@@ -314,8 +314,11 @@ public class PlayerController : MonoBehaviour
     {
         canJump = false;
         canMove = false;
-        inputHandler.canHandleInput = false;
         yield return new WaitForSeconds(3f);
+        myAnimator.SetBool("isStand", true);
+        OnPlayerStand?.Invoke();
+        inputHandler.canHandleInput = false;
+        yield return new WaitForSeconds(4f);
         inputHandler.canHandleInput = true;
         canJump = true;
         canMove = true;

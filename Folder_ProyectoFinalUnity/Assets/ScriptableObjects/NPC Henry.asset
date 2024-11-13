@@ -15,6 +15,6 @@ MonoBehaviour:
   watingTime: 1.2
   forceRotateNpc: 5
   nameCharacter: Henry
-  dialogue: He odio que ahi fuera hay muchos esqueletos y ranas mutadas, ten cuidado
+  dialogue: He oido que ahi fuera hay muchos esqueletos y ranas mutadas, ten cuidado
     al salir amigo.
   imageCharacter: {fileID: 21300000, guid: b60b6d68126744f40b14c020c4ae5dee, type: 3}

@@ -15,4 +15,4 @@ MonoBehaviour:
   maxFallRotationX: 95
   maxFallRotationZ: 95
   damage: 10
-  shootForce: 8
+  shootForce: 10

@@ -13,17 +13,36 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject loosePanel;
 
     [Header("Dotween")]
-
     [SerializeField] private Ease myEase;
     [SerializeField] private float duration;
 
+    [Header("Luces")]
+    [SerializeField] private Light bonfireLight;
+    [SerializeField] private float minIntensity;
+    [SerializeField] private float maxIntensity;
+
+
+    [Header("Cinemachine")]
+    [SerializeField] private CinemachineVirtualCamera cameraMenu;
+
     public event Action OnStartGame;
 
+    private void Start()
+    {
+        if (SceneManager.GetActiveScene().name == "Game")
+        {
+            if (cameraMenu != null)
+            {
+                StartCoroutine(ChangeCameraInGame());
+            }
+        }
+        bonfireLight.DOIntensity(maxIntensity, 1f).SetLoops(-1,LoopType.Yoyo).SetEase(Ease.InOutQuart);
+    }
     public void ChangeScene(string sceneName)
     {
         Time.timeScale = 1f;
+        OnStartGame?.Invoke();
         SceneManager.LoadScene(sceneName);
-        OnStartGame?.Invoke(); 
     }
     public void ShowOptions()
     {
@@ -65,5 +84,10 @@ public class GameManager : MonoBehaviour
     {
         loosePanel.SetActive(true);
         Time.timeScale = 0;
+    }
+    private IEnumerator ChangeCameraInGame()
+    {
+        yield return new WaitForSeconds(1f);
+        cameraMenu.Priority = 9;
     }
 }

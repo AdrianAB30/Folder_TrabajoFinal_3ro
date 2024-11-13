@@ -16,8 +16,8 @@ MonoBehaviour:
   life: 3
   speedRunning: 2
   forceFalling: 5
-  jumpForce: 10
+  jumpForce: 5
   attackCooldown: 1
   rollImpulse: 10
   standCooldown: 3
-  Stamina: 100
+  Stamina: 64.80157
