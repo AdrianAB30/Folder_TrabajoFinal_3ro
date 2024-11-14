@@ -3,34 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using DG.Tweening;
 
 public class AudioManager : MonoBehaviour
 {
+    [Header("Audio Settings")]
     [SerializeField] private AudioSettings audioSettings;
     [SerializeField] private AudioMixer myAudioMixer;
     [SerializeField] private Slider masterSlider;
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Slider sfxSlider;
-    private float volume;
 
-    //public static AudioManager Instance { get; set; }
-
-    //private void Awake()
-    //{
-    //    if (Instance != null && Instance != this)
-    //    {
-    //        Destroy(Instance);
-    //    }
-    //    else
-    //    {
-    //        Instance = this;
-    //        DontDestroyOnLoad(gameObject);
-    //    }
-    //}
+    [Header("Dotween Audio")]
+    [SerializeField] private AudioSource[] backgroundAudios;
+    [SerializeField] private float fadeDuration;
+    [SerializeField] private float maxVolume;
+    private int currentIndex = 0;
 
     private void Start()
     {
         LoadVolume();
+        if (backgroundAudios.Length > 0)
+        {
+            PlayNextSong();
+        }
     }
     public void LoadVolume()
     {
@@ -55,5 +51,25 @@ public class AudioManager : MonoBehaviour
     {
         audioSettings.sfxVolume = sfxSlider.value;
         myAudioMixer.SetFloat("SfxVolume", Mathf.Log10(audioSettings.sfxVolume) * 20);
+    }
+    private void PlayNextSong()
+    {
+        if (currentIndex >= backgroundAudios.Length)
+        {
+            currentIndex = 0;
+        }
+        AudioSource currentAudio = backgroundAudios[currentIndex];
+        currentAudio.volume = 0;
+        currentAudio.Play();
+
+        currentAudio.DOFade(maxVolume, fadeDuration).OnComplete(() =>
+        {
+            currentAudio.DOFade(0, fadeDuration).SetDelay(currentAudio.clip.length - fadeDuration).OnComplete(() =>
+            {
+                currentAudio.Stop();
+                ++currentIndex;
+                PlayNextSong();
+            });
+        });
     }
 }

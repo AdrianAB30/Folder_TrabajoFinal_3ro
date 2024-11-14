@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class RoutePatrolRandom : PatrolBehaviour
 {
@@ -27,7 +28,7 @@ public class RoutePatrolRandom : PatrolBehaviour
 
         GameObject currentNode = nodesRoutes.GetNodeAtPosition(currentPatrolIndex);
         MoveTowards(currentNode.transform.position);
-        LookAtNode(currentNode);    
+        LookAtNode(currentNode);
 
         if (Vector3.Distance(transform.position, currentNode.transform.position) > distanceToNode)
         {
@@ -36,7 +37,7 @@ public class RoutePatrolRandom : PatrolBehaviour
         else
         {
             enemyAnimator.SetBool("isWalkingRandom", false);
-            StartCoroutine(WaitAtNode()); 
+            StartCoroutine(WaitAtNode());
         }
     }
     private void LookAtNode(GameObject targetNode)
@@ -51,8 +52,8 @@ public class RoutePatrolRandom : PatrolBehaviour
     private IEnumerator WaitAtNode()
     {
         isWaiting = true;
-        enemyAnimator.SetBool("isWalkingRandom", false); 
-        yield return new WaitForSeconds(enemyData.watingTime); 
+        enemyAnimator.SetBool("isWalkingRandom", false);
+        yield return new WaitForSeconds(enemyData.watingTime);
 
         currentPatrolIndex = Random.Range(0, nodesRoutes.Length);
         isWaiting = false;

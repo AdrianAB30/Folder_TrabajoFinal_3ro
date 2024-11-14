@@ -91,6 +91,7 @@ public class SkeletonController : RoutePatrolRandom
         isDead = true;
         enemyAnimator.SetTrigger("isDead");
         enemyAnimator.SetBool("isWalkingRandom",false);
+        movementForce = 0f;
         StartCoroutine(DeadEnemySkeleton());
         Debug.Log("Enemigo Muerto");
     }

@@ -6,6 +6,7 @@ public class EnemyData : ScriptableObject
 {
     public float watingTime;
     public float forceRotateEnemy;
+    public float speedChase;
     public int maxLife;
     public int damage;
     public int pushingForceHit;

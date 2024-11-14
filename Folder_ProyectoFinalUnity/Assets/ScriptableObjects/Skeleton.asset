@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   watingTime: 0.5
   forceRotateEnemy: 5
+  speedChase: 10
   maxLife: 100
   damage: 0
   pushingForceHit: 2

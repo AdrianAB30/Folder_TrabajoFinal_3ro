@@ -25,8 +25,6 @@ public class GameManager : MonoBehaviour
     [Header("Cinemachine")]
     [SerializeField] private CinemachineVirtualCamera cameraMenu;
 
-    public event Action OnStartGame;
-
     private void Start()
     {
         if (SceneManager.GetActiveScene().name == "Game")
@@ -41,7 +39,6 @@ public class GameManager : MonoBehaviour
     public void ChangeScene(string sceneName)
     {
         Time.timeScale = 1f;
-        OnStartGame?.Invoke();
         SceneManager.LoadScene(sceneName);
     }
     public void ShowOptions()
@@ -77,7 +74,7 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator TimeInGamePause()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.05f);
         Time.timeScale = 0;
     }
     public void LooseGame()
