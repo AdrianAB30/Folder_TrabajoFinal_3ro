@@ -11,7 +11,6 @@ public class SkeletonController : RoutePatrolRandom
     public int currentLife;
     public event Action<int> OnHealthChanged;
 
-
     protected override void Awake()
     {
         base.Awake();
