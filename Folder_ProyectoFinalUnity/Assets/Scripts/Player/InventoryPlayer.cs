@@ -36,7 +36,6 @@ public class InventoryPlayer : MonoBehaviour
         ResetWeapons();
         Debug.Log("Capacidad inicial del inventario: " + weaponsInventory.Count);
     }
-
     private void ResetWeapons()
     {
         sword.SetActive(false);
@@ -53,11 +52,6 @@ public class InventoryPlayer : MonoBehaviour
         weaponsInventory.InsertAtEnd(weapon);
         Debug.Log("Arma añadida al inventario: " + weapon.name);
         Debug.Log("Capacidad actual del inventario: " + weaponsInventory.Count);
-         if (weapon == sword)
-         {
-             playerController.ChangeState("SwordState"); 
-             EquipWeapon(sword);
-         }
     }
 
     public void OnSwitchWeaponPrevious(InputAction.CallbackContext context)
@@ -80,7 +74,11 @@ public class InventoryPlayer : MonoBehaviour
 
     private void EquipWeapon(GameObject newWeapon)
     {
-        if (isEquipping)
+        if (isEquipping || playerController == null)
+        {
+            return;
+        }
+        if (playerController.GetMovementMagnitude() > 0f)
         {
             return;
         }
@@ -140,8 +138,8 @@ public class InventoryPlayer : MonoBehaviour
     {
         if (sword && shield != null)
         {
-            sword.SetActive(true);
-            shield.SetActive(true);
+            swordBack.SetActive(true);
+            shieldBack.SetActive(true);
             currentWeapon = sword;
         }
     }

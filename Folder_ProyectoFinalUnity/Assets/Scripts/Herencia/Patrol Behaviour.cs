@@ -45,7 +45,8 @@ public abstract class PatrolBehaviour : MonoBehaviour
             if (distanceToTarget > distanceToNode)
             {
                 Vector3 direction = (targetPosition - transform.position).normalized;
-                myRBD.velocity = direction * movementForce * Time.deltaTime;
+
+                myRBD.AddForce(direction * movementForce, ForceMode.Force);
             }
             else
             {
@@ -53,5 +54,9 @@ public abstract class PatrolBehaviour : MonoBehaviour
             }
         }
     }
-
+    protected Transform GetNextPatrolPoint()
+    {
+        currentPatrolIndex = (currentPatrolIndex + 1) % nodesRoutes.Length;
+        return nodesRoutes.GetNodeAtPosition(currentPatrolIndex).transform;
+    }
 }

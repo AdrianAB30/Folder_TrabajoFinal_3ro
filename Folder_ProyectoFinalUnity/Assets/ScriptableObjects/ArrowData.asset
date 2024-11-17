@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxFallRotationX: 95
   maxFallRotationZ: 95
-  damage: 10
+  damage: 15
   shootForce: 10

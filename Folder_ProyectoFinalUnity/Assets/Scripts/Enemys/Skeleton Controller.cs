@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SkeletonController : RoutePatrolRandom
 {
@@ -8,12 +9,17 @@ public class SkeletonController : RoutePatrolRandom
     [SerializeField] private GraphManager graphManager;
     [SerializeField] private GameObject[] nodes;
     [SerializeField] private GameObject skeleton;
+    [SerializeField] private GameObject objective;
+    private NavMeshAgent IA;
     public int currentLife;
+
+    //Eventos
     public event Action<int> OnHealthChanged;
 
     protected override void Awake()
     {
         base.Awake();
+        IA = GetComponent<NavMeshAgent>();
     }
     protected override void Start()
     {
@@ -21,6 +27,7 @@ public class SkeletonController : RoutePatrolRandom
         currentLife = enemyData.maxLife;
         SetNodesPatrol();
     }
+
     private void SetNodesPatrol()
     {
         SimpleLinkedList<GameObject> pointsPatrol = new SimpleLinkedList<GameObject>();
@@ -52,7 +59,7 @@ public class SkeletonController : RoutePatrolRandom
             Gizmos.color = Color.red;
             Gizmos.DrawLine(nodes[1].transform.position, nodes[2].transform.position);
         }
-        if (nodes[2] != null && nodes[3] != null)
+        if(nodes[2] != null && nodes[3] != null)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(nodes[2].transform.position, nodes[3].transform.position);
@@ -62,7 +69,6 @@ public class SkeletonController : RoutePatrolRandom
     {
         currentLife -= damage;
         currentLife = Mathf.Clamp(currentLife, 0, enemyData.maxLife);
-        Debug.Log("Invocando evento OnHealthChanged con currentLife: " + currentLife);
         OnHealthChanged?.Invoke(currentLife);
 
         if (currentLife <= 0)
@@ -97,20 +103,19 @@ public class SkeletonController : RoutePatrolRandom
     IEnumerator DeadEnemySkeleton()
     {
         yield return new WaitForSeconds(2f);
+        isDead = true;
         skeleton.SetActive(false);
-    }
-    public int GetCurrentLife()
-    {
-        return currentLife;
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Sword"))
         {
+            isTakingDamage = true;
             TakeDamage(20);
         }
-        if (other.gameObject.CompareTag("Arrow"))
+        else if (other.gameObject.CompareTag("Arrow"))
         {
+            isTakingDamage = true;
             TakeDamage(10);
             Destroy(other.gameObject);
         }

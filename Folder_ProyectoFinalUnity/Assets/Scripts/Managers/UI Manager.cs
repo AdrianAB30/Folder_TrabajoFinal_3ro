@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
-using DG.Tweening.Core.Easing;
+using System;
 using Cinemachine;
 
 public class UIManager : MonoBehaviour
@@ -40,6 +40,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Vector3[] targetPositions;
     private Vector3[] originalPositions;
 
+
     private void Start()
     {
         StartCoroutine(MoveAtributesPlayer());
@@ -51,7 +52,6 @@ public class UIManager : MonoBehaviour
         }
         ResetWeaponUI();
     }
-
     private void ResetWeaponUI()
     {
         bowUI.gameObject.SetActive(false);
@@ -59,7 +59,6 @@ public class UIManager : MonoBehaviour
         swordBorder.gameObject.SetActive(false);
         bowBorder.gameObject.SetActive(false);
     }
-
     private void OnEnable()
     {
         player.OnPlayerStand += ShowTutorial;
@@ -70,7 +69,6 @@ public class UIManager : MonoBehaviour
         HerreraController.OnPlayerEnter += ShowDialogueNpc;
         HenryController.OnPlayerEnter += ShowDialogueNpc;
     }
-
     private void OnDisable()
     {
         player.OnPlayerStand -= ShowTutorial;
@@ -98,7 +96,6 @@ public class UIManager : MonoBehaviour
         .AppendInterval(5f)
         .Append(dialoguePanels[5].DOAnchorPos(originalPositions[5],0.8f).SetEase(Ease.InOutBack));
     }
-
     private void UpdateWeaponBorder(string weaponName)
     {
         swordBorder.gameObject.SetActive(false);
@@ -205,6 +202,7 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         lifeBar.DOAnchorPos(targetPositions[2], 0.5f).SetEase(Ease.InOutQuad);
         staminaBar.DOAnchorPos(targetPositions[3], 0.8f).SetEase(Ease.OutQuad);
+      
     }
     private void DisplayDialogueNPC(int npcIndex, NPCData dialoguesData)
     {

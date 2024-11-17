@@ -456,8 +456,8 @@ public class PlayerController : MonoBehaviour
             canJump = true;
         }
     }
-    public void ChangeState(string newState)
+    public float GetMovementMagnitude()
     {
-        Debug.Log("Cambiando al estado: " + newState);
+        return movement.magnitude;
     }
 }
