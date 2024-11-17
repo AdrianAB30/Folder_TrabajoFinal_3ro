@@ -36,7 +36,7 @@ public class Arrow : MonoBehaviour
 
                 targetRotation = Quaternion.Euler(targetEulerRotation.x, targetEulerRotation.y, targetEulerRotation.z);
             }
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * 5f);
         }
     }
     public float GetArrowDamage()

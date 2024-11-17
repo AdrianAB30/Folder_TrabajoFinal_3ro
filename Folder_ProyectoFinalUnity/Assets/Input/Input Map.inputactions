@@ -94,15 +94,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Hide Options",
-                    "type": "Button",
-                    "id": "57445337-75b7-44fe-bea1-eb122842788f",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -438,12 +429,12 @@
                 },
                 {
                     "name": "",
-                    "id": "670d32ce-eac5-42cc-be54-4c8641fffa97",
-                    "path": "<Keyboard>/escape",
+                    "id": "5c288663-4aad-4a5a-9418-b0c83f424340",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Hide Options",
+                    "action": "Show Options",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

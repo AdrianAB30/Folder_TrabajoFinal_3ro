@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 410087040}
-  m_IndirectSpecularColor: {r: 0.00043266526, g: 0.03834651, b: 0.040710002, a: 1}
+  m_IndirectSpecularColor: {r: 0.00041487103, g: 0.038397297, b: 0.04063692, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12061,7 +12061,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &410087040
 Light:
   m_ObjectHideFlags: 0
@@ -39318,8 +39318,10 @@ MonoBehaviour:
   panelOptions: {fileID: 1688787507}
   panel: {fileID: 1893403028}
   loosePanel: {fileID: 581015010}
+  fadeImage: {fileID: 0}
   myEase: 28
   duration: 1
+  fadeDuration: 0
   bonfireLight: {fileID: 1329563554}
   minIntensity: 0.5
   maxIntensity: 2
