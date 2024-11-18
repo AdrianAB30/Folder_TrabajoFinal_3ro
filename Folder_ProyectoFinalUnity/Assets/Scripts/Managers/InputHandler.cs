@@ -14,6 +14,7 @@ public class InputHandler : MonoBehaviour
     public event Action<bool> OnCoverInput;
 
     public bool canHandleInput = true;
+    public bool canHandleInputJump = true;
 
     public void HandleMovement(InputAction.CallbackContext context)
     {
@@ -33,7 +34,7 @@ public class InputHandler : MonoBehaviour
     }
     public void HandleJump(InputAction.CallbackContext context)
     {
-        if (!canHandleInput) return;
+        if (!canHandleInputJump) return;
 
         if (context.performed)
         {

@@ -1,4 +1,3 @@
-using DG.Tweening.Core.Easing;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -128,8 +127,8 @@ public class PlayerController : MonoBehaviour
         if (isJumping && isGrounded && canJump)
         {
             myRBD.AddForce(Vector3.up * playerData.jumpForce, ForceMode.Impulse);
-            isJumping = false;
-            canJump = false;
+            StartCoroutine(JumpCooldown());
+
         }
     }
 
@@ -283,7 +282,6 @@ public class PlayerController : MonoBehaviour
         {
             myRBD.AddForce(rollDirection * playerData.rollImpulse * Time.deltaTime, ForceMode.Impulse);
         }
-
         yield return new WaitForSeconds(1f);
         myCollider.center = new Vector3(0.025f, 2.78f, 0.2f);
         myCollider.size = new Vector3(1.72f, 5.1f, 1.55f);
@@ -293,6 +291,14 @@ public class PlayerController : MonoBehaviour
         canMove = true;
         canJump = true;
         movement = Vector2.zero;
+    }
+    private IEnumerator JumpCooldown()
+    {
+        inputHandler.canHandleInputJump = false;
+        canJump = false;
+        yield return new WaitForSeconds(1f);
+        inputHandler.canHandleInputJump = true;
+        canJump = true;
     }
     private IEnumerator AttackCooldown()
     {
@@ -314,6 +320,7 @@ public class PlayerController : MonoBehaviour
     {
         canJump = false;
         canMove = false;
+        inputHandler.canHandleInput = false;
         yield return new WaitForSeconds(3f);
         myAnimator.SetBool("isStand", true);
         OnPlayerStand?.Invoke();

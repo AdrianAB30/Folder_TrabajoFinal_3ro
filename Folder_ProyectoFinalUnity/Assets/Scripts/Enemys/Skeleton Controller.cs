@@ -44,6 +44,7 @@ public class SkeletonController : RoutePatrolRandom
         graphManager.AddBidirectionalConnections(nodes[0], nodes[1]);
         graphManager.AddBidirectionalConnections(nodes[1], nodes[2]);
         graphManager.AddBidirectionalConnections(nodes[2], nodes[3]);
+        graphManager.AddBidirectionalConnections(nodes[3], nodes[0]);
 
         SetPatrolRoute(pointsPatrol);
     }
