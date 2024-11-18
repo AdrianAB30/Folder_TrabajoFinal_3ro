@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 410087040}
-  m_IndirectSpecularColor: {r: 0.0004455403, g: 0.038447205, b: 0.04069625, a: 1}
+  m_IndirectSpecularColor: {r: 0.00041494082, g: 0.03831768, b: 0.04068022, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10873,7 +10873,7 @@ MonoBehaviour:
   loosePanel: {fileID: 0}
   fadeImage: {fileID: 901115652}
   myEase: 28
-  duration: 10
+  duration: 1
   fadeDuration: 20
   bonfireLight: {fileID: 1329563554}
   minIntensity: 0.5

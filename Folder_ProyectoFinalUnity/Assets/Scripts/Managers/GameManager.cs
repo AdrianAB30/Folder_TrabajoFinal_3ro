@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(ChangeCameraInGame());
             }
         }
-        bonfireLight.DOIntensity(maxIntensity, 1f).SetLoops(-1,LoopType.Yoyo).SetEase(Ease.InOutQuart);
+        bonfireLight.DOIntensity(maxIntensity, 3f).SetLoops(-1,LoopType.Yoyo).SetEase(Ease.InOutQuart);
         FadeStart();
     }
     public void ChangeScene(string sceneName)

@@ -15,6 +15,7 @@ public class RoutePatrolDefined : PatrolBehaviour
     }
     protected override void Start()
     {
+        npcData.forceRotateNpc = 5f;
         StartCoroutine(WaitAtNode());
         base.Start();
     }

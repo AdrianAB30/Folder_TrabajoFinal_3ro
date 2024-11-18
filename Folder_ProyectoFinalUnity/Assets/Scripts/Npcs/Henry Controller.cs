@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -106,10 +107,11 @@ public class HenryController : RoutePatrolDefined
         {
             npcData.forceRotateNpc = 0f;
             Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
+
             if (directionToPlayer != Vector3.zero)
             {
                 Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+                transform.DORotateQuaternion(lookRotation, 0.08f).SetEase(Ease.InOutSine);
             }
         }
     }
