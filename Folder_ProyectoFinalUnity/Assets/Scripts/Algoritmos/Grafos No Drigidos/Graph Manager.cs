@@ -12,15 +12,14 @@ public class GraphManager : MonoBehaviour
             nodes.InsertNodeAtEnd(new Nodes(nodeObject));
         }
     }
-    public void AddBidirectionalConnections(GameObject nodeA, GameObject nodeB)
+    public void AddDirectedConnection(GameObject fromNode, GameObject toNode)
     {
-        Nodes graphNodeA = SearchNextNode(nodeA);
-        Nodes graphNodeB = SearchNextNode(nodeB);
+        Nodes graphFromNode = SearchNextNode(fromNode);
+        Nodes graphToNode = SearchNextNode(toNode);
 
-        if (graphNodeA != null && graphNodeB != null)
+        if (graphFromNode != null && graphToNode != null)
         {
-            graphNodeA.AddNode(graphNodeB);
-            graphNodeB.AddNode(graphNodeA); 
+            graphFromNode.AddNode(graphToNode); 
         }
     }
     public SimpleLinkedList<GameObject> GetNeighbors(GameObject nodeObject)

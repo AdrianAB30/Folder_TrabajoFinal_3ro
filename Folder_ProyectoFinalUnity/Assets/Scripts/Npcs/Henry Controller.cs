@@ -56,9 +56,9 @@ public class HenryController : RoutePatrolDefined
         graphManager.AddNode(nodes[2]);
         graphManager.AddNode(nodes[3]);
 
-        graphManager.AddBidirectionalConnections(nodes[0], nodes[1]);
-        graphManager.AddBidirectionalConnections(nodes[1], nodes[2]);
-        graphManager.AddBidirectionalConnections(nodes[2], nodes[3]);
+        graphManager.AddDirectedConnection(nodes[0], nodes[1]);
+        graphManager.AddDirectedConnection(nodes[1], nodes[2]);
+        graphManager.AddDirectedConnection(nodes[2], nodes[3]);
 
         SetPatrolRoute(patrolPointsRandom);
     }

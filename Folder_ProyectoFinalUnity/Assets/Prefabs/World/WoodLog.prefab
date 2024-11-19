@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5170191229448239437}
   - component: {fileID: 761045090880931934}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,6 +130,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WoodLog
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 587997b9d23c22f4282fa6256cd1b065,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

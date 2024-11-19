@@ -63,6 +63,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hay
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 35acef6c5c1f87143b05f59290f432ad,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -97,7 +102,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.0064588585
-  m_Height: 0.021038195
+  m_Radius: 0.005972813
+  m_Height: 0.02070813
   m_Direction: 2
-  m_Center: {x: -0.000060647726, y: 0.001233447, z: 0.009021972}
+  m_Center: {x: 0.00010478019, y: 0.00084227655, z: 0.0091870045}

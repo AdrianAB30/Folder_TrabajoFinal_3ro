@@ -83,6 +83,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock_Medium_2
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 24be855ce0314194395d60f6d09a9692,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
