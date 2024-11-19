@@ -5,6 +5,7 @@ using TMPro;
 using DG.Tweening;
 using System;
 using Cinemachine;
+using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private NPCData dialoguesHerrera;
     [SerializeField] private PlayerData dataPlayer;
     [SerializeField] private PlayerController player;
+    [SerializeField] private Stack<int> damagedLifeIndices = new Stack<int>();
 
     [Header("Npc UI")]
     [SerializeField] private RectTransform[] dialoguePanels;
@@ -40,15 +42,26 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Vector3[] targetPositions;
     private Vector3[] originalPositions;
 
+    [Header("Life Regeneration Curve")]
+    [SerializeField] private AnimationCurve lifeRegenerationCurve;
+    private bool[] isLifeBarActive;
+    private float[] regenerationTimers;
 
     private void Start()
     {
         StartCoroutine(MoveAtributesPlayer());
-
         originalPositions = new Vector3[dialoguePanels.Length];
         for (int i = 0; i < dialoguePanels.Length; i++)
         {
             originalPositions[i] = dialoguePanels[i].anchoredPosition;
+        }
+
+        isLifeBarActive = new bool[lifeFills.Length];
+        regenerationTimers = new float[lifeFills.Length];
+        for (int i = 0; i < lifeFills.Length; i++)
+        {
+            isLifeBarActive[i] = true;
+            regenerationTimers[i] = 0f;  
         }
         ResetWeaponUI();
     }
@@ -78,6 +91,10 @@ public class UIManager : MonoBehaviour
         PlayerController.OnSwordCollected -= ActivateSwordUI;
         HerreraController.OnPlayerEnter -= ShowDialogueNpc;
         HenryController.OnPlayerEnter -= ShowDialogueNpc;
+    }
+    private void Update()
+    {
+        RegenerateLifeBar();
     }
     private void ActivateBowUI()
     {
@@ -118,12 +135,30 @@ public class UIManager : MonoBehaviour
     {
         if (hitsReceived > 0 && hitsReceived <= lifeFills.Length)
         {
-            Image currentFill = lifeFills[hitsReceived - 1];
-            StartCoroutine(FadeOutLifeBar(currentFill));
+            int index = hitsReceived - 1;
 
-            if (hitsReceived == lifeFills.Length)
+            if (isLifeBarActive[index])
             {
-                Debug.Log("Sin vida");
+                if (!damagedLifeIndices.Contains(index))
+                {
+                    damagedLifeIndices.Push(index);  
+                }
+                Image currentFill = lifeFills[index];
+                StartCoroutine(FadeOutLifeBar(currentFill)); 
+                regenerationTimers[index] = dataPlayer.regenerationLifeTime;  
+
+                isLifeBarActive[index] = false; 
+
+                if (hitsReceived == lifeFills.Length)
+                {
+                    Debug.Log("Sin vida");
+                }
+            }
+            else
+            {
+                isLifeBarActive[index] = false;
+                StartCoroutine(FadeOutLifeBar(lifeFills[index])); 
+                regenerationTimers[index] = dataPlayer.regenerationLifeTime; 
             }
         }
     }
@@ -153,6 +188,43 @@ public class UIManager : MonoBehaviour
                 staminaFills[0].fillAmount = 0f;
             }
         }
+    }
+    public void RegenerateLifeBar()
+    {
+        if (damagedLifeIndices.Count > 0)
+        {
+            int index = damagedLifeIndices.Peek();
+
+            if (lifeFills[index].fillAmount < 1f)
+            {
+                if (regenerationTimers[index] > 0)
+                {
+                    regenerationTimers[index] -= Time.deltaTime;  
+                }
+
+                if (regenerationTimers[index] <= 0)
+                {
+                    isLifeBarActive[index] = true;  
+                    damagedLifeIndices.Pop();  
+                    StartCoroutine(RegenerateLifeBarAnimation(lifeFills[index])); 
+                }
+            }
+        }
+    }
+    private IEnumerator RegenerateLifeBarAnimation(Image image)
+    {
+        float duration = 5f;
+        float elapsedTime = 0f;
+        float targetFillAmount = 1f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float lerpedAmount = Mathf.Lerp(0f, targetFillAmount, lifeRegenerationCurve.Evaluate(elapsedTime / duration));
+            image.fillAmount = lerpedAmount;
+            yield return null;
+        }
+        image.fillAmount = targetFillAmount;
     }
     private IEnumerator FadeOutLifeBar(Image image)
     {

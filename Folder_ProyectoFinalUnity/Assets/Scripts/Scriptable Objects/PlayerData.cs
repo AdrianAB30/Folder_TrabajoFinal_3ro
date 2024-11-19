@@ -15,4 +15,5 @@ public class PlayerData : ScriptableObject
     public float rollImpulse;
     public float standCooldown;
     public float Stamina;
+    public float regenerationLifeTime;
 }

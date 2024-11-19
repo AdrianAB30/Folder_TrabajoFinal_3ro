@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkspeed: 6
   life: 3
-  speedRunning: 2
+  speedRunning: 3
   forceFalling: 5
   jumpForce: 5
   attackCooldown: 1
   rollImpulse: 20
   standCooldown: 3
-  Stamina: 40.215717
+  Stamina: 100
+  regenerationLifeTime: 3
