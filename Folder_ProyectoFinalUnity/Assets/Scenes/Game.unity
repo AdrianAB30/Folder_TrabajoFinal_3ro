@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00041999307, g: 0.03833146, b: 0.040694702, a: 1}
+  m_IndirectSpecularColor: {r: 0.0004401336, g: 0.038353868, b: 0.040714186, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -20288,6 +20288,11 @@ PrefabInstance:
       propertyPath: m_AABB.m_Extent.y
       value: 2.32
       objectReference: {fileID: 0}
+    - target: {fileID: -6167657787490748894, guid: 903591a8435d7d24cbc5b2c5b32b2172,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 991f4d9940aebff44b53ee7a39ea1902, type: 2}
     - target: {fileID: -6056541330796499132, guid: 903591a8435d7d24cbc5b2c5b32b2172,
         type: 3}
       propertyPath: m_Layer
@@ -25767,7 +25772,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  groundDistance: 0.2
+  groundDistance: 0.21
   lifeManager: {fileID: 1611634781}
   inventoryPlayer: {fileID: 409726727}
   particleClass: {fileID: 1087493539}

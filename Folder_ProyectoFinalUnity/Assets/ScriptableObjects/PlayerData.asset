@@ -16,9 +16,9 @@ MonoBehaviour:
   life: 3
   speedRunning: 3
   forceFalling: 5
-  jumpForce: 5
+  jumpForce: 6
   attackCooldown: 1
   rollImpulse: 20
   standCooldown: 3
-  Stamina: 100
+  Stamina: 37.896477
   regenerationLifeTime: 3
