@@ -14,6 +14,7 @@ public class Arrow : MonoBehaviour
     private void Start()
     {
         ShootArrow();
+        StartCoroutine(DestroyArrowAfterTime());
     }
     public void ShootArrow()
     {
@@ -42,6 +43,11 @@ public class Arrow : MonoBehaviour
     public float GetArrowDamage()
     {
         return arrowData.damage;
+    }
+    private IEnumerator DestroyArrowAfterTime()
+    {
+        yield return new WaitForSeconds(arrowData.timeToDestroy);
+        Destroy(gameObject);
     }
 }
 

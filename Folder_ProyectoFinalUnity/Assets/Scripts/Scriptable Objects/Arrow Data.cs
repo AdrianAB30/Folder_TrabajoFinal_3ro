@@ -8,5 +8,6 @@ public class ArrowData : ScriptableObject
     public float maxFallRotationX;
     public float maxFallRotationZ;
     public float damage;
-    public float shootForce = 10f;
+    public float shootForce;
+    public float timeToDestroy;
 }

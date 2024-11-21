@@ -23,6 +23,11 @@ public class InventoryPlayer : MonoBehaviour
     [SerializeField] private GameObject groundQuiver;
 
     [SerializeField] private PlayerController playerController;
+
+    public bool isSwordEquipped = false;
+    public bool isBowEquipped = false;
+    public bool isShieldEquipped = false;
+
     // Eventos
     public static event Action<string> OnWeaponChanged;
 
@@ -103,6 +108,9 @@ public class InventoryPlayer : MonoBehaviour
             swordBack.SetActive(false);
             shieldBack.SetActive(false);
             bowHand.SetActive(false);
+            isSwordEquipped = true;
+            isBowEquipped = false;
+            isShieldEquipped = true;
         }
         else if (currentWeapon == bow)
         {
@@ -113,6 +121,9 @@ public class InventoryPlayer : MonoBehaviour
             quiver.SetActive(true);
             shieldBack.SetActive(true);
             swordBack.SetActive(true);
+            isSwordEquipped = false;
+            isBowEquipped = true;
+            isShieldEquipped = false;
         }
         playerAnimator.SetBool("hasSword", currentWeapon == sword);
         playerAnimator.SetBool("hasBow", currentWeapon == bow);

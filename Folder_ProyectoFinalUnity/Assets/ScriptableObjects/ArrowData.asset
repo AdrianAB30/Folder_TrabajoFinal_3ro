@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b7c5129c121b714ba401ad966f59938, type: 3}
   m_Name: ArrowData
   m_EditorClassIdentifier: 
-  maxFallRotationX: 95
-  maxFallRotationZ: 95
+  maxFallRotationX: 55
+  maxFallRotationZ: 90
   damage: 15
   shootForce: 10
+  timeToDestroy: 4

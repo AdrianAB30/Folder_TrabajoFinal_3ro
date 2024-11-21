@@ -39,8 +39,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool isAttackSword = false;
     [SerializeField] private bool isAttackBow = false;
     [SerializeField] private bool isCovering = false;
-    [SerializeField] private bool isRolling = false;
-    [SerializeField] private bool isJumping = false;
+    public bool isRolling = false;
+    public bool isJumping = false;
     private bool wasGrounded = false;
     private bool isPlayerRunning = false;
     private bool isTakingDamage = false;
@@ -154,7 +154,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded && canJump && !isAttackSword && !isCovering && playerData.Stamina > 10 && !isPlayerRunning)
         {
-            DecreaseStamina(5);
+            DecreaseStamina(8);
             isJumping = true;
             myAnimator.SetBool("isJumpNormal", true);
             myAnimator.SetBool("isInGround", false);
@@ -169,7 +169,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!isAttackSword && !isJumping && movement.magnitude == 0 && !isCovering && isGrounded && playerData.Stamina > 10)
         {
-            DecreaseStamina(5);
+            DecreaseStamina(8);
             isAttackSword = true;
             canJump = false;
             canMove = false;
@@ -244,7 +244,7 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded && isPlayerRunning && movement.magnitude > 0 && !isCovering && !isJumping && !isAttackSword && playerData.Stamina > 10)
         {
-            DecreaseStamina(5);
+            DecreaseStamina(8);
             isRolling = true;
             canMove = false;
             canJump = false;
@@ -321,12 +321,13 @@ public class PlayerController : MonoBehaviour
         canJump = false;
         canMove = false;
         inputHandler.canHandleInput = false;
+        inputHandler.canHandleInputJump = false;
         yield return new WaitForSeconds(3f);
         myAnimator.SetBool("isStand", true);
         OnPlayerStand?.Invoke();
-        inputHandler.canHandleInput = false;
         yield return new WaitForSeconds(4f);
         inputHandler.canHandleInput = true;
+        inputHandler.canHandleInputJump = true;
         canJump = true;
         canMove = true;
     }
@@ -449,7 +450,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isPlayerRunning && playerData.Stamina > 0)
         {
-            DecreaseStamina(Time.deltaTime * 8f);
+            DecreaseStamina(Time.deltaTime * 10f);
         }
         else if (movement.magnitude == 0 || (movement.magnitude > 0 && !isPlayerRunning))
         {

@@ -34,7 +34,6 @@ public class AudioManager : MonoBehaviour
         musicSlider.value = audioSettings.musicVolume;
         sfxSlider.value = audioSettings.sfxVolume;
     }
-
     public void SetMasterVolume()
     {
         audioSettings.masterVolume = masterSlider.value;
@@ -46,7 +45,6 @@ public class AudioManager : MonoBehaviour
         audioSettings.musicVolume = musicSlider.value;
         myAudioMixer.SetFloat("MusicVolume", Mathf.Log10(audioSettings.musicVolume) * 20);
     }
-
     public void SetSfxVolume()
     {
         audioSettings.sfxVolume = sfxSlider.value;

@@ -16,6 +16,10 @@ public class InputHandler : MonoBehaviour
     public bool canHandleInput = true;
     public bool canHandleInputJump = true;
 
+    [Header("Referencias")]
+    [SerializeField] private InventoryPlayer inventoryPlayer;
+    [SerializeField] private PlayerController playerController;
+
     public void HandleMovement(InputAction.CallbackContext context)
     {
         if (!canHandleInput) return;
@@ -44,7 +48,7 @@ public class InputHandler : MonoBehaviour
     }
     public void HandleAttackSword(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && CanPerformAttackSword())
         {
             Debug.Log("Atacando con espada");
             OnAttackSwordInput?.Invoke();
@@ -53,15 +57,18 @@ public class InputHandler : MonoBehaviour
     }
     public void HandleAttackBow(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (CanPerformAttackBow())
         {
-            Debug.Log("Tensando el Arco");
-            OnAttackBow?.Invoke(true);
-        }
-        else if (context.canceled)
-        {
-            Debug.Log("Disparando Flecha");
-            OnAttackBow?.Invoke(false); 
+            if (context.started)
+            {
+                Debug.Log("Tensando el Arco");
+                OnAttackBow?.Invoke(true);
+            }
+            else if (context.canceled)
+            {
+                Debug.Log("Disparando Flecha");
+                OnAttackBow?.Invoke(false);
+            }
         }
     }
 
@@ -80,15 +87,18 @@ public class InputHandler : MonoBehaviour
     }
     public void HandleCover(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (CanPerformCover())
         {
-            Debug.Log("Cubriendose");
-            OnCoverInput?.Invoke(true);
-        }
-        else if (context.canceled)
-        {
-            Debug.Log("Ya no se cubre");
-            OnCoverInput?.Invoke(false);
+            if (context.started)
+            {
+                Debug.Log("Cubriéndose");
+                OnCoverInput?.Invoke(true);
+            }
+            else if (context.canceled)
+            {
+                Debug.Log("Dejando de cubrirse");
+                OnCoverInput?.Invoke(false);
+            }
         }
     }
     public void HandleRolling(InputAction.CallbackContext context)
@@ -98,5 +108,17 @@ public class InputHandler : MonoBehaviour
             Debug.Log("Rolleando");
             OnRollingInput?.Invoke();
         }
+    }
+    private bool CanPerformAttackSword()
+    {
+        return inventoryPlayer.isSwordEquipped && inventoryPlayer.isShieldEquipped && !playerController.isRolling && !playerController.isJumping;
+    }
+    private bool CanPerformAttackBow()
+    {
+        return inventoryPlayer.isBowEquipped && !playerController.isRolling && !playerController.isJumping;
+    }
+    private bool CanPerformCover()
+    {
+        return inventoryPlayer.isShieldEquipped && !playerController.isRolling && !playerController.isJumping;
     }
 }
