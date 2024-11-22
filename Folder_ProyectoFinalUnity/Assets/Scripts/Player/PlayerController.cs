@@ -454,7 +454,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (movement.magnitude == 0 || (movement.magnitude > 0 && !isPlayerRunning))
         {
-            IncreaseStamina(Time.deltaTime * 3f);
+            IncreaseStamina(Time.deltaTime * 5f);
         }
         else if (playerData.Stamina <= 0)
         {
