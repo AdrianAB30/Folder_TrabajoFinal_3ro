@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 movement;
     private Vector3 jumpingCenter = new Vector3(0.025f, 2.1f, 0.2f);
     private Vector3 jumpingSize = new Vector3(1.72f, 4f, 1.6f);
-    private Vector3 fallingCenter = new Vector3(0.025f, 2.7f, 0.2f);
+    private Vector3 fallingCenter = new Vector3(0.025f, 2.75f, 0.2f);
     private Vector3 fallingSize = new Vector3(1.72f, 5f, 1.55f);
 
     [Header("References Managers")]
@@ -443,6 +443,7 @@ public class PlayerController : MonoBehaviour
     }
     private void DecreaseStamina(float amount)
     {
+        if (gameManager.IsOptionsMenuActive) return;
         playerData.Stamina = Mathf.Max(playerData.Stamina - amount, 0);
         uiManager.UpdateStaminaBar();
     }
@@ -467,5 +468,10 @@ public class PlayerController : MonoBehaviour
     public float GetMovementMagnitude()
     {
         return movement.magnitude;
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(checkGround.transform.position, checkGround.transform.position + Vector3.down * groundDistance);
     }
 }

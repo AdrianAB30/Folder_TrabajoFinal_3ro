@@ -21,6 +21,7 @@ public class InventoryPlayer : MonoBehaviour
     [SerializeField] private GameObject quiver;
     [SerializeField] private GameObject groundBow;
     [SerializeField] private GameObject groundQuiver;
+    [SerializeField] private GameObject arrowsCount;
 
     [SerializeField] private PlayerController playerController;
 
@@ -50,6 +51,7 @@ public class InventoryPlayer : MonoBehaviour
         quiver.SetActive(false);
         swordBack.SetActive(false);
         shieldBack.SetActive(false);
+        arrowsCount.SetActive(false);
     }
 
     public void AddWeapon(GameObject weapon)
@@ -108,6 +110,7 @@ public class InventoryPlayer : MonoBehaviour
             swordBack.SetActive(false);
             shieldBack.SetActive(false);
             bowHand.SetActive(false);
+            arrowsCount.SetActive(false);
             isSwordEquipped = true;
             isBowEquipped = false;
             isShieldEquipped = true;
@@ -121,6 +124,7 @@ public class InventoryPlayer : MonoBehaviour
             quiver.SetActive(true);
             shieldBack.SetActive(true);
             swordBack.SetActive(true);
+            arrowsCount.SetActive(true);
             isSwordEquipped = false;
             isBowEquipped = true;
             isShieldEquipped = false;
@@ -142,6 +146,7 @@ public class InventoryPlayer : MonoBehaviour
         if (bow != null)
         {
             bow.SetActive(true);
+            arrowsCount.SetActive(true);
             currentWeapon = bow;
         }
     }

@@ -10,11 +10,11 @@ public abstract class PatrolBehaviour : MonoBehaviour
     [SerializeField] protected float movementForce;
     [SerializeField] protected NPCData npcData;
     [SerializeField] protected EnemyData enemyData;
-    public Rigidbody myRBD;
+    public Rigidbody myRBDRoute;
 
     protected virtual void Awake()
     {
-        myRBD = GetComponent<Rigidbody>();
+        myRBDRoute = GetComponent<Rigidbody>();
     }
     protected virtual void Start()
     {
@@ -38,7 +38,7 @@ public abstract class PatrolBehaviour : MonoBehaviour
 
     protected void MoveTowards(Vector3 targetPosition)
     {
-        if (myRBD != null)
+        if (myRBDRoute != null)
         {
             float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
 
@@ -46,11 +46,11 @@ public abstract class PatrolBehaviour : MonoBehaviour
             {
                 Vector3 direction = (targetPosition - transform.position).normalized;
 
-                myRBD.AddForce(direction * movementForce, ForceMode.Force);
+                myRBDRoute.AddForce(direction * movementForce, ForceMode.Force);
             }
             else
             {
-                myRBD.velocity = Vector3.zero;
+                myRBDRoute.velocity = Vector3.zero;
             }
         }
     }

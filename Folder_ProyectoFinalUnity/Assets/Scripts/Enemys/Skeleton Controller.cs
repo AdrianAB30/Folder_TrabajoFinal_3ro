@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class SkeletonController : RoutePatrolRandom
 {
@@ -10,7 +9,6 @@ public class SkeletonController : RoutePatrolRandom
     [SerializeField] private GameObject[] nodes;
     [SerializeField] private GameObject skeleton;
     [SerializeField] private GameObject objective;
-    private NavMeshAgent IA;
     public int currentLife;
 
     //Eventos
@@ -19,7 +17,6 @@ public class SkeletonController : RoutePatrolRandom
     protected override void Awake()
     {
         base.Awake();
-        IA = GetComponent<NavMeshAgent>();
     }
     protected override void Start()
     {
@@ -77,7 +74,7 @@ public class SkeletonController : RoutePatrolRandom
         }
         else
         {
-            myRBD.AddForce(enemyData.directionPushing * enemyData.pushingForceHit, ForceMode.Impulse);
+            myRBDRoute.AddForce(enemyData.directionPushing * enemyData.pushingForceHit, ForceMode.Impulse);
             StartCoroutine(HitCoroutine());
         }
     }

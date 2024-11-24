@@ -138,7 +138,6 @@ public class SimpleLinkedList<T>
             nodePosition.Value = newValue;
         }
     }
-
     public T GetNodeAtStart()
     {
         if (Head == null)
@@ -163,7 +162,6 @@ public class SimpleLinkedList<T>
             return classNode.Value;
         }
     }
-
     public T GetNodeAtPosition(int position)
     {
         if (position == 0)
@@ -260,11 +258,11 @@ public class SimpleLinkedList<T>
     }
     public bool SearchValue(T value)
     {
-        Node current = Head;
+        dynamic current = Head;
 
         while (current != null)
         {
-            if (current.Value.Equals(value)) 
+            if (current.Value == value)  
             {
                 return true;
             }

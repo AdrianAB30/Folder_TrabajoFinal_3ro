@@ -18,4 +18,4 @@ MonoBehaviour:
   maxLife: 100
   damage: 0
   pushingForceHit: 2
-  directionPushing: {x: 0, y: 0, z: 0}
+  directionPushing: {x: 1, y: 0, z: 1}

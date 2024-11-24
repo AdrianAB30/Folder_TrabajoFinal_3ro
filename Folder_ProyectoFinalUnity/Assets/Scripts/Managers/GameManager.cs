@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float minIntensity;
     [SerializeField] private float maxIntensity;
 
-
     [Header("Cinemachine")]
     [SerializeField] private CinemachineVirtualCamera cameraMenu;
 
@@ -34,6 +33,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject optionsSelected;
     [SerializeField] private GameObject menuSelected;
 
+    public bool IsOptionsMenuActive { get; private set; }
     private void Start()
     {
         if (SceneManager.GetActiveScene().name == "Game")
@@ -43,7 +43,10 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(ChangeCameraInGame());
             }
         }
-        bonfireLight.DOIntensity(maxIntensity, 3f).SetLoops(-1,LoopType.Yoyo).SetEase(Ease.InOutQuart);
+        if (bonfireLight != null)
+        {
+            bonfireLight.DOIntensity(maxIntensity, 3f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutQuart);
+        }
         FadeStart();
     }
     public void ChangeScene(string sceneName)
@@ -69,16 +72,21 @@ public class GameManager : MonoBehaviour
     {
         if (context.started)
         {
+            IsOptionsMenuActive = true;
             panel.gameObject.SetActive(true);
             panelOptions.DOAnchorPos(new Vector3(0, 0, 0), duration).SetEase(myEase);
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(optionsSelected);
             StartCoroutine(TimeInGamePause());
         }
-        else if (context.canceled)
-        {
-            panel.gameObject.SetActive(false);
-            panelOptions.DOAnchorPos(new Vector3(0, 950, 0), duration).SetEase(myEase);
-            Time.timeScale = 1;
-        }
+    }
+    public void HideOptionsInGame()
+    {
+        IsOptionsMenuActive = false;
+        panel.gameObject.SetActive(false);
+        panelOptions.DOAnchorPos(new Vector3(0, 950, 0), duration).SetEase(myEase);
+        EventSystem.current.SetSelectedGameObject(null);
+        Time.timeScale = 1;
     }
     public void HideOptions()
     {

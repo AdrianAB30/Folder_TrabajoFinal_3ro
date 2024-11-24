@@ -5,24 +5,26 @@ using TMPro;
 using DG.Tweening;
 using System;
 using Cinemachine;
-using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
-    [Header("Weapon Borders")]
     [SerializeField] private Image swordBorder;
     [SerializeField] private Image bowBorder;
     [SerializeField] private GameObject bowUI;
     [SerializeField] private GameObject swordUI;
+    [SerializeField] private TMP_Text arrowCountText;
 
     [Header("Stamina and Life Player")]
     [SerializeField] private Image[] staminaFills; 
     [SerializeField] private Image[] lifeFills;
     [SerializeField] private RectTransform lifeBar;
     [SerializeField] private RectTransform staminaBar;
+    [SerializeField] private RectTransform timerArrows;
+    [SerializeField] private Image timer;
 
     [Header("References")]
     [SerializeField] private LifeManager lifeManager;
+    [SerializeField] private SpawnArrows countArrows;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private NPCData dialoguesHenry;
     [SerializeField] private NPCData dialoguesHerrera;
@@ -41,6 +43,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float duration;
     [SerializeField] private Vector3[] targetPositions;
     private Vector3[] originalPositions;
+    private Vector3 positionTimer = new Vector3(0,130,0);
 
     [Header("Life Regeneration Curve")]
     [SerializeField] private AnimationCurve lifeRegenerationCurve;
@@ -74,6 +77,8 @@ public class UIManager : MonoBehaviour
     }
     private void OnEnable()
     {
+        countArrows.OnArrowsEmpty += ShowTimerArrows;
+        countArrows.OnArrowCountChanged += UpdateArrowCountUI;
         player.OnPlayerStand += ShowTutorial;
         lifeManager.OnPlayerDamage += UpdateLifeBar;
         InventoryPlayer.OnWeaponChanged += UpdateWeaponBorder;
@@ -84,6 +89,8 @@ public class UIManager : MonoBehaviour
     }
     private void OnDisable()
     {
+        countArrows.OnArrowsEmpty -= ShowTimerArrows;
+        countArrows.OnArrowCountChanged -= UpdateArrowCountUI;
         player.OnPlayerStand -= ShowTutorial;
         lifeManager.OnPlayerDamage -= UpdateLifeBar;
         InventoryPlayer.OnWeaponChanged -= UpdateWeaponBorder;
@@ -95,6 +102,10 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         RegenerateLifeBar();
+    }
+    private void UpdateArrowCountUI(int currentArrows)
+    {
+        arrowCountText.text = "X" + currentArrows;
     }
     private void ActivateBowUI()
     {
@@ -136,7 +147,6 @@ public class UIManager : MonoBehaviour
         if (hitsReceived > 0 && hitsReceived <= lifeFills.Length)
         {
             int index = hitsReceived - 1;
-
             if (isLifeBarActive[index])
             {
                 if (!damagedLifeIndices.Contains(index))
@@ -177,7 +187,6 @@ public class UIManager : MonoBehaviour
             {
                 staminaFills[1].fillAmount = currentStamina / maxStaminaPerBar;
             }
-
             if (currentStamina > maxStaminaPerBar)
             {
                 float excessStamina = currentStamina - maxStaminaPerBar;
@@ -201,7 +210,6 @@ public class UIManager : MonoBehaviour
                 {
                     regenerationTimers[index] -= Time.deltaTime;  
                 }
-
                 if (regenerationTimers[index] <= 0)
                 {
                     isLifeBarActive[index] = true;  
@@ -255,7 +263,6 @@ public class UIManager : MonoBehaviour
             npcIndex = 1;
             dialoguesToShow = dialoguesHenry;
         }
-
         if (npcIndex != -1 && dialoguesToShow != null)
         {
             if (isPlayerInRange)
@@ -293,5 +300,23 @@ public class UIManager : MonoBehaviour
     .Append(dialoguePanels[3].DOAnchorPos(targetPositions[5],0.5f).SetEase(Ease.InSine))
     .AppendInterval(2f)
     .Append(dialoguePanels[3].DOAnchorPos(originalPositions[3], 0.8f).SetEase(Ease.InOutBack));
+    }
+    private void ShowTimerArrows()
+    {
+        timerArrows.DOAnchorPos(targetPositions[8], 0.5f).SetEase(Ease.InOutBounce);
+
+        if (timer != null)
+        {
+            DOTween.To(() => timer.fillAmount, x => timer.fillAmount = x, 1f, 5f).SetEase(Ease.InOutBounce)
+            .OnComplete(() =>
+            {
+                timerArrows.DOAnchorPos(positionTimer, 0.5f).SetEase(Ease.InOutBounce)
+                .OnComplete(() =>
+                {
+                    timer.fillAmount = 0f;
+                    countArrows.ReloadArrows();
+                });
+            });
+        }
     }
 }
