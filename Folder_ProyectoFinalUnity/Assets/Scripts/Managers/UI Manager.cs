@@ -307,7 +307,7 @@ public class UIManager : MonoBehaviour
 
         if (timer != null)
         {
-            DOTween.To(() => timer.fillAmount, x => timer.fillAmount = x, 1f, 5f).SetEase(Ease.InOutBounce)
+            DOTween.To(() => timer.fillAmount, x => timer.fillAmount = x, 1f, 5f).SetEase(Ease.InSine)
             .OnComplete(() =>
             {
                 timerArrows.DOAnchorPos(positionTimer, 0.5f).SetEase(Ease.InOutBounce)
