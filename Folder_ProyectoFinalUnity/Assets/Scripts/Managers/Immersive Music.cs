@@ -14,7 +14,6 @@ public class ImmersiveMusic : MonoBehaviour
     private void Start()
     {
         audioRangeCollider = GetComponent<SphereCollider>();
-        bonfireAudio.volume = 0.1f; 
     }
     private void Update()
     {

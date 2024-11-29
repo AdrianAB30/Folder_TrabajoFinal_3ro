@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0004428615, g: 0.03836961, b: 0.040742923, a: 1}
+  m_IndirectSpecularColor: {r: 0.00043091824, g: 0.038340032, b: 0.040708616, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -19019,7 +19019,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.9960785, g: 0.89019614, b: 0.15294118, a: 1}
-  m_Intensity: 20
+  m_Intensity: 10
   m_Range: 30
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -39604,8 +39604,13 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 650731588939497076, guid: 23d6bb448a693b94f9bc91d37c83cdfc,
         type: 3}
+      propertyPath: m_Volume
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 650731588939497076, guid: 23d6bb448a693b94f9bc91d37c83cdfc,
+        type: 3}
       propertyPath: MaxDistance
-      value: 5
+      value: 5.000001
       objectReference: {fileID: 0}
     - target: {fileID: 650731588939497076, guid: 23d6bb448a693b94f9bc91d37c83cdfc,
         type: 3}
@@ -39725,7 +39730,7 @@ PrefabInstance:
     - target: {fileID: 6684571904883989132, guid: 23d6bb448a693b94f9bc91d37c83cdfc,
         type: 3}
       propertyPath: maxVolume
-      value: 0.2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6684571904883989132, guid: 23d6bb448a693b94f9bc91d37c83cdfc,
         type: 3}
@@ -65966,8 +65971,13 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 650731588939497076, guid: 23d6bb448a693b94f9bc91d37c83cdfc,
         type: 3}
+      propertyPath: m_Volume
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 650731588939497076, guid: 23d6bb448a693b94f9bc91d37c83cdfc,
+        type: 3}
       propertyPath: MaxDistance
-      value: 5
+      value: 5.000001
       objectReference: {fileID: 0}
     - target: {fileID: 650731588939497076, guid: 23d6bb448a693b94f9bc91d37c83cdfc,
         type: 3}
@@ -66087,7 +66097,7 @@ PrefabInstance:
     - target: {fileID: 6684571904883989132, guid: 23d6bb448a693b94f9bc91d37c83cdfc,
         type: 3}
       propertyPath: maxVolume
-      value: 0.2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6684571904883989132, guid: 23d6bb448a693b94f9bc91d37c83cdfc,
         type: 3}
