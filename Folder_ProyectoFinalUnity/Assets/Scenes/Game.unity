@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00043091824, g: 0.038340032, b: 0.040708616, a: 1}
+  m_IndirectSpecularColor: {r: 0.000438663, g: 0.038350366, b: 0.04071048, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -19019,7 +19019,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.9960785, g: 0.89019614, b: 0.15294118, a: 1}
-  m_Intensity: 10
+  m_Intensity: 15
   m_Range: 30
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -24572,7 +24572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: -20, y: 17, z: -17}
+  m_FollowOffset: {x: -20, y: 17, z: -20}
   m_XDamping: 1
   m_YDamping: 0.1
   m_ZDamping: 1
@@ -36992,8 +36992,8 @@ MonoBehaviour:
   backgroundAudios:
   - {fileID: 1138453435}
   - {fileID: 1138453437}
-  fadeDuration: 20
-  maxVolume: 0.15
+  fadeDuration: 15
+  maxVolume: 0.1
 --- !u!82 &1138453437
 AudioSource:
   m_ObjectHideFlags: 0
@@ -42300,7 +42300,7 @@ Transform:
   m_GameObject: {fileID: 1330760290}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2080551, y: 0.26910362, z: -0.05965883, w: 0.938476}
-  m_LocalPosition: {x: -21.5, y: 75.509995, z: 19.334}
+  m_LocalPosition: {x: -21.5, y: 75.509995, z: 16.334}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

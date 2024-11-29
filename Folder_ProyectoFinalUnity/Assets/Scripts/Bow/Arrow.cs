@@ -5,6 +5,7 @@ using UnityEngine;
 public class Arrow : MonoBehaviour
 {
     private Rigidbody rb;
+    private bool isStuck = false;
     public ArrowData arrowData;
 
     private void Awake()
@@ -39,6 +40,28 @@ public class Arrow : MonoBehaviour
             }
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * 5f);
         }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ground") && !isStuck)
+        {
+            StickArrow(other);
+        }
+    }
+    private void StickArrow(Collider groundCollider)
+    {
+        isStuck = true;
+
+        rb.isKinematic = true; 
+        rb.velocity = Vector3.zero;  
+
+        Vector3 contactPoint = groundCollider.ClosestPointOnBounds(transform.position);
+        transform.position = contactPoint;
+
+        Vector3 normal = groundCollider.transform.up;  
+        transform.rotation = Quaternion.LookRotation(-normal);
+
+        StartCoroutine(DestroyArrowAfterTime());
     }
     private IEnumerator DestroyArrowAfterTime()
     {

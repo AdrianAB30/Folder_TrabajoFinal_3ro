@@ -16,4 +16,4 @@ MonoBehaviour:
   maxFallRotationZ: 90
   damage: 15
   shootForce: 10
-  timeToDestroy: 4
+  timeToDestroy: 5

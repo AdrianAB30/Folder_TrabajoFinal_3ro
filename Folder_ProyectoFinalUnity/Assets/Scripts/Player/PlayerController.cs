@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnMovement(Vector2 movementInput)
     {
-        if (canMove && !isRolling)
+        if (canMove && !isRolling && !isAttackBow)
         {
             movement = movementInput;
             if (movement.magnitude == 0)
@@ -152,7 +152,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnJump()
     {
-        if (isGrounded && canJump && !isAttackSword && !isCovering && playerData.Stamina > 10 && !isPlayerRunning)
+        if (isGrounded && canJump && !isAttackSword && !isAttackBow && !isCovering && playerData.Stamina > 10 && !isPlayerRunning)
         {
             DecreaseStamina(8);
             isJumping = true;
@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCovering(bool isCoveringPlayer)
     {
-        if (!isJumping && !isAttackSword && !isRolling)
+        if (!isJumping && !isAttackSword && !isAttackBow && !isRolling)
         {
             isCovering = isCoveringPlayer;
             myAnimator.SetBool("isCovering", isCovering);
@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnRunning(bool isRunning)
     {
-        if (playerData.Stamina > 10f && isRunning && isGrounded && movement.magnitude > 0)
+        if (playerData.Stamina > 10f && isRunning && isGrounded && !isAttackBow && movement.magnitude > 0)
         {
             isPlayerRunning = true;
             playerData.walkspeed = originalSpeed + playerData.speedRunning;
@@ -242,7 +242,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isRolling) return;
 
-        if (isGrounded && isPlayerRunning && movement.magnitude > 0 && !isCovering && !isJumping && !isAttackSword && playerData.Stamina > 10)
+        if (isGrounded && isPlayerRunning && movement.magnitude > 0 && !isCovering && !isJumping && !isAttackSword && !isAttackBow && playerData.Stamina > 10)
         {
             DecreaseStamina(8);
             isRolling = true;
