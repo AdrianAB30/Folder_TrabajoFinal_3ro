@@ -30,7 +30,9 @@ public class RoutePatrolRandom : PatrolBehaviour
         MoveTowards(currentNode.transform.position);
         LookAtNode(currentNode);
 
-        if (Vector3.Distance(transform.position, currentNode.transform.position) > distanceToNode)
+        enemyAnimator.SetBool("isWalkingRandom", true);
+
+        if (Vector3.Distance(transform.position, currentNode.transform.position) >= distanceToNode)
         {
             enemyAnimator.SetBool("isWalkingRandom", true);
         }
@@ -42,6 +44,8 @@ public class RoutePatrolRandom : PatrolBehaviour
     }
     private void LookAtNode(GameObject targetNode)
     {
+        if (isChasing || isTakingDamage || isDead) return;
+
         Vector3 direction = (targetNode.transform.position - transform.position).normalized;
         if (direction != Vector3.zero)
         {

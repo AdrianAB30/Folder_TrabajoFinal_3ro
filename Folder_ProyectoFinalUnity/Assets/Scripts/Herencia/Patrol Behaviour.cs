@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class PatrolBehaviour : MonoBehaviour 
 {
@@ -10,10 +11,14 @@ public abstract class PatrolBehaviour : MonoBehaviour
     [SerializeField] protected float movementForce;
     [SerializeField] protected NPCData npcData;
     [SerializeField] protected EnemyData enemyData;
+    public bool isChasing = false;
     public Rigidbody myRBDRoute;
+    public NavMeshAgent IA;
+    public GameObject lastPatrolNode;
 
     protected virtual void Awake()
     {
+        IA = GetComponent<NavMeshAgent>();
         myRBDRoute = GetComponent<Rigidbody>();
     }
     protected virtual void Start()
@@ -53,10 +58,5 @@ public abstract class PatrolBehaviour : MonoBehaviour
                 myRBDRoute.velocity = Vector3.zero;
             }
         }
-    }
-    protected Transform GetNextPatrolPoint()
-    {
-        currentPatrolIndex = (currentPatrolIndex + 1) % nodesRoutes.Length;
-        return nodesRoutes.GetNodeAtPosition(currentPatrolIndex).transform;
     }
 }
