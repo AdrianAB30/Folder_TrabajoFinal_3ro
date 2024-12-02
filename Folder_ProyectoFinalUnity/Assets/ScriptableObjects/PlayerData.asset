@@ -20,5 +20,5 @@ MonoBehaviour:
   attackCooldown: 1
   rollImpulse: 20
   standCooldown: 3
-  Stamina: 37.896477
+  Stamina: 100
   regenerationLifeTime: 3

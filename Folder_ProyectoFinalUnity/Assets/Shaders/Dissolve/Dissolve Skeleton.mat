@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2950527985282016421
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -7,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Water
-  m_Shader: {fileID: -6465566751694194690, guid: 94ce783e4b5296a4ab3a5363ae24a676,
+  m_Name: Dissolve Skeleton
+  m_Shader: {fileID: -6465566751694194690, guid: db38d833e485c4f448ed4663ab0d8828,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -24,12 +37,8 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _FlowMap:
-        m_Texture: {fileID: 2800000, guid: 9784e8e1de0537041a9d6706d8fbd5ab, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _FoamTex:
-        m_Texture: {fileID: 2800000, guid: b522848972e6ecf43bab6cc61dd6e6f7, type: 3}
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: 108f9cd182a6a7f46949cf629424b272, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -46,29 +55,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Choppiness: -0.3
-    - _FlowSpeed: 0.05
-    - _FlowStrength: 0.0075
-    - _FoamDistance: 10
-    - _Opacity: 0.5
+    - _DissolveAmount: 0.093
+    - _DissolveScale: 40
+    - _DissolveWidth: 0.05
+    - _Metallic: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Size: 5
+    - _Smoothness: 0.5
     m_Colors:
-    - _DarkFoamColor: {r: 0.36405307, g: 0.58377904, b: 0.764151, a: 1}
-    - _LightFoamColor: {r: 0.9433962, g: 0.91224635, b: 0.91224635, a: 1}
-    - _WaterColor: {r: 0.41037732, g: 0.7019608, b: 1, a: 1}
+    - _BaseColor: {r: 2.0000002, g: 2.0000002, b: 2.0000002, a: 1}
+    - _DissolveColor: {r: 11.984313, g: 1.086648, b: 0, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &871086837174199604
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 7

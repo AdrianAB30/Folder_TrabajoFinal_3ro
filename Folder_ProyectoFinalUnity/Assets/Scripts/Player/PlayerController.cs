@@ -93,13 +93,10 @@ public class PlayerController : MonoBehaviour
     {
         StartCoroutine(StandCooldown());
         playerData.Stamina = 100f;
+        playerData.life = 3;
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            TakeDamage(1);
-        }
         StaminaLogic();
     }
     private void FixedUpdate()
@@ -393,7 +390,9 @@ public class PlayerController : MonoBehaviour
         {
             isTakingDamage = true;
             lifeManager.DamageToPlayer(damageAmount);
+            playerData.life -= damageAmount;
             isTakingDamage = false;
+            playerData.life = Mathf.Clamp(playerData.life, 0, 3);
         }
     }
     public void TriggerEquipEnd()
@@ -435,6 +434,10 @@ public class PlayerController : MonoBehaviour
         {
             gameManager.LooseGame();
         }
+        else if (other.CompareTag("AreaSkeleton"))
+        {
+            TakeDamage(1);
+        }
     }
     private void IncreaseStamina(float amount)
     {
@@ -468,10 +471,5 @@ public class PlayerController : MonoBehaviour
     public float GetMovementMagnitude()
     {
         return movement.magnitude;
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(checkGround.transform.position, checkGround.transform.position + Vector3.down * groundDistance);
     }
 }
