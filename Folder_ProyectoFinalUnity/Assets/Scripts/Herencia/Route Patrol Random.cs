@@ -62,4 +62,12 @@ public class RoutePatrolRandom : PatrolBehaviour
         currentPatrolIndex = Random.Range(0, nodesRoutes.Length);
         isWaiting = false;
     }
+    public void CancelWaiting()
+    {
+        if (isWaiting)
+        {
+            StopCoroutine(WaitAtNode());
+            isWaiting = false;
+        }
+    }
 }

@@ -394,6 +394,18 @@ public class PlayerController : MonoBehaviour
             isTakingDamage = false;
             playerData.life = Mathf.Clamp(playerData.life, 0, 3);
         }
+        if (playerData.life <= 0)
+        {
+            DeathPlayer();
+        }
+    }
+    public void DeathPlayer()
+    {
+        inputHandler.canHandleInput = false;
+        inputHandler.canHandleInputJump = false;
+        myRBD.isKinematic = true;
+
+        myAnimator.SetTrigger("isDead");
     }
     public void TriggerEquipEnd()
     {

@@ -99,10 +99,6 @@ public class UIManager : MonoBehaviour
         HerreraController.OnPlayerEnter -= ShowDialogueNpc;
         HenryController.OnPlayerEnter -= ShowDialogueNpc;
     }
-    private void Update()
-    {
-        RegenerateLifeBar();
-    }
     private void UpdateArrowCountUI(int currentArrows)
     {
         arrowCountText.text = "X" + currentArrows;
@@ -154,21 +150,13 @@ public class UIManager : MonoBehaviour
                     damagedLifeIndices.Push(index);  
                 }
                 Image currentFill = lifeFills[index];
-                StartCoroutine(FadeOutLifeBar(currentFill)); 
-                regenerationTimers[index] = dataPlayer.regenerationLifeTime;  
-
-                isLifeBarActive[index] = false; 
+                StartCoroutine(FadeOutLifeBar(currentFill));  
+                isLifeBarActive[index] = false;  
 
                 if (hitsReceived == lifeFills.Length)
                 {
                     Debug.Log("Sin vida");
                 }
-            }
-            else
-            {
-                isLifeBarActive[index] = false;
-                StartCoroutine(FadeOutLifeBar(lifeFills[index])); 
-                regenerationTimers[index] = dataPlayer.regenerationLifeTime; 
             }
         }
     }
@@ -197,42 +185,6 @@ public class UIManager : MonoBehaviour
                 staminaFills[0].fillAmount = 0f;
             }
         }
-    }
-    public void RegenerateLifeBar()
-    {
-        if (damagedLifeIndices.Count > 0)
-        {
-            int index = damagedLifeIndices.Peek();
-
-            if (lifeFills[index].fillAmount < 1f)
-            {
-                if (regenerationTimers[index] > 0)
-                {
-                    regenerationTimers[index] -= Time.deltaTime;  
-                }
-                if (regenerationTimers[index] <= 0)
-                {
-                    isLifeBarActive[index] = true;  
-                    damagedLifeIndices.Pop();  
-                    StartCoroutine(RegenerateLifeBarAnimation(lifeFills[index])); 
-                }
-            }
-        }
-    }
-    private IEnumerator RegenerateLifeBarAnimation(Image image)
-    {
-        float duration = 5f;
-        float elapsedTime = 0f;
-        float targetFillAmount = 1f;
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            float lerpedAmount = Mathf.Lerp(0f, targetFillAmount, lifeRegenerationCurve.Evaluate(elapsedTime / duration));
-            image.fillAmount = lerpedAmount;
-            yield return null;
-        }
-        image.fillAmount = targetFillAmount;
     }
     private IEnumerator FadeOutLifeBar(Image image)
     {

@@ -74,25 +74,38 @@ public class SkeletonController : RoutePatrolRandom
         }
         else
         {
-            myRBDRoute.AddForce(enemyData.directionPushing * enemyData.pushingForceHit, ForceMode.Impulse);
             StartCoroutine(HitCoroutine());
+            myRBDRoute.AddForce(enemyData.directionPushing * enemyData.pushingForceHit, ForceMode.Impulse);
         }
     }
     private IEnumerator HitCoroutine()
     {
         isTakingDamage = true;
         enemyAnimator.SetBool("isHit", true);
-
-        yield return new WaitForSeconds(0.5f);
-
+        yield return new WaitForSeconds(0.9f);
         isTakingDamage = false;
         enemyAnimator.SetBool("isHit", false);
     }
     private void KillEnemy()
     {
         isDead = true;
+        StopAllCoroutines();
         enemyAnimator.SetTrigger("isDead");
         enemyAnimator.SetBool("isWalkingRandom", false);
+        enemyAnimator.SetBool("isChasing", false);
+        enemyAnimator.SetBool("isAttacking", false);
+        if (IA != null)
+        {
+            IA.isStopped = true;
+            IA.enabled = false;
+        }
+
+        if (myRBDRoute != null)
+        {
+            myRBDRoute.velocity = Vector3.zero;
+            myRBDRoute.isKinematic = true;
+        }
+
         movementForce = 0f;
         StartCoroutine(DeadEnemySkeleton());
         Debug.Log("Enemigo Muerto");
@@ -100,6 +113,7 @@ public class SkeletonController : RoutePatrolRandom
     private void ChasingPlayer()
     {
         if (isChasing) return;
+        CancelWaiting();
         lastPatrolNode = nodesRoutes.GetNodeAtPosition(currentPatrolIndex);
 
         isChasing = true;
@@ -138,6 +152,14 @@ public class SkeletonController : RoutePatrolRandom
             nodesRoutes.InsertNodeAtEnd(nodes[i]);
         }
         currentPatrolIndex = 0;
+        Patrol();
+    }
+    private void StartPatrolAtNode(GameObject startNode)
+    {
+        if (startNode == null) return;
+
+        CancelWaiting();
+        SetPatrolRoute(startNode);
         Patrol();
     }
     private void SetPatrolRoute(GameObject startNode)
@@ -191,17 +213,15 @@ public class SkeletonController : RoutePatrolRandom
     }
     private IEnumerator AttackPlayer()
     {
-        if (!canAttack) yield break;
-
-        enemyAnimator.SetBool("isChasing", false);
-        enemyAnimator.SetTrigger("isAttack2");
+        enemyAnimator.SetBool("isAttacking", true);
         canAttack = false;
-        yield return new WaitForSeconds(0.9f);
+        yield return new WaitForSeconds(1.05f);
+        enemyAnimator.SetBool("isAttacking", false);
         canAttack = true;
     }
     private void DetectPlayerInRange()
     {
-        if (objective != null)
+        if (objective != null && !isDead)
         {
             Vector3 playerPosition = objective.transform.position;
             Vector3 enemyPosition = transform.position;

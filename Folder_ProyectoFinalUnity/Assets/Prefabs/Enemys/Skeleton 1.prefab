@@ -163,6 +163,7 @@ GameObject:
   - component: {fileID: 9173233908708652546}
   - component: {fileID: 5590308505064474633}
   - component: {fileID: 7248527979783245565}
+  - component: {fileID: 7830060620092821341}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -253,6 +254,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &7830060620092821341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6714076794398847843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99909c521769ebc4f93e253741413f1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeBarEnemy: {fileID: 3208783568270377947}
+  enemySkeleton: {fileID: 4460272802944064050}
+  enemyData: {fileID: 11400000, guid: 8e95fe3d54d93604fa7d621b743f9644, type: 2}
 --- !u!1 &8515039596704012336
 GameObject:
   m_ObjectHideFlags: 0
@@ -420,6 +436,16 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -5818889320171079249, guid: a79f0dfb07f222747b6103d044a2f3f0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: bbba130126757e04ba5950fc9010c94a, type: 2}
+    - target: {fileID: -588380622795953590, guid: a79f0dfb07f222747b6103d044a2f3f0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: bbba130126757e04ba5950fc9010c94a, type: 2}
     - target: {fileID: 919132149155446097, guid: a79f0dfb07f222747b6103d044a2f3f0,
         type: 3}
       propertyPath: m_Name
@@ -490,7 +516,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentPatrolIndex: 0
   distanceToNode: 0.2
-  movementForce: 16
+  movementForce: 250
   npcData: {fileID: 0}
   enemyData: {fileID: 11400000, guid: 8e95fe3d54d93604fa7d621b743f9644, type: 2}
   isChasing: 0
@@ -508,7 +534,8 @@ MonoBehaviour:
   - {fileID: 0}
   skeleton: {fileID: 0}
   objective: {fileID: 0}
-  detectionRadius: 5
+  detectionRadius: 10
+  dissolveMaterial: {fileID: 2100000, guid: bbba130126757e04ba5950fc9010c94a, type: 2}
   currentLife: 0
   canAttack: 1
 --- !u!54 &7210973212608336169
@@ -519,7 +546,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4076660941492477188}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 20
   m_Drag: 2
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -558,9 +585,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.8007296
-  m_Height: 2.752511
+  m_Height: 2.728367
   m_Direction: 1
-  m_Center: {x: 0.0032814343, y: 1.3488501, z: -0.120229125}
+  m_Center: {x: 0.0032814343, y: 1.360922, z: -0.120229125}
 --- !u!195 &2422949570227648369
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -574,13 +601,13 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 500
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: -0.05
+  m_BaseOffset: -0.02
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!95 &7293801693187399108 stripped

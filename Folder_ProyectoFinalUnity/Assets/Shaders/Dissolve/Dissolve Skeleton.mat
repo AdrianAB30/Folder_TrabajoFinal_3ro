@@ -55,7 +55,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DissolveAmount: 0.093
+    - _DissolveAmount: 0
     - _DissolveScale: 40
     - _DissolveWidth: 0.05
     - _Metallic: 0
@@ -63,6 +63,6 @@ Material:
     - _QueueOffset: 0
     - _Smoothness: 0.5
     m_Colors:
-    - _BaseColor: {r: 2.0000002, g: 2.0000002, b: 2.0000002, a: 1}
-    - _DissolveColor: {r: 11.984313, g: 1.086648, b: 0, a: 1}
+    - _BaseColor: {r: 1.4980394, g: 1.4980394, b: 1.4980394, a: 1}
+    - _DissolveColor: {r: 0, g: 4.933282, b: 5.9921565, a: 1}
   m_BuildTextureStacks: []
