@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     [Header("Player Data")]
     [SerializeField] private PlayerData playerData;
     [SerializeField] private GameObject checkGround;
+    [SerializeField] private GameObject deathZone;
+    [SerializeField] private GameObject player;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundDistance;
     private float originalSpeed = 6f;
@@ -92,6 +94,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         StartCoroutine(StandCooldown());
+        deathZone.gameObject.SetActive(false);
         playerData.Stamina = 100f;
         playerData.life = 3;
     }
@@ -319,7 +322,7 @@ public class PlayerController : MonoBehaviour
         canMove = false;
         inputHandler.canHandleInput = false;
         inputHandler.canHandleInputJump = false;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(3);
         myAnimator.SetBool("isStand", true);
         OnPlayerStand?.Invoke();
         yield return new WaitForSeconds(4f);
@@ -327,6 +330,11 @@ public class PlayerController : MonoBehaviour
         inputHandler.canHandleInputJump = true;
         canJump = true;
         canMove = true;
+    }
+    private IEnumerator DamageCooldown()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isTakingDamage = false;
     }
     #endregion
 
@@ -386,26 +394,30 @@ public class PlayerController : MonoBehaviour
     }
     public void TakeDamage(int damageAmount)
     {
-        if (!isTakingDamage)
-        {
-            isTakingDamage = true;
-            lifeManager.DamageToPlayer(damageAmount);
-            playerData.life -= damageAmount;
-            isTakingDamage = false;
-            playerData.life = Mathf.Clamp(playerData.life, 0, 3);
-        }
+        if (isTakingDamage) return; 
+
+        isTakingDamage = true; 
+
+        lifeManager.DamageToPlayer(damageAmount);
+        playerData.life -= damageAmount;
+
+        playerData.life = Mathf.Clamp(playerData.life, 0, 3);
+
         if (playerData.life <= 0)
         {
-            DeathPlayer();
+            DeathPlayer(); 
         }
+
+        StartCoroutine(DamageCooldown());
     }
     public void DeathPlayer()
     {
+        myAnimator.SetTrigger("isDead");
         inputHandler.canHandleInput = false;
         inputHandler.canHandleInputJump = false;
-        myRBD.isKinematic = true;
-
-        myAnimator.SetTrigger("isDead");
+        deathZone.SetActive(true);
+        myCollider.center = new Vector3(0.2f, 2.7f, -3);
+        myCollider.size = new Vector3(1.72f, 5.6f, 5);
     }
     public void TriggerEquipEnd()
     {

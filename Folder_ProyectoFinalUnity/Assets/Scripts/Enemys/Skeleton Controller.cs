@@ -11,6 +11,7 @@ public class SkeletonController : RoutePatrolRandom
     [SerializeField] private GameObject skeleton;
     [SerializeField] private GameObject objective;
     [SerializeField] private float detectionRadius = 5f;
+    [SerializeField]
     public int currentLife;
     public bool canAttack = true;
 
@@ -152,22 +153,7 @@ public class SkeletonController : RoutePatrolRandom
             nodesRoutes.InsertNodeAtEnd(nodes[i]);
         }
         currentPatrolIndex = 0;
-        Patrol();
-    }
-    private void StartPatrolAtNode(GameObject startNode)
-    {
-        if (startNode == null) return;
-
         CancelWaiting();
-        SetPatrolRoute(startNode);
-        Patrol();
-    }
-    private void SetPatrolRoute(GameObject startNode)
-    {
-        lastPatrolNode = startNode;
-        currentPatrolIndex = 0;
-        nodesRoutes = new SimpleLinkedList<GameObject>();
-        nodesRoutes.InsertNodeAtEnd(startNode);
         Patrol();
     }
     private IEnumerator ChasePlayerCoroutine()
@@ -213,9 +199,10 @@ public class SkeletonController : RoutePatrolRandom
     }
     private IEnumerator AttackPlayer()
     {
+        if (isTakingDamage) yield break;
         enemyAnimator.SetBool("isAttacking", true);
         canAttack = false;
-        yield return new WaitForSeconds(1.05f);
+        yield return new WaitForSeconds(1.1f);
         enemyAnimator.SetBool("isAttacking", false);
         canAttack = true;
     }
@@ -254,6 +241,7 @@ public class SkeletonController : RoutePatrolRandom
     }
     private void OnTriggerEnter(Collider other)
     {
+        if (isTakingDamage) return;
         if (other.gameObject.CompareTag("Sword"))
         {
             isTakingDamage = true;
@@ -264,6 +252,11 @@ public class SkeletonController : RoutePatrolRandom
             isTakingDamage = true;
             TakeDamage(15);
             Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("Death"))
+        {
+            StopChasingPlayer();
+            objective = null;
         }
     }
     private void OnDrawGizmos()

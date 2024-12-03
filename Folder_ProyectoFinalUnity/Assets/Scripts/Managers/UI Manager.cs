@@ -45,11 +45,6 @@ public class UIManager : MonoBehaviour
     private Vector3[] originalPositions;
     private Vector3 positionTimer = new Vector3(0,130,0);
 
-    [Header("Life Regeneration Curve")]
-    [SerializeField] private AnimationCurve lifeRegenerationCurve;
-    private bool[] isLifeBarActive;
-    private float[] regenerationTimers;
-
     private void Start()
     {
         StartCoroutine(MoveAtributesPlayer());
@@ -57,14 +52,6 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < dialoguePanels.Length; i++)
         {
             originalPositions[i] = dialoguePanels[i].anchoredPosition;
-        }
-
-        isLifeBarActive = new bool[lifeFills.Length];
-        regenerationTimers = new float[lifeFills.Length];
-        for (int i = 0; i < lifeFills.Length; i++)
-        {
-            isLifeBarActive[i] = true;
-            regenerationTimers[i] = 0f;  
         }
         ResetWeaponUI();
     }
@@ -143,15 +130,14 @@ public class UIManager : MonoBehaviour
         if (hitsReceived > 0 && hitsReceived <= lifeFills.Length)
         {
             int index = hitsReceived - 1;
-            if (isLifeBarActive[index])
+            if (lifeFills[index])
             {
                 if (!damagedLifeIndices.Contains(index))
                 {
                     damagedLifeIndices.Push(index);  
                 }
                 Image currentFill = lifeFills[index];
-                StartCoroutine(FadeOutLifeBar(currentFill));  
-                isLifeBarActive[index] = false;  
+                StartCoroutine(FadeOutLifeBar(currentFill));
 
                 if (hitsReceived == lifeFills.Length)
                 {
