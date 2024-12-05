@@ -37,7 +37,9 @@ public class GameManager : MonoBehaviour
     [Header("References Skeleton and Bridge")]
     [SerializeField] private SkeletonController[] skeletons;
     [SerializeField] private GameObject bridgeCollider;        
+    [SerializeField] private GameObject rockCollider;        
     [SerializeField] private Material bridgeMaterial;          
+    [SerializeField] private Material rockMaterial;          
     [SerializeField] private float dissolveSpeed;
     public int skeletonKillCount = 0;
     private int TotalSkeletons = 5;
@@ -72,6 +74,7 @@ public class GameManager : MonoBehaviour
         }
         FadeStart();
         bridgeMaterial.SetFloat("_DissolveAmount", 1f);
+        rockMaterial.SetFloat("_DissolveAmount", 0f);
     }
     public void ChangeScene(string sceneName)
     {
@@ -135,8 +138,7 @@ public class GameManager : MonoBehaviour
     }
     public void LooseGame()
     {
-        loosePanel.SetActive(true);
-        Time.timeScale = 0;
+        StartCoroutine(Loose());
     }
     private IEnumerator ChangeCameraInGame()
     {
@@ -149,27 +151,38 @@ public class GameManager : MonoBehaviour
 
         if (skeletonKillCount >= TotalSkeletons)
         {
-            StartCoroutine(DissolveBridge());
+            StartCoroutine(DissolveBridgeAndRocks());
             Debug.Log("¡Puente activado!");
         }
     }
-    private IEnumerator DissolveBridge()
+    IEnumerator Loose()
+    {
+        yield return new WaitForSeconds(0.05f);
+        loosePanel.SetActive(true);
+        Time.timeScale = 0f;
+    }
+    private IEnumerator DissolveBridgeAndRocks()
     {
         cameraBridge.Priority = 11;
         yield return new WaitForSeconds(1.5f);
         float dissolveValue = 1f;
+        float rockDissolveValue = 0f;
 
         bridgeCollider.SetActive(false);
 
         while (dissolveValue > 0f)
         {
             dissolveValue -= Time.deltaTime * dissolveSpeed;
+            rockDissolveValue += Time.deltaTime * dissolveSpeed;
             bridgeMaterial.SetFloat("_DissolveAmount", dissolveValue);
-            yield return null;
+            rockMaterial.SetFloat("_DissolveAmount", rockDissolveValue);
+            yield return null;        
         }
         bridgeMaterial.SetFloat("_DissolveAmount", 0f);
+        rockMaterial.SetFloat("_DissolveAmount", 1f);
 
         bridgeCollider.SetActive(true);
+        rockCollider.SetActive(false);
         Debug.Log("¡Collider del puente activado!");
 
         yield return new WaitForSeconds(1f);

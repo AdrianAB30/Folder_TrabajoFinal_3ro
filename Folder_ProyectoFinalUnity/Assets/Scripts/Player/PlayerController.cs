@@ -409,6 +409,7 @@ public class PlayerController : MonoBehaviour
         myAnimator.SetTrigger("isDead");
         inputHandler.canHandleInput = false;
         inputHandler.canHandleInputJump = false;
+        myRBD.velocity = Vector3.zero;
         deathZone.SetActive(true);
         myCollider.center = new Vector3(0.2f, 2.7f, 2.5f);
         myCollider.size = new Vector3(1.72f, 5.5f, 5);

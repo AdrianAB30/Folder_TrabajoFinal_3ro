@@ -254,7 +254,7 @@ public class SkeletonController : RoutePatrolRandom
         if (other.gameObject.CompareTag("Sword"))
         {
             isTakingDamage = true;
-            TakeDamage(50);
+            TakeDamage(100);
         }
         else if (other.gameObject.CompareTag("Arrow"))
         {
