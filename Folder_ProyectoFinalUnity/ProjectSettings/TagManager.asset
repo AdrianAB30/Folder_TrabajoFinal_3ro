@@ -15,6 +15,7 @@ TagManager:
   - Area
   - AreaSkeleton
   - Death
+  - Block
   layers:
   - Default
   - TransparentFX

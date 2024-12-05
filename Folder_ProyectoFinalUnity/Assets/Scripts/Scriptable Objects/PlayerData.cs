@@ -7,7 +7,7 @@ public class PlayerData : ScriptableObject
 {
     [Header("Player Stats")]
     public float walkspeed;
-    public float life;
+    public int life;
     public float speedRunning;
     public float forceFalling;
     public float jumpForce;
@@ -15,5 +15,4 @@ public class PlayerData : ScriptableObject
     public float rollImpulse;
     public float standCooldown;
     public float Stamina;
-    public float regenerationLifeTime;
 }

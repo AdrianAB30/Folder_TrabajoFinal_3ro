@@ -5,18 +5,21 @@ using UnityEngine.AI;
 
 public class SkeletonController : RoutePatrolRandom
 {
-    [Header("Patrol Data NPC")]
+    [Header("Skeleton Data")]
     [SerializeField] private GraphManager graphManager;
     [SerializeField] private GameObject[] nodes;
     [SerializeField] private GameObject skeleton;
     [SerializeField] private GameObject objective;
     [SerializeField] private float detectionRadius = 5f;
-    [SerializeField]
+    [SerializeField] public EnemyData enemyData;
+    [SerializeField] public SkinnedMeshRenderer enemy;
+    [SerializeField] private float dissolveSpeed;
     public int currentLife;
     public bool canAttack = true;
 
     //Eventos
     public event Action<int> OnHealthChanged;
+    public event Action OnEnemyKilled;
 
     protected override void Awake()
     {
@@ -95,11 +98,9 @@ public class SkeletonController : RoutePatrolRandom
         enemyAnimator.SetBool("isWalkingRandom", false);
         enemyAnimator.SetBool("isChasing", false);
         enemyAnimator.SetBool("isAttacking", false);
-        if (IA != null)
-        {
-            IA.isStopped = true;
-            IA.enabled = false;
-        }
+
+        IA.isStopped = true;
+        IA.enabled = false;
 
         if (myRBDRoute != null)
         {
@@ -108,6 +109,8 @@ public class SkeletonController : RoutePatrolRandom
         }
 
         movementForce = 0f;
+        enemy.material = new Material(enemy.material);
+        OnEnemyKilled?.Invoke();
         StartCoroutine(DeadEnemySkeleton());
         Debug.Log("Enemigo Muerto");
     }
@@ -183,6 +186,7 @@ public class SkeletonController : RoutePatrolRandom
                     IA.isStopped = false;
                     IA.updatePosition = true;
                     IA.updateRotation = true;
+                    IA.SetDestination(playerPosition);
                     enemyAnimator.SetBool("isChasing", true);
                 }
                 Vector3 directionToPlayer = playerPosition - transform.position;
@@ -191,7 +195,7 @@ public class SkeletonController : RoutePatrolRandom
                 if (directionToPlayer != Vector3.zero)
                 {
                     Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * enemyData.forceRotateEnemy);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5);
                 }
             }
             yield return new WaitForSeconds(0.1f);
@@ -202,7 +206,7 @@ public class SkeletonController : RoutePatrolRandom
         if (isTakingDamage) yield break;
         enemyAnimator.SetBool("isAttacking", true);
         canAttack = false;
-        yield return new WaitForSeconds(1.1f);
+        yield return new WaitForSeconds(2f);
         enemyAnimator.SetBool("isAttacking", false);
         canAttack = true;
     }
@@ -235,8 +239,13 @@ public class SkeletonController : RoutePatrolRandom
     }
     IEnumerator DeadEnemySkeleton()
     {
-        yield return new WaitForSeconds(2f);
-        isDead = true;
+        float dissolveAmount = 0f;
+        while (dissolveAmount < 1f)
+        {
+            dissolveAmount += Time.deltaTime * dissolveSpeed;
+            enemy.material.SetFloat("_DissolveAmount", dissolveAmount);
+            yield return null; 
+        }
         skeleton.SetActive(false);
     }
     private void OnTriggerEnter(Collider other)
@@ -245,19 +254,24 @@ public class SkeletonController : RoutePatrolRandom
         if (other.gameObject.CompareTag("Sword"))
         {
             isTakingDamage = true;
-            TakeDamage(20);
+            TakeDamage(50);
         }
         else if (other.gameObject.CompareTag("Arrow"))
         {
             isTakingDamage = true;
-            TakeDamage(15);
+            TakeDamage(40);
             Destroy(other.gameObject);
         }
         else if (other.CompareTag("Death"))
         {
             StopChasingPlayer();
+            enemyAnimator.SetBool("isAttacking", false);
             objective = null;
         }
+    }
+    private int DamageToPlayer()
+    {
+        return enemyData.damage;
     }
     private void OnDrawGizmos()
     {

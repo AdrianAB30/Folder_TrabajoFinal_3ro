@@ -26,13 +26,36 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float minIntensity;
     [SerializeField] private float maxIntensity;
 
-    [Header("Cinemachine")]
+    [Header("Cameras")]
     [SerializeField] private CinemachineVirtualCamera cameraMenu;
+    [SerializeField] private CinemachineVirtualCamera cameraBridge;
 
     [Header("Menu Navigation")]
     [SerializeField] private GameObject optionsSelected;
     [SerializeField] private GameObject menuSelected;
 
+    [Header("References Skeleton and Bridge")]
+    [SerializeField] private SkeletonController[] skeletons;
+    [SerializeField] private GameObject bridgeCollider;        
+    [SerializeField] private Material bridgeMaterial;          
+    [SerializeField] private float dissolveSpeed;
+    public int skeletonKillCount = 0;
+    private int TotalSkeletons = 5;
+
+    private void OnEnable()
+    {
+        for (int i = 0; i < skeletons.Length; i++)
+        {
+            skeletons[i].OnEnemyKilled += ActivateBridge;
+        }
+    }
+    private void OnDisable()
+    {
+        for (int i = 0; i < skeletons.Length; i++)
+        {
+            skeletons[i].OnEnemyKilled -= ActivateBridge;
+        }
+    }
     public bool IsOptionsMenuActive { get; private set; }
     private void Start()
     {
@@ -48,6 +71,7 @@ public class GameManager : MonoBehaviour
             bonfireLight.DOIntensity(maxIntensity, 3f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutQuart);
         }
         FadeStart();
+        bridgeMaterial.SetFloat("_DissolveAmount", 1f);
     }
     public void ChangeScene(string sceneName)
     {
@@ -118,5 +142,38 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         cameraMenu.Priority = 9;
+    }
+    private void ActivateBridge()
+    {
+        skeletonKillCount++;
+
+        if (skeletonKillCount >= TotalSkeletons)
+        {
+            StartCoroutine(DissolveBridge());
+            Debug.Log("¡Puente activado!");
+        }
+    }
+    private IEnumerator DissolveBridge()
+    {
+        cameraBridge.Priority = 11;
+        yield return new WaitForSeconds(1.5f);
+        float dissolveValue = 1f;
+
+        bridgeCollider.SetActive(false);
+
+        while (dissolveValue > 0f)
+        {
+            dissolveValue -= Time.deltaTime * dissolveSpeed;
+            bridgeMaterial.SetFloat("_DissolveAmount", dissolveValue);
+            yield return null;
+        }
+        bridgeMaterial.SetFloat("_DissolveAmount", 0f);
+
+        bridgeCollider.SetActive(true);
+        Debug.Log("¡Collider del puente activado!");
+
+        yield return new WaitForSeconds(1f);
+
+        cameraBridge.Priority = 9;
     }
 }

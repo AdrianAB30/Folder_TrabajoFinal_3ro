@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Player Data")]
-    [SerializeField] private PlayerData playerData;
+    [SerializeField] public PlayerData playerData;
     [SerializeField] private GameObject checkGround;
     [SerializeField] private GameObject deathZone;
     [SerializeField] private GameObject player;
@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 fallingSize = new Vector3(1.72f, 5f, 1.55f);
 
     [Header("References Managers")]
-    [SerializeField] private LifeManager lifeManager;
+    [SerializeField] private AtributesManager atributesManager;
     [SerializeField] private InventoryPlayer inventoryPlayer;
     [SerializeField] private Particle_Class particleClass;
     [SerializeField] private UIManager uiManager;
@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
     public bool isJumping = false;
     private bool wasGrounded = false;
     private bool isPlayerRunning = false;
-    private bool isTakingDamage = false;
+    public bool isTakingDamage = false;
     private bool isGrounded = true;
 
     //Eventos
@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        lifeManager.OnPlayerDamage += TakeDamage;
+        atributesManager.OnPlayerDamage += HandleDamage;
         OnJumpColl += JumpCollider;
         OnFallingColl += FallingCollider;
         inputHandler.OnMovementInput += OnMovement;
@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDisable()
     {
-        lifeManager.OnPlayerDamage -= TakeDamage;
+        atributesManager.OnPlayerDamage -= HandleDamage;
         OnJumpColl -= JumpCollider;
         OnFallingColl -= FallingCollider;
         inputHandler.OnMovementInput -= OnMovement;
@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour
             movement = movementInput;
             if (movement.magnitude == 0)
             {
-                IncreaseStamina(Time.deltaTime * 5f);
+                atributesManager.IncreaseStamina(Time.deltaTime * 5f);
                 playerData.walkspeed = originalSpeed;
                 myAnimator.SetBool("isRunning", false);
                 myAnimator.SetBool("isAttack", false);
@@ -154,7 +154,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded && canJump && !isAttackSword && !isAttackBow && !isCovering && playerData.Stamina > 10 && !isPlayerRunning)
         {
-            DecreaseStamina(8);
+            atributesManager.DecreaseStamina(8);
             isJumping = true;
             myAnimator.SetBool("isJumpNormal", true);
             myAnimator.SetBool("isInGround", false);
@@ -169,7 +169,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!isAttackSword && !isJumping && movement.magnitude == 0 && !isCovering && isGrounded && playerData.Stamina > 10)
         {
-            DecreaseStamina(8);
+            atributesManager.DecreaseStamina(8);
             isAttackSword = true;
             canJump = false;
             canMove = false;
@@ -206,7 +206,7 @@ public class PlayerController : MonoBehaviour
 
             if (isCovering)
             {
-                IncreaseStamina(Time.deltaTime * 5f);
+                atributesManager.IncreaseStamina(Time.deltaTime * 5f);
                 canMove = false;
                 canJump = false;
                 isRolling = false;
@@ -244,7 +244,7 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded && isPlayerRunning && movement.magnitude > 0 && !isCovering && !isJumping && !isAttackSword && !isAttackBow && playerData.Stamina > 10)
         {
-            DecreaseStamina(8);
+            atributesManager.DecreaseStamina(8);
             isRolling = true;
             canMove = false;
             canJump = false;
@@ -361,7 +361,6 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
-    #endregion 
 
     private void CheckGround()
     {
@@ -392,23 +391,18 @@ public class PlayerController : MonoBehaviour
         }
         wasGrounded = isGrounded;
     }
-    public void TakeDamage(int damageAmount)
+    #endregion
+    public void HandleDamage(int damage)
     {
         if (isTakingDamage) return; 
 
-        isTakingDamage = true; 
-
-        lifeManager.DamageToPlayer(damageAmount);
-        playerData.life -= damageAmount;
-
-        playerData.life = Mathf.Clamp(playerData.life, 0, 3);
+        isTakingDamage = true;
+        StartCoroutine(DamageCooldown());
 
         if (playerData.life <= 0)
         {
             DeathPlayer(); 
         }
-
-        StartCoroutine(DamageCooldown());
     }
     public void DeathPlayer()
     {
@@ -416,8 +410,8 @@ public class PlayerController : MonoBehaviour
         inputHandler.canHandleInput = false;
         inputHandler.canHandleInputJump = false;
         deathZone.SetActive(true);
-        myCollider.center = new Vector3(0.2f, 2.7f, -3);
-        myCollider.size = new Vector3(1.72f, 5.6f, 5);
+        myCollider.center = new Vector3(0.2f, 2.7f, 2.5f);
+        myCollider.size = new Vector3(1.72f, 5.5f, 5);
     }
     public void TriggerEquipEnd()
     {
@@ -460,29 +454,18 @@ public class PlayerController : MonoBehaviour
         }
         else if (other.CompareTag("AreaSkeleton"))
         {
-            TakeDamage(1);
+            atributesManager.DamageToPlayer(1);
         }
-    }
-    private void IncreaseStamina(float amount)
-    {
-        playerData.Stamina = Mathf.Min(playerData.Stamina + amount, 100);
-        uiManager.UpdateStaminaBar();
-    }
-    private void DecreaseStamina(float amount)
-    {
-        if (gameManager.IsOptionsMenuActive) return;
-        playerData.Stamina = Mathf.Max(playerData.Stamina - amount, 0);
-        uiManager.UpdateStaminaBar();
     }
     private void StaminaLogic()
     {
         if (isPlayerRunning && playerData.Stamina > 0)
         {
-            DecreaseStamina(Time.deltaTime * 10f);
+            atributesManager.DecreaseStamina(Time.deltaTime * 10f);
         }
         else if (movement.magnitude == 0 || (movement.magnitude > 0 && !isPlayerRunning))
         {
-            IncreaseStamina(Time.deltaTime * 5f);
+            atributesManager.IncreaseStamina(Time.deltaTime * 5f);
         }
         else if (playerData.Stamina <= 0)
         {

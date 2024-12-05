@@ -9,8 +9,6 @@ public abstract class PatrolBehaviour : MonoBehaviour
     [SerializeField] protected int currentPatrolIndex;
     [SerializeField] protected float distanceToNode;
     [SerializeField] protected float movementForce;
-    [SerializeField] protected NPCData npcData;
-    [SerializeField] protected EnemyData enemyData;
     public bool isChasing = false;
     public Rigidbody myRBDRoute;
     public NavMeshAgent IA;

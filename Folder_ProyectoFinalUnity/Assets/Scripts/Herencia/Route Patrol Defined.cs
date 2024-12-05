@@ -7,6 +7,7 @@ public class RoutePatrolDefined : PatrolBehaviour
     private bool movingForward = true;
     private bool isWaiting = false;
     public Animator npcAnimator;
+    public float forceRotateNPC;
 
     protected override void Awake()
     {
@@ -15,7 +16,7 @@ public class RoutePatrolDefined : PatrolBehaviour
     }
     protected override void Start()
     {
-        npcData.forceRotateNpc = 5f;
+        forceRotateNPC = 5f;
         StartCoroutine(WaitAtNode());
         base.Start();
     }
@@ -44,13 +45,13 @@ public class RoutePatrolDefined : PatrolBehaviour
     {
         Vector3 direction = (node.transform.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)); 
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * npcData.forceRotateNpc); 
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * forceRotateNPC); 
     }
     private IEnumerator WaitAtNode()
     {
         isWaiting = true;
         npcAnimator.SetBool("isWalking", false);
-        yield return new WaitForSeconds(npcData.watingTime);
+        yield return new WaitForSeconds(1.2f);
         isWaiting = false;
         UpdatePatrolIndex(); 
     }

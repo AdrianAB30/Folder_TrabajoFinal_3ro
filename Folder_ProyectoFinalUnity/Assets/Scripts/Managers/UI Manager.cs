@@ -23,7 +23,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image timer;
 
     [Header("References")]
-    [SerializeField] private LifeManager lifeManager;
+    [SerializeField] private AtributesManager atributesManager;
     [SerializeField] private SpawnArrows countArrows;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private NPCData dialoguesHenry;
@@ -67,7 +67,7 @@ public class UIManager : MonoBehaviour
         countArrows.OnArrowsEmpty += ShowTimerArrows;
         countArrows.OnArrowCountChanged += UpdateArrowCountUI;
         player.OnPlayerStand += ShowTutorial;
-        lifeManager.OnPlayerDamage += UpdateLifeBar;
+        atributesManager.OnPlayerDamage += UpdateLifeBar;
         InventoryPlayer.OnWeaponChanged += UpdateWeaponBorder;
         PlayerController.OnBowCollected += ActivateBowUI;
         PlayerController.OnSwordCollected += ActivateSwordUI;
@@ -79,7 +79,7 @@ public class UIManager : MonoBehaviour
         countArrows.OnArrowsEmpty -= ShowTimerArrows;
         countArrows.OnArrowCountChanged -= UpdateArrowCountUI;
         player.OnPlayerStand -= ShowTutorial;
-        lifeManager.OnPlayerDamage -= UpdateLifeBar;
+        atributesManager.OnPlayerDamage -= UpdateLifeBar;
         InventoryPlayer.OnWeaponChanged -= UpdateWeaponBorder;
         PlayerController.OnBowCollected -= ActivateBowUI;
         PlayerController.OnSwordCollected -= ActivateSwordUI;

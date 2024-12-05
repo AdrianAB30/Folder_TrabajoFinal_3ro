@@ -440,12 +440,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: bbba130126757e04ba5950fc9010c94a, type: 2}
+      objectReference: {fileID: 2100000, guid: 6d78d5abd54209f4c9831d0e9a39168a, type: 2}
     - target: {fileID: -588380622795953590, guid: a79f0dfb07f222747b6103d044a2f3f0,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: bbba130126757e04ba5950fc9010c94a, type: 2}
+      objectReference: {fileID: 2100000, guid: 6d78d5abd54209f4c9831d0e9a39168a, type: 2}
     - target: {fileID: 919132149155446097, guid: a79f0dfb07f222747b6103d044a2f3f0,
         type: 3}
       propertyPath: m_Name
@@ -517,8 +517,6 @@ MonoBehaviour:
   currentPatrolIndex: 0
   distanceToNode: 0.2
   movementForce: 250
-  npcData: {fileID: 0}
-  enemyData: {fileID: 11400000, guid: 8e95fe3d54d93604fa7d621b743f9644, type: 2}
   isChasing: 0
   myRBDRoute: {fileID: 0}
   IA: {fileID: 0}
@@ -526,6 +524,7 @@ MonoBehaviour:
   enemyAnimator: {fileID: 7293801693187399108}
   isTakingDamage: 0
   isDead: 0
+  forceRotateEnemy: 10
   graphManager: {fileID: 0}
   nodes:
   - {fileID: 0}
@@ -535,7 +534,9 @@ MonoBehaviour:
   skeleton: {fileID: 0}
   objective: {fileID: 0}
   detectionRadius: 10
-  dissolveMaterial: {fileID: 2100000, guid: bbba130126757e04ba5950fc9010c94a, type: 2}
+  enemyData: {fileID: 11400000, guid: 8e95fe3d54d93604fa7d621b743f9644, type: 2}
+  enemy: {fileID: 0}
+  dissolveSpeed: 0.5
   currentLife: 0
   canAttack: 1
 --- !u!54 &7210973212608336169

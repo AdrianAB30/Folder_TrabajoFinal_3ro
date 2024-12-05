@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0004355458, g: 0.038353268, b: 0.040727053, a: 1}
+  m_IndirectSpecularColor: {r: 0.0004336823, g: 0.038350917, b: 0.040718615, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11235,8 +11235,14 @@ MonoBehaviour:
   minIntensity: 0.5
   maxIntensity: 2
   cameraMenu: {fileID: 0}
+  cameraBridge: {fileID: 0}
   optionsSelected: {fileID: 1406448488}
   menuSelected: {fileID: 530015463}
+  skeletons: []
+  bridgeCollider: {fileID: 0}
+  bridgeMaterial: {fileID: 2100000, guid: 3b0387b36d50afe4a80dd6a3131e99b1, type: 2}
+  dissolveSpeed: 0
+  skeletonKillCount: 0
 --- !u!4 &2111099179
 Transform:
   m_ObjectHideFlags: 0

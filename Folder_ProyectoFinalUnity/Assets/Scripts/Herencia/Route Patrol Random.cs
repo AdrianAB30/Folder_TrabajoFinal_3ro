@@ -8,6 +8,7 @@ public class RoutePatrolRandom : PatrolBehaviour
     public Animator enemyAnimator;
     public bool isTakingDamage;
     public bool isDead;
+    public float forceRotateEnemy;
 
     protected override void Awake()
     {
@@ -39,7 +40,7 @@ public class RoutePatrolRandom : PatrolBehaviour
         else
         {
             enemyAnimator.SetBool("isWalkingRandom", false);
-            StartCoroutine(WaitAtNode());
+            if (!isWaiting) StartCoroutine(WaitAtNode());
         }
     }
     private void LookAtNode(GameObject targetNode)
@@ -50,14 +51,14 @@ public class RoutePatrolRandom : PatrolBehaviour
         if (direction != Vector3.zero)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * enemyData.forceRotateEnemy);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * forceRotateEnemy);
         }
     }
     private IEnumerator WaitAtNode()
     {
         isWaiting = true;
         enemyAnimator.SetBool("isWalkingRandom", false);
-        yield return new WaitForSeconds(enemyData.watingTime);
+        yield return new WaitForSeconds(1);
 
         currentPatrolIndex = Random.Range(0, nodesRoutes.Length);
         isWaiting = false;
