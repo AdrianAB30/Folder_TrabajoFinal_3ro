@@ -13,12 +13,11 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   walkspeed: 6
-  life: 3
+  life: 1
   speedRunning: 3
   forceFalling: 5
-  jumpForce: 6
+  jumpForce: 5
   attackCooldown: 1
   rollImpulse: 20
   standCooldown: 3
   Stamina: 100
-  regenerationLifeTime: 3
