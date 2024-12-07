@@ -51,12 +51,13 @@ public class PlayerController : MonoBehaviour
     //Eventos
     public event Action OnJumpColl;
     public event Action OnFallingColl;
+    public event Action OnPlayerStand;
     public static event Action OnStartRollingParticle;
     public static event Action OnEndRollingParticle;
     public static event Action OnBowCollected;
     public static event Action OnSwordCollected;
+    public static event Action OnPlayerDeath;
     public static event Action<bool> OnAttackBowSpawner;
-    public event Action OnPlayerStand;
 
     private void OnEnable()
     {
@@ -413,6 +414,7 @@ public class PlayerController : MonoBehaviour
         deathZone.SetActive(true);
         myCollider.center = new Vector3(0.2f, 2.7f, 2.5f);
         myCollider.size = new Vector3(1.72f, 5.5f, 5);
+        OnPlayerDeath?.Invoke();
     }
     public void TriggerEquipEnd()
     {
@@ -451,6 +453,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (other.CompareTag("Perder"))
         {
+            myRBD.isKinematic = true;
             gameManager.LooseGame();
         }
         else if (other.CompareTag("AreaSkeleton"))

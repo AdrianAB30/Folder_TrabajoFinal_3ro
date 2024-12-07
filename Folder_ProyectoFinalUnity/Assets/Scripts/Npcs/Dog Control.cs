@@ -1,25 +1,18 @@
 using DG.Tweening;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HenryController : RoutePatrolDefined
+public class DogControl : RoutePatrolDefined
 {
-    [Header("Patrol Data NPC")]
+    [Header("Patrol Data Dog")]
     [SerializeField] private GraphManager graphManager;
     [SerializeField] private GameObject[] nodes;
-
-    [Header("NPC Dialogue")]
-    [SerializeField] private GameObject dialogueMark;
 
     public Transform playerTransform;
     private bool playerInRange;
     private float originalForce;
     private float originalRotate;
-
-    //Eventos
-    public static event Action<bool,string> OnPlayerEnter;
 
     protected override void Awake()
     {
@@ -50,15 +43,21 @@ public class HenryController : RoutePatrolDefined
         patrolPointsRandom.InsertNodeAtEnd(nodes[1]);
         patrolPointsRandom.InsertNodeAtEnd(nodes[2]);
         patrolPointsRandom.InsertNodeAtEnd(nodes[3]);
+        patrolPointsRandom.InsertNodeAtEnd(nodes[4]);
+        patrolPointsRandom.InsertNodeAtEnd(nodes[5]);
 
         graphManager.AddNode(nodes[0]);
         graphManager.AddNode(nodes[1]);
         graphManager.AddNode(nodes[2]);
         graphManager.AddNode(nodes[3]);
+        graphManager.AddNode(nodes[4]);
+        graphManager.AddNode(nodes[5]);
 
         graphManager.AddDirectedConnection(nodes[0], nodes[1]);
         graphManager.AddDirectedConnection(nodes[1], nodes[2]);
         graphManager.AddDirectedConnection(nodes[2], nodes[3]);
+        graphManager.AddDirectedConnection(nodes[3], nodes[4]);
+        graphManager.AddDirectedConnection(nodes[4], nodes[5]);
 
         SetPatrolRoute(patrolPointsRandom);
     }
@@ -79,14 +78,23 @@ public class HenryController : RoutePatrolDefined
             Gizmos.color = Color.red;
             Gizmos.DrawLine(nodes[2].transform.position, nodes[3].transform.position);
         }
+        if (nodes[3] != null && nodes[4] != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(nodes[3].transform.position, nodes[4].transform.position);
+        }
+        if (nodes[4] != null && nodes[5] != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(nodes[4].transform.position, nodes[5].transform.position);
+        }
+
     }
     private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            dialogueMark.SetActive(false);
             npcAnimator.SetBool("isInteract", true);
-            OnPlayerEnter?.Invoke(true,"Henry");
             movementForce = 0f;
             playerInRange = true;
         }
@@ -96,7 +104,6 @@ public class HenryController : RoutePatrolDefined
         if (collision.gameObject.CompareTag("Player"))
         {
             npcAnimator.SetBool("isInteract", false);
-            OnPlayerEnter?.Invoke(false,"Henry");
             movementForce = originalForce;
             playerInRange = false;
         }

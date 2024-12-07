@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private RectTransform panelOptions;
     [SerializeField] private GameObject panel;
-    [SerializeField] private GameObject loosePanel;
+    [SerializeField] private Image loosePanel;
     [SerializeField] private Image fadeImage;
 
     [Header("Dotween")]
@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
         {
             skeletons[i].OnEnemyKilled += ActivateBridge;
         }
+        PlayerController.OnPlayerDeath += LooseGame;
     }
     private void OnDisable()
     {
@@ -57,6 +58,7 @@ public class GameManager : MonoBehaviour
         {
             skeletons[i].OnEnemyKilled -= ActivateBridge;
         }
+        PlayerController.OnPlayerDeath -= LooseGame;
     }
     public bool IsOptionsMenuActive { get; private set; }
     private void Start()
@@ -138,7 +140,23 @@ public class GameManager : MonoBehaviour
     }
     public void LooseGame()
     {
-        StartCoroutine(Loose());
+        StartCoroutine(AnimateLoosePanel());
+    }
+    private IEnumerator AnimateLoosePanel()
+    {
+        yield return new WaitForSeconds(3f);
+        float duration = 1f; 
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / duration;
+            loosePanel.fillAmount = progress; 
+            yield return null;
+        }
+        RestartGame();
+        loosePanel.fillAmount = 1f; 
     }
     private IEnumerator ChangeCameraInGame()
     {
@@ -154,12 +172,6 @@ public class GameManager : MonoBehaviour
             StartCoroutine(DissolveBridgeAndRocks());
             Debug.Log("¡Puente activado!");
         }
-    }
-    IEnumerator Loose()
-    {
-        yield return new WaitForSeconds(0.05f);
-        loosePanel.SetActive(true);
-        Time.timeScale = 0f;
     }
     private IEnumerator DissolveBridgeAndRocks()
     {

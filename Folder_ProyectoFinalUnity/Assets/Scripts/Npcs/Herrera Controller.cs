@@ -8,7 +8,6 @@ public class HerreraController : RoutePatrolDefined
     [Header("Patrol Data NPC")]
     [SerializeField] private GraphManager graphManager;
     [SerializeField] private GameObject[] nodes;
-    [SerializeField] private NPCData npcData;
 
     [Header("NPC Dialogue")]
     [SerializeField] private GameObject dialogueMark;

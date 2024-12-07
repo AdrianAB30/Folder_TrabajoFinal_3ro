@@ -7,6 +7,7 @@ public class RoutePatrolDefined : PatrolBehaviour
     private bool movingForward = true;
     private bool isWaiting = false;
     public Animator npcAnimator;
+    public NPCData npcData;
     public float forceRotateNPC;
 
     protected override void Awake()
@@ -51,7 +52,7 @@ public class RoutePatrolDefined : PatrolBehaviour
     {
         isWaiting = true;
         npcAnimator.SetBool("isWalking", false);
-        yield return new WaitForSeconds(1.2f);
+        yield return new WaitForSeconds(npcData.watingTime);
         isWaiting = false;
         UpdatePatrolIndex(); 
     }

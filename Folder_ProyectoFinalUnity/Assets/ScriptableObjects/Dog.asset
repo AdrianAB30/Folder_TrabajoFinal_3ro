@@ -9,15 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5926b53cc01f73e4583214d58d8ee087, type: 3}
-  m_Name: PlayerData
+  m_Script: {fileID: 11500000, guid: ea1bbb0c62e67104ea3d38b6107bf947, type: 3}
+  m_Name: Dog
   m_EditorClassIdentifier: 
-  walkspeed: 6
-  life: 3
-  speedRunning: 3
-  forceFalling: 5
-  jumpForce: 6
-  attackCooldown: 1
-  rollImpulse: 20
-  standCooldown: 3
-  Stamina: 100
+  watingTime: 5
+  forceRotateNpc: 5
+  nameCharacter: 
+  dialogue: 
+  imageCharacter: {fileID: 0}
