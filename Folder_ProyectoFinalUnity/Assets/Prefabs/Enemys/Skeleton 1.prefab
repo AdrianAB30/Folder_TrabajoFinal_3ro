@@ -533,7 +533,7 @@ MonoBehaviour:
   - {fileID: 0}
   skeleton: {fileID: 0}
   objective: {fileID: 0}
-  detectionRadius: 10
+  detectionRadius: 15
   enemyData: {fileID: 11400000, guid: 8e95fe3d54d93604fa7d621b743f9644, type: 2}
   enemy: {fileID: 0}
   dissolveSpeed: 0.5

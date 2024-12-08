@@ -465,11 +465,11 @@ public class PlayerController : MonoBehaviour
     {
         if (isPlayerRunning && playerData.Stamina > 0)
         {
-            atributesManager.DecreaseStamina(Time.deltaTime * 10f);
+            atributesManager.DecreaseStamina(Time.deltaTime * 8f);
         }
         else if (movement.magnitude == 0 || (movement.magnitude > 0 && !isPlayerRunning))
         {
-            atributesManager.IncreaseStamina(Time.deltaTime * 5f);
+            atributesManager.IncreaseStamina(Time.deltaTime * 6f);
         }
         else if (playerData.Stamina <= 0)
         {
