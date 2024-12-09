@@ -48,7 +48,7 @@ public class Particle_Class : MonoBehaviour
             {
                 explotionParticle[i].gameObject.SetActive(true);
                 explotionParticle[i].Play();
-            }
+            }]
         }
     }
 }

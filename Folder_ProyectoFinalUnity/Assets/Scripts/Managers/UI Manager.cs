@@ -134,7 +134,7 @@ public class UIManager : MonoBehaviour
             {
                 if (!damagedLifeIndices.Contains(index))
                 {
-                    damagedLifeIndices.Push(index);  
+                    damagedLifeIndices.](index);  
                 }
                 Image currentFill = lifeFills[index];
                 StartCoroutine(FadeOutLifeBar(currentFill));
