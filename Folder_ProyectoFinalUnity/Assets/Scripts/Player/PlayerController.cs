@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private UIManager uiManager;
     [SerializeField] private SfxSounds sfxSounds;
     [SerializeField] private InputHandler inputHandler;
-    [SerializeField] private GameManager gameManager;
 
     [Header("Player Components")]
     private Rigidbody myRBD;
@@ -36,8 +35,8 @@ public class PlayerController : MonoBehaviour
     private AudioSource myAudioSource;
 
     [Header("Player Booleans")]
-    [SerializeField] private bool canJump = true;
-    [SerializeField] private bool canMove = true;
+    [SerializeField] public bool canJump = true;
+    [SerializeField] public bool canMove = true;
     [SerializeField] private bool isAttackSword = false;
     [SerializeField] private bool isAttackBow = false;
     [SerializeField] private bool isCovering = false;
@@ -57,6 +56,7 @@ public class PlayerController : MonoBehaviour
     public static event Action OnBowCollected;
     public static event Action OnSwordCollected;
     public static event Action OnPlayerDeath;
+    public static event Action OnPlayerWin;
     public static event Action<bool> OnAttackBowSpawner;
 
     private void OnEnable()
@@ -175,6 +175,7 @@ public class PlayerController : MonoBehaviour
             canJump = false;
             canMove = false;
             myAnimator.SetBool("isAttack", true);
+            myAudioSource.PlayOneShot(sfxSounds.soundSfx[0]);
             StartCoroutine(AttackCooldown());
         }
     }
@@ -362,7 +363,6 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
-
     private void CheckGround()
     {
         isGrounded = Physics.Raycast(checkGround.transform.position, Vector3.down, groundDistance, groundLayer);
@@ -395,6 +395,8 @@ public class PlayerController : MonoBehaviour
     #endregion
     public void HandleDamage(int damage)
     {
+        if (isCovering) return;
+
         if (isTakingDamage) return; 
 
         isTakingDamage = true;
@@ -436,12 +438,10 @@ public class PlayerController : MonoBehaviour
         }
         else if (other.CompareTag("GroundQuiver"))
         {
-            Debug.Log("Has recogido la funda del suelo.");
             other.gameObject.SetActive(false);
         }
         else if (other.CompareTag("GroundSword"))
         {
-            Debug.Log("Has recogido la espada y escudo");
             inventoryPlayer.AddWeapon(inventoryPlayer.GetSwordAndShield());
             OnSwordCollected?.Invoke();
             inventoryPlayer.ActivateSword();
@@ -454,11 +454,15 @@ public class PlayerController : MonoBehaviour
         else if (other.CompareTag("Perder"))
         {
             myRBD.isKinematic = true;
-            gameManager.LooseGame();
+            OnPlayerDeath?.Invoke();
         }
-        else if (other.CompareTag("AreaSkeleton"))
+        else if (other.CompareTag("AreaAttackEnemy"))
         {
             atributesManager.DamageToPlayer(1);
+        }
+        else if (other.CompareTag("Padre"))
+        {
+            OnPlayerWin?.Invoke();
         }
     }
     private void StaminaLogic()

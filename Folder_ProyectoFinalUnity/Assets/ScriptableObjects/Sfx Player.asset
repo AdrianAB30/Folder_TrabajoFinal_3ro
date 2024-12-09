@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Sfx Player
   m_EditorClassIdentifier: 
   soundSfx:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: c68b80365c1de3845be73ebcd012b581, type: 3}
+  - {fileID: 8300000, guid: 66f53836ebf700a46ac41a2be936a136, type: 3}
   - {fileID: 8300000, guid: 6bd5e11ef1a7fdd4ea73b0844e502421, type: 3}

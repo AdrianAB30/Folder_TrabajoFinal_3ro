@@ -94,18 +94,18 @@ public class UIManager : MonoBehaviour
     {
         bowUI.gameObject.SetActive(true);
         DOTween.Sequence()
-        .Append(dialoguePanels[4].DOAnchorPos(targetPositions[6], 0.5f).SetEase(Ease.InSine))
+        .Append(dialoguePanels[6].DOAnchorPos(targetPositions[6], 0.5f).SetEase(Ease.InSine))
         .AppendInterval(5f)
-        .Append(dialoguePanels[4].DOAnchorPos(originalPositions[4],0.8f).SetEase(Ease.InOutBack));
+        .Append(dialoguePanels[6].DOAnchorPos(originalPositions[6],0.8f).SetEase(Ease.InOutBack));
     }
     private void ActivateSwordUI()
     {
         swordUI.gameObject.SetActive(true);
         swordBorder.gameObject.SetActive(true);
         DOTween.Sequence()
-        .Append(dialoguePanels[5].DOAnchorPos(targetPositions[7],0.5f).SetEase(Ease.InSine))
+        .Append(dialoguePanels[7].DOAnchorPos(targetPositions[7],0.5f).SetEase(Ease.InSine))
         .AppendInterval(5f)
-        .Append(dialoguePanels[5].DOAnchorPos(originalPositions[5],0.8f).SetEase(Ease.InOutBack));
+        .Append(dialoguePanels[7].DOAnchorPos(originalPositions[7],0.8f).SetEase(Ease.InOutBack));
     }
     private void UpdateWeaponBorder(string weaponName)
     {
@@ -229,15 +229,23 @@ public class UIManager : MonoBehaviour
     }
     private void ShowTutorial()
     {
-     DOTween.Sequence()
-    .AppendInterval(0.8f)
-    .Append(dialoguePanels[2].DOAnchorPos(targetPositions[4],0.5f).SetEase(Ease.InSine))
-    .AppendInterval(2f)
-    .Append(dialoguePanels[2].DOAnchorPos(originalPositions[2], 0.8f).SetEase(Ease.InOutBack))
-    .AppendInterval(2f)
-    .Append(dialoguePanels[3].DOAnchorPos(targetPositions[5],0.5f).SetEase(Ease.InSine))
-    .AppendInterval(2f)
-    .Append(dialoguePanels[3].DOAnchorPos(originalPositions[3], 0.8f).SetEase(Ease.InOutBack));
+        DOTween.Sequence()
+       .AppendInterval(0.8f)
+       .Append(dialoguePanels[2].DOAnchorPos(targetPositions[4], 0.5f).SetEase(Ease.InSine))
+       .AppendInterval(4f)
+       .Append(dialoguePanels[2].DOAnchorPos(originalPositions[2], 0.8f).SetEase(Ease.InOutBack))
+       .AppendInterval(4f)
+       .Append(dialoguePanels[3].DOAnchorPos(targetPositions[5], 0.5f).SetEase(Ease.InSine))
+       .AppendInterval(4f)
+       .Append(dialoguePanels[3].DOAnchorPos(originalPositions[3], 0.8f).SetEase(Ease.InOutBack))
+       .AppendInterval(4f)
+       .Append(dialoguePanels[4].DOAnchorPos(targetPositions[9], 0.8f).SetEase(Ease.InSine))
+       .AppendInterval(4f)
+       .Append(dialoguePanels[4].DOAnchorPos(originalPositions[4], 0.8f).SetEase(Ease.InOutBack))
+       .AppendInterval(4f)
+       .Append(dialoguePanels[5].DOAnchorPos(targetPositions[10], 0.8f).SetEase(Ease.InSine))
+       .AppendInterval(4f)
+       .Append(dialoguePanels[5].DOAnchorPos(originalPositions[5], 0.8f).SetEase(Ease.InOutBack));
     }
     private void ShowTimerArrows()
     {

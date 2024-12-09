@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using Unity.VisualScripting;
 
 public class InventoryPlayer : MonoBehaviour
 {
@@ -40,7 +41,6 @@ public class InventoryPlayer : MonoBehaviour
     private void Start()
     {
         ResetWeapons();
-        Debug.Log("Capacidad inicial del inventario: " + weaponsInventory.Count);
     }
     private void ResetWeapons()
     {
@@ -57,8 +57,6 @@ public class InventoryPlayer : MonoBehaviour
     public void AddWeapon(GameObject weapon)
     {
         weaponsInventory.InsertAtEnd(weapon);
-        Debug.Log("Arma añadida al inventario: " + weapon.name);
-        Debug.Log("Capacidad actual del inventario: " + weaponsInventory.Count);
     }
 
     public void OnSwitchWeaponPrevious(InputAction.CallbackContext context)
@@ -67,6 +65,7 @@ public class InventoryPlayer : MonoBehaviour
         {
             currentWeaponIndex = (currentWeaponIndex - 1 + weaponsInventory.Count) % weaponsInventory.Count;
             EquipWeapon(weaponsInventory.GetAtPosition(currentWeaponIndex));
+            StartCoroutine(HandleWeaponSwitch());
         }
     }
 
@@ -76,6 +75,7 @@ public class InventoryPlayer : MonoBehaviour
         {
             currentWeaponIndex = (currentWeaponIndex + 1) % weaponsInventory.Count;
             EquipWeapon(weaponsInventory.GetAtPosition(currentWeaponIndex));
+            StartCoroutine(HandleWeaponSwitch());
         }
     }
 
@@ -131,8 +131,6 @@ public class InventoryPlayer : MonoBehaviour
         }
         playerAnimator.SetBool("hasSword", currentWeapon == sword);
         playerAnimator.SetBool("hasBow", currentWeapon == bow);
-
-        Debug.Log("Se ha equipado: " + currentWeapon.name);
     }
 
     public void OnEquipAnimationEnd()
@@ -174,5 +172,15 @@ public class InventoryPlayer : MonoBehaviour
         {
             quiver.SetActive(true);
         }
+    }
+    private IEnumerator HandleWeaponSwitch()
+    {
+        playerController.canMove = false;
+        playerController.canJump = false;
+
+        yield return new WaitForSeconds(1.5f);
+      
+        playerController.canMove = true;
+        playerController.canJump = true;
     }
 }

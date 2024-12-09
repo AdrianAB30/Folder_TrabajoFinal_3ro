@@ -7,15 +7,31 @@ public class UIEnemys : MonoBehaviour
 {
     [SerializeField] private Image lifeBarEnemy;
     [SerializeField] private SkeletonController enemySkeleton;
+    [SerializeField] private FrogController enemyFrog;
     [SerializeField] private EnemyData enemyData;
 
     private void OnEnable()
     {
-        enemySkeleton.OnHealthChanged += UpdateHealthBarEnemy;
+        if (enemySkeleton != null)
+        {
+            enemySkeleton.OnHealthChanged += UpdateHealthBarEnemy;
+        }
+        if (enemyFrog != null)
+        {
+            enemyFrog.OnHealthChanged += UpdateHealthBarEnemy;
+        }
     }
     private void OnDisable()
     {
-        enemySkeleton.OnHealthChanged -= UpdateHealthBarEnemy;
+
+        if (enemySkeleton != null)
+        {
+            enemySkeleton.OnHealthChanged -= UpdateHealthBarEnemy;
+        }
+        if (enemyFrog != null)
+        {
+            enemyFrog.OnHealthChanged -= UpdateHealthBarEnemy;
+        }
     }
     private void UpdateHealthBarEnemy(int currentLife)
     {

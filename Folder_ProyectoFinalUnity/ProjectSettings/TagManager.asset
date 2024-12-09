@@ -13,9 +13,10 @@ TagManager:
   - Arrow
   - Perder
   - Area
-  - AreaSkeleton
   - Death
   - Block
+  - AreaAttackEnemy
+  - Padre
   layers:
   - Default
   - TransparentFX

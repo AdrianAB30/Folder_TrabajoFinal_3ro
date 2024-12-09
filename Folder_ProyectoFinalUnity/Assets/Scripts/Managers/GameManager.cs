@@ -12,6 +12,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private RectTransform panelOptions;
+    [SerializeField] private RectTransform winTxt;
     [SerializeField] private GameObject panel;
     [SerializeField] private Image loosePanel;
     [SerializeField] private Image fadeImage;
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
     [Header("Cameras")]
     [SerializeField] private CinemachineVirtualCamera cameraMenu;
     [SerializeField] private CinemachineVirtualCamera cameraBridge;
+    [SerializeField] private CinemachineVirtualCamera cameraExplotion;
 
     [Header("Menu Navigation")]
     [SerializeField] private GameObject optionsSelected;
@@ -36,35 +38,52 @@ public class GameManager : MonoBehaviour
 
     [Header("References Skeleton and Bridge")]
     [SerializeField] private SkeletonController[] skeletons;
+    [SerializeField] private FrogController[] frogs;
     [SerializeField] private GameObject bridgeCollider;        
+    [SerializeField] private GameObject explotion;        
     [SerializeField] private GameObject rockCollider;        
     [SerializeField] private Material bridgeMaterial;          
     [SerializeField] private Material rockMaterial;          
     [SerializeField] private float dissolveSpeed;
+    public bool IsOptionsMenuActive { get; private set; }
     public int skeletonKillCount = 0;
-    private int TotalSkeletons = 5;
+    public int frogKillCount = 0;
+    private int TotalSkeletons = 6;
+    private int TotalFrogs = 8;
 
+    public static event Action OnExplotionStart;
     private void OnEnable()
     {
         for (int i = 0; i < skeletons.Length; i++)
         {
-            skeletons[i].OnEnemyKilled += ActivateBridge;
+            skeletons[i].OnSkeletonKilled += ActivateBridge;
+        }
+        for (int i = 0; i < frogs.Length; i++)
+        {
+            frogs[i].OnFrogKilled += ActivateWall;
         }
         PlayerController.OnPlayerDeath += LooseGame;
+        PlayerController.OnPlayerWin += WinGame;
     }
     private void OnDisable()
     {
         for (int i = 0; i < skeletons.Length; i++)
         {
-            skeletons[i].OnEnemyKilled -= ActivateBridge;
+            skeletons[i].OnSkeletonKilled -= ActivateBridge;
+        }
+        for (int i = 0; i < frogs.Length; i++)
+        {
+            frogs[i].OnFrogKilled -= ActivateWall;
         }
         PlayerController.OnPlayerDeath -= LooseGame;
+        PlayerController.OnPlayerWin -= WinGame;
     }
-    public bool IsOptionsMenuActive { get; private set; }
     private void Start()
     {
         if (SceneManager.GetActiveScene().name == "Game")
         {
+            Cursor.lockState = CursorLockMode.Locked; 
+            Cursor.visible = false;
             if (cameraMenu != null)
             {
                 StartCoroutine(ChangeCameraInGame());
@@ -102,6 +121,8 @@ public class GameManager : MonoBehaviour
         if (context.started)
         {
             IsOptionsMenuActive = true;
+            Cursor.lockState = CursorLockMode.None; 
+            Cursor.visible = true;
             panel.gameObject.SetActive(true);
             panelOptions.DOAnchorPos(new Vector3(0, 0, 0), duration).SetEase(myEase);
             EventSystem.current.SetSelectedGameObject(null);
@@ -112,6 +133,8 @@ public class GameManager : MonoBehaviour
     public void HideOptionsInGame()
     {
         IsOptionsMenuActive = false;
+        Cursor.lockState = CursorLockMode.Locked;   
+        Cursor.visible = false;
         panel.gameObject.SetActive(false);
         panelOptions.DOAnchorPos(new Vector3(0, 950, 0), duration).SetEase(myEase);
         EventSystem.current.SetSelectedGameObject(null);
@@ -142,6 +165,10 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(AnimateLoosePanel());
     }
+    public void WinGame()
+    {
+        StartCoroutine(AnimateWinPanel());
+    }
     private IEnumerator AnimateLoosePanel()
     {
         yield return new WaitForSeconds(3f);
@@ -158,6 +185,27 @@ public class GameManager : MonoBehaviour
         RestartGame();
         loosePanel.fillAmount = 1f; 
     }
+    private IEnumerator AnimateWinPanel()
+    {
+        yield return new WaitForSeconds(1f);
+        float duration = 1f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / duration;
+            loosePanel.fillAmount = progress;
+            yield return null;
+        }
+        loosePanel.fillAmount = 1f;
+        
+        yield return new WaitForSeconds(2f);
+        winTxt.DOAnchorPos(new Vector3(0,0,0),1f).SetEase(Ease.InOutBounce);
+        yield return new WaitForSeconds(4f);
+        SceneManager.LoadScene("Menu");
+
+    }
     private IEnumerator ChangeCameraInGame()
     {
         yield return new WaitForSeconds(1f);
@@ -170,7 +218,17 @@ public class GameManager : MonoBehaviour
         if (skeletonKillCount >= TotalSkeletons)
         {
             StartCoroutine(DissolveBridgeAndRocks());
-            Debug.Log("¡Puente activado!");
+        }
+    }
+    private void ActivateWall()
+    {
+        frogKillCount++;
+
+        if (frogKillCount >= TotalFrogs)
+        {
+            OnExplotionStart?.Invoke();
+            explotion.SetActive(false);
+            StartCoroutine(ChangeCameraExplotion());
         }
     }
     private IEnumerator DissolveBridgeAndRocks()
@@ -195,10 +253,15 @@ public class GameManager : MonoBehaviour
 
         bridgeCollider.SetActive(true);
         rockCollider.SetActive(false);
-        Debug.Log("¡Collider del puente activado!");
 
         yield return new WaitForSeconds(1f);
 
         cameraBridge.Priority = 9;
+    }
+    private IEnumerator ChangeCameraExplotion()
+    {
+        cameraExplotion.Priority = 11;
+        yield return new WaitForSeconds(3f);
+        cameraExplotion.Priority = 9;
     }
 }

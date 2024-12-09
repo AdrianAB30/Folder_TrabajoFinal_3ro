@@ -26,13 +26,11 @@ public class InputHandler : MonoBehaviour
 
         if (context.performed)
         {
-            Debug.Log("Moviendose");
             Vector2 movementInput = context.ReadValue<Vector2>();
             OnMovementInput?.Invoke(movementInput);
         }
         else if (context.canceled)
         {
-            Debug.Log("Ya no se mueve");
             OnMovementInput?.Invoke(Vector2.zero);
         }
     }
@@ -42,7 +40,6 @@ public class InputHandler : MonoBehaviour
 
         if (context.performed)
         {
-            Debug.Log("Saltando");
             OnJumpInput?.Invoke();
         }
     }
@@ -50,7 +47,6 @@ public class InputHandler : MonoBehaviour
     {
         if (context.performed && CanPerformAttackSword())
         {
-            Debug.Log("Atacando con espada");
             OnAttackSwordInput?.Invoke();
         }
 
@@ -61,12 +57,10 @@ public class InputHandler : MonoBehaviour
         {
             if (context.started)
             {
-                Debug.Log("Tensando el Arco");
                 OnAttackBow?.Invoke(true);
             }
             else if (context.canceled)
             {
-                Debug.Log("Disparando Flecha");
                 OnAttackBow?.Invoke(false);
             }
         }
@@ -76,12 +70,10 @@ public class InputHandler : MonoBehaviour
     {
         if (context.started)
         {
-            Debug.Log("Corriendo");
             OnRunningInput?.Invoke(true);
         }
         else if (context.canceled)
         {
-            Debug.Log("Ya no corre");
             OnRunningInput?.Invoke(false);
         }
     }
@@ -91,12 +83,10 @@ public class InputHandler : MonoBehaviour
         {
             if (context.started)
             {
-                Debug.Log("Cubriéndose");
                 OnCoverInput?.Invoke(true);
             }
             else if (context.canceled)
             {
-                Debug.Log("Dejando de cubrirse");
                 OnCoverInput?.Invoke(false);
             }
         }
@@ -105,7 +95,6 @@ public class InputHandler : MonoBehaviour
     {
         if (context.performed)
         {
-            Debug.Log("Rolleando");
             OnRollingInput?.Invoke();
         }
     }

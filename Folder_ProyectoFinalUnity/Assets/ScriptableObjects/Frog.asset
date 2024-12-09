@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e3887eb992321348828a88310ffc7cc, type: 3}
   m_Name: Frog
   m_EditorClassIdentifier: 
-  watingTime: 0.3
-  forceRotateEnemy: 5
-  maxLife: 0
+  speedChaseMultiplier: 7
+  maxLife: 100
+  pushingForceHit: 2
+  directionPushing: {x: 1, y: 0, z: 1}
