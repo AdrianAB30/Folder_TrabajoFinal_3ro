@@ -50,6 +50,7 @@ public class SkeletonController : RoutePatrolRandom
             }
         }
     }
+    //O(n)
     private void SetNodesPatrol()
     {
         SimpleLinkedList<GameObject> pointsPatrol = new SimpleLinkedList<GameObject>();
@@ -152,6 +153,7 @@ public class SkeletonController : RoutePatrolRandom
             enemyAnimator.SetBool("isWalkingRandom", true);
         }
     }
+    //O(n)
     private void StartPatrolAllNodes()
     {
         nodesRoutes = new SimpleLinkedList<GameObject>();

@@ -43,6 +43,7 @@ public class HenryController : RoutePatrolDefined
             npcData.forceRotateNpc = originalRotate;
         }
     }
+    //O(n)
     private void SetNodesPatrol()
     {
         SimpleLinkedList<GameObject> patrolPointsRandom = new SimpleLinkedList<GameObject>();

@@ -125,6 +125,8 @@ public class UIManager : MonoBehaviour
                 break;
         }
     }
+
+    //O(n)
     public void UpdateLifeBar(int hitsReceived)
     {
         if (hitsReceived > 0 && hitsReceived <= lifeFills.Length)
@@ -134,7 +136,7 @@ public class UIManager : MonoBehaviour
             {
                 if (!damagedLifeIndices.Contains(index))
                 {
-                    damagedLifeIndices.](index);  
+                    damagedLifeIndices.Push(index);  
                 }
                 Image currentFill = lifeFills[index];
                 StartCoroutine(FadeOutLifeBar(currentFill));
@@ -146,6 +148,7 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+    // O(1)
     public void UpdateStaminaBar()
     {
         if (staminaFills != null && dataPlayer != null)
@@ -172,6 +175,7 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+    // O(n)
     private IEnumerator FadeOutLifeBar(Image image)
     {
         float duration = 0.5f;
@@ -186,6 +190,7 @@ public class UIManager : MonoBehaviour
         }
         image.fillAmount = 0;
     }
+    // O(1)
     private void ShowDialogueNpc(bool isPlayerInRange, string npcName)
     {
         int npcIndex = -1;
@@ -247,6 +252,7 @@ public class UIManager : MonoBehaviour
        .AppendInterval(4f)
        .Append(dialoguePanels[5].DOAnchorPos(originalPositions[5], 0.8f).SetEase(Ease.InOutBack));
     }
+    // O(1)
     private void ShowTimerArrows()
     {
         timerArrows.DOAnchorPos(targetPositions[8], 0.5f).SetEase(Ease.InOutBounce);

@@ -5,6 +5,7 @@ public class GraphManager : MonoBehaviour
 {
     public SimpleLinkedList<Nodes> nodes = new SimpleLinkedList<Nodes>();
 
+    // O(1)
     public void AddNode(GameObject nodeObject)
     {
         if (!CurrentNodes(nodeObject))
@@ -12,6 +13,7 @@ public class GraphManager : MonoBehaviour
             nodes.InsertNodeAtEnd(new Nodes(nodeObject));
         }
     }
+    // O(n)
     public void AddDirectedConnection(GameObject fromNode, GameObject toNode)
     {
         Nodes graphFromNode = SearchNextNode(fromNode);
@@ -22,6 +24,7 @@ public class GraphManager : MonoBehaviour
             graphFromNode.AddNode(graphToNode); 
         }
     }
+    // O(n)
     public SimpleLinkedList<GameObject> GetNeighbors(GameObject nodeObject)
     {
         Nodes node = SearchNextNode(nodeObject);
@@ -37,10 +40,12 @@ public class GraphManager : MonoBehaviour
         }
         return null;
     }
+    // O(n)
     public bool CurrentNodes(GameObject nodeObject)
     {
         return SearchNextNode(nodeObject) != null;
     }
+    // O(n)
     private Nodes SearchNextNode(GameObject nodeObject)
     {
         for (int i = 0; i < nodes.Length; i++)

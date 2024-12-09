@@ -21,6 +21,7 @@ public class DoubleCircularLinkedList<T>
     private Node Head { get; set; }
     public int Count { get; private set; }
 
+    //O(n)
     public void InsertAtStart(T value)
     {
         Node newNode = new Node(value);
@@ -41,7 +42,7 @@ public class DoubleCircularLinkedList<T>
         Head = newNode;
         ++Count;
     }
-
+    //O(n)
     public void InsertAtEnd(T value)
     {
         if (Head == null)
@@ -59,7 +60,7 @@ public class DoubleCircularLinkedList<T>
             ++Count;
         }
     }
-
+    //O(1)
     public T GetAtStart()
     {
         if (Head == null)
@@ -68,7 +69,7 @@ public class DoubleCircularLinkedList<T>
         }
         return Head.Value;
     }
-
+    //O(1)
     public T GetAtEnd()
     {
         if (Head == null)
@@ -77,7 +78,7 @@ public class DoubleCircularLinkedList<T>
         Node lastNode = SearchLastNode();
         return lastNode.Value;
     }
-
+    //O(n)
     public T GetAtPosition(int position)
     {
         if (position < 0 || position >= Count)
@@ -92,7 +93,7 @@ public class DoubleCircularLinkedList<T>
         }
         return currentNode.Value;
     }
-
+    //O(1)
     public void DeleteAtStart()
     {
         if (Head == null)
@@ -115,7 +116,7 @@ public class DoubleCircularLinkedList<T>
             --Count;
         }
     }
-
+    //O(1)
     public void DeleteAtEnd()
     {
         if (Head == null)
@@ -137,7 +138,7 @@ public class DoubleCircularLinkedList<T>
             --Count;
         }
     }
-
+    //O(n)
     private Node SearchLastNode()
     {
         if (Head == null)

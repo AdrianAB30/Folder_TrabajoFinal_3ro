@@ -19,7 +19,7 @@ public class Stack<T>
     private Node Head { get; set; }
     private Node Top { get; set; }
     public int Count { get; private set; }
-
+    // O(1)
     public void Push(T value)
     {
         Node newNode = new Node(value);
@@ -37,6 +37,7 @@ public class Stack<T>
         }
         Count++;
     }
+    // O(1)
     public T Pop()
     {
         if (Head == null)
@@ -61,6 +62,7 @@ public class Stack<T>
         Count--;
         return topValue;
     }
+    // O(1)
     public T Peek()
     {
         if (Head == null)
@@ -73,6 +75,7 @@ public class Stack<T>
     {
         return Count == 0;
     }
+    // O(n)
     public bool Contains(T value)
     {
         Node currentNode = Top;

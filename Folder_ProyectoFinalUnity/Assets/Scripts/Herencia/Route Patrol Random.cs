@@ -20,6 +20,7 @@ public class RoutePatrolRandom : PatrolBehaviour
         StartCoroutine(WaitAtNode());
         base.Start();
     }
+    // O(1)
     protected override void Patrol()
     {
         if (nodesRoutes.Length == 0 || isWaiting || isTakingDamage || isDead)

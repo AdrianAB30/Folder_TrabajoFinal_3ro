@@ -46,6 +46,7 @@ public class FrogController : RoutePatrolRandom
             }
         }
     }
+    //O(n)
     private void SetNodesPatrol()
     {
         SimpleLinkedList<GameObject> pointsPatrol = new SimpleLinkedList<GameObject>();
@@ -160,6 +161,7 @@ public class FrogController : RoutePatrolRandom
             enemyAnimator.SetBool("isWalkingRandom", true);
         }
     }
+    //O(n)
     private void StartPatrolAllNodes()
     {
         nodesRoutes = new SimpleLinkedList<GameObject>();

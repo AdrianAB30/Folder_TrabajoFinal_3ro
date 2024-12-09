@@ -11,6 +11,7 @@ public class Nodes
         Node = nodesRoute;
         neighbors = new SimpleLinkedList<Nodes>();
     }
+    // O(n)
     public void AddNode(Nodes nodeNeighbor)
     {
         if (!neighbors.SearchValue(nodeNeighbor))

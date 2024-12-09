@@ -17,6 +17,7 @@ public class SimpleLinkedList<T>
     private Node Head { get; set; }
     public int Length { get; set; }
 
+    //O(1)
     public void InsertNodeAtStart(T value)
     {
         if (Head == null)
@@ -33,6 +34,7 @@ public class SimpleLinkedList<T>
             Length = Length + 1;
         }
     }
+    //O(n)
     public void InsertNodeAtEnd(T value)
     {
         if (Head == null)
@@ -51,6 +53,7 @@ public class SimpleLinkedList<T>
             Length = Length + 1;
         }
     }
+    // O(n)
     public void InsertNodeAtPosition(T value, int position)
     {
         if (position == 0)
@@ -87,6 +90,7 @@ public class SimpleLinkedList<T>
             Length = Length + 1;
         }
     }
+    // O(1)
     public void ModifyAtStart(T newValue)
     {
         if (Head == null)
@@ -98,7 +102,7 @@ public class SimpleLinkedList<T>
             Head.Value = newValue;
         }
     }
-
+    // O(1)
     public void ModifyAtEnd(T newValue)
     {
         if (Head == null)
@@ -111,7 +115,7 @@ public class SimpleLinkedList<T>
             lastNode.Value = newValue;
         }
     }
-
+    // O(n)
     public void ModifyAtPosition(T newValue, int position)
     {
         if (position == 0)
@@ -138,6 +142,7 @@ public class SimpleLinkedList<T>
             nodePosition.Value = newValue;
         }
     }
+    // O(1)
     public T GetNodeAtStart()
     {
         if (Head == null)
@@ -149,7 +154,7 @@ public class SimpleLinkedList<T>
             return Head.Value;
         }
     }
-
+    // O(1)
     public T GetNodeAtEnd()
     {
         if (Head == null)
@@ -162,6 +167,7 @@ public class SimpleLinkedList<T>
             return classNode.Value;
         }
     }
+    // O(n)
     public T GetNodeAtPosition(int position)
     {
         if (position == 0)
@@ -188,7 +194,7 @@ public class SimpleLinkedList<T>
             return nodePosition.Value;
         }
     }
-
+    // O(1)
     public void DeleteAtStart()
     {
         if (Head == null)
@@ -203,7 +209,7 @@ public class SimpleLinkedList<T>
             Length = Length - 1;
         }
     }
-
+    // O(n)
     public void DeleteAtEnd()
     {
         if (Head == null)
@@ -223,7 +229,7 @@ public class SimpleLinkedList<T>
             Length = Length - 1;
         }
     }
-
+    // O(n)
     public void DeleteNodeAtPosition(int position)
     {
         if (position == 0)
@@ -256,6 +262,7 @@ public class SimpleLinkedList<T>
             Length = Length - 1;
         }
     }
+    // O(n)
     public bool SearchValue(T value)
     {
         dynamic current = Head;
@@ -270,6 +277,7 @@ public class SimpleLinkedList<T>
         }
         return false;
     }
+    // O(n)
     private Node SearchLastNode()
     {
         if (Head == null)
